@@ -1,0 +1,93 @@
+/*
+ * Athar Plus design tokens.
+ * Brand: deep navy (trust), Athar turquoise (action/life), restrained gold
+ * (Plus/premium only), warm ivory (calm surfaces). Components consume only
+ * semantic tokens, never raw colors.
+ */
+:root {
+  --font-body: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-display: "Readex Pro Variable", "IBM Plex Sans Arabic", system-ui, sans-serif;
+
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --app-height: 100dvh;
+  --bottom-nav-height: 68px;
+  --content-max-width: 640px;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --background: #f5f2eb;
+  --surface: #fffdf8;
+  --surface-elevated: #ffffff;
+  --surface-sunken: #ece7dc;
+  --foreground: #0e1a33;
+  --muted: #e6e1d6;
+  --muted-foreground: #5b6477;
+  --border: rgb(14 26 51 / 0.09);
+  --border-strong: rgb(14 26 51 / 0.16);
+  --primary: #0f2a55;
+  --primary-foreground: #f7f3ea;
+  --accent: #178f89;
+  --accent-foreground: #ffffff;
+  --accent-soft: rgb(23 143 137 / 0.11);
+  --gold: #a9812f;
+  --gold-foreground: #1b1406;
+  --gold-soft: rgb(169 129 47 / 0.12);
+  --success: #1c8a5e;
+  --success-soft: rgb(28 138 94 / 0.12);
+  --warning: #b87812;
+  --warning-soft: rgb(184 120 18 / 0.12);
+  --danger: #c0413f;
+  --danger-soft: rgb(192 65 63 / 0.1);
+  --ring: rgb(23 143 137 / 0.45);
+  --overlay: rgb(8 14 30 / 0.42);
+  --shadow-sm: 0 1px 2px rgb(14 26 51 / 0.05), 0 1px 1px rgb(14 26 51 / 0.03);
+  --shadow-md: 0 6px 20px -8px rgb(14 26 51 / 0.14), 0 2px 6px -2px rgb(14 26 51 / 0.06);
+  --shadow-lg: 0 20px 44px -18px rgb(14 26 51 / 0.24);
+  --hero-gradient: linear-gradient(135deg, #0f2a55 0%, #13396b 55%, #17616a 100%);
+  --plus-gradient: linear-gradient(135deg, #1a1508 0%, #3a2c10 60%, #6b5320 100%);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #070d1b;
+  --surface: #0c1528;
+  --surface-elevated: #121e36;
+  --surface-sunken: #050a15;
+  --foreground: #edf0f6;
+  --muted: #18243d;
+  --muted-foreground: #8d98ae;
+  --border: rgb(237 240 246 / 0.07);
+  --border-strong: rgb(237 240 246 / 0.14);
+  --primary: #efe7d6;
+  --primary-foreground: #0b1427;
+  --accent: #3cc3b8;
+  --accent-foreground: #04201e;
+  --accent-soft: rgb(60 195 184 / 0.13);
+  --gold: #d3b068;
+  --gold-foreground: #1b1406;
+  --gold-soft: rgb(211 176 104 / 0.13);
+  --success: #3ec48a;
+  --success-soft: rgb(62 196 138 / 0.13);
+  --warning: #e3a43a;
+  --warning-soft: rgb(227 164 58 / 0.13);
+  --danger: #ef6f6c;
+  --danger-soft: rgb(239 111 108 / 0.13);
+  --ring: rgb(60 195 184 / 0.5);
+  --overlay: rgb(2 5 12 / 0.6);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 8px 24px -10px rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 24px 48px -20px rgb(0 0 0 / 0.7);
+  --hero-gradient: linear-gradient(135deg, #0e2448 0%, #0f2f57 55%, #0f4f55 100%);
+  --plus-gradient: linear-gradient(135deg, #15110a 0%, #2c2212 60%, #4f3d19 100%);
+}

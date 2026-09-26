@@ -1,0 +1,212 @@
+{
+  "app": {
+    "name": "أثر بلس",
+    "tagline": "خدماتك الرقمية بلمسة أثر"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "explore": "استكشف",
+    "orders": "طلباتي",
+    "wallet": "المحفظة",
+    "profile": "حسابي",
+    "back": "رجوع",
+    "search": "بحث",
+    "notifications": "الإشعارات"
+  },
+  "common": {
+    "retry": "إعادة المحاولة",
+    "seeAll": "عرض الكل",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "close": "إغلاق",
+    "copy": "نسخ",
+    "copied": "تم النسخ",
+    "loading": "جارٍ التحميل…",
+    "continue": "متابعة",
+    "done": "تم",
+    "optional": "اختياري",
+    "currentPlan": "مستواك الحالي"
+  },
+  "gate": {
+    "connecting": "جارٍ تجهيز حسابك…",
+    "openInTelegramTitle": "افتح أثر بلس من تيليجرام",
+    "openInTelegramBody": "هذا التطبيق يعمل داخل تيليجرام لحماية حسابك ومحفظتك.",
+    "openBot": "فتح البوت",
+    "failedTitle": "تعذّر تسجيل الدخول",
+    "failedBody": "حدث خطأ أثناء التحقق من جلستك. حاول مجددًا أو أعد فتح التطبيق."
+  },
+  "home": {
+    "greeting": "أهلًا {name}",
+    "greetingSubtitle": "ماذا تحتاج اليوم؟",
+    "searchPlaceholder": "ابحث عن خدمة، مثل: كانفا، ببجي…",
+    "categories": "الأقسام",
+    "featured": "خدمات مميزة",
+    "popular": "الأكثر طلبًا",
+    "plusTitle": "عضوية بلس",
+    "plusBody": "أسعار تفضيلية وأولوية في التنفيذ ووصول مبكر للعروض.",
+    "plusCta": "اكتشف المزايا"
+  },
+  "wallet": {
+    "title": "المحفظة",
+    "balance": "الرصيد المتاح",
+    "deposit": "إيداع",
+    "giftCode": "كود هدية",
+    "history": "سجل العمليات",
+    "pendingDeposits": "{count, plural, one {إيداع واحد قيد المراجعة} two {إيداعان قيد المراجعة} few {# إيداعات قيد المراجعة} many {# إيداعًا قيد المراجعة} other {# إيداع قيد المراجعة}}",
+    "emptyTitle": "لا توجد عمليات بعد",
+    "emptyBody": "ستظهر هنا عمليات الإيداع والشراء والاسترداد.",
+    "localEquivalent": "≈ {amount}",
+    "transactionType": {
+      "deposit": "إيداع",
+      "purchase": "شراء",
+      "refund": "استرداد",
+      "gift_code": "كود هدية",
+      "adjustment": "تسوية"
+    }
+  },
+  "deposit": {
+    "title": "إيداع رصيد",
+    "chooseMethod": "اختر طريقة الإيداع",
+    "chooseMethodBody": "بعد الإيداع يُضاف الرصيد إلى محفظتك بعد المراجعة.",
+    "pendingSpecificationBadge": "قريبًا",
+    "pendingSpecificationTitle": "هذه الطريقة قيد التجهيز",
+    "pendingSpecificationBody": "نعمل على تفعيل الإيداع عبر {method}. ستظهر هنا التعليمات وخطوات التحويل فور اعتمادها.",
+    "amount": "المبلغ (دولار)",
+    "amountHelp": "المبلغ الذي ستقوم بتحويله.",
+    "note": "ملاحظة",
+    "submit": "إرسال طلب الإيداع",
+    "submittedTitle": "تم إرسال طلب الإيداع",
+    "submittedBody": "سيُضاف الرصيد إلى محفظتك بعد مراجعة التحويل.",
+    "invalidAmount": "أدخل مبلغًا صحيحًا"
+  },
+  "giftCode": {
+    "title": "كود هدية",
+    "subtitle": "أدخل كود الهدية لإضافة رصيد إلى محفظتك.",
+    "label": "كود الهدية",
+    "placeholder": "مثال: ATHAR-2026",
+    "redeem": "استخدام الكود",
+    "successTitle": "تمت إضافة {amount} إلى محفظتك",
+    "successBody": "استمتع بخدماتك مع أثر بلس."
+  },
+  "product": {
+    "unavailable": "غير متاح حاليًا",
+    "outOfStock": "نفد المخزون",
+    "buy": "اطلب الآن",
+    "buyFor": "اطلب بـ {price}",
+    "description": "تفاصيل الخدمة",
+    "delivery": "طريقة التنفيذ",
+    "requiredInfo": "المعلومات المطلوبة",
+    "fulfillment": {
+      "manual": "تنفيذ يدوي من فريقنا",
+      "inventory": "تسليم فوري"
+    },
+    "youSave": "توفّر {amount}",
+    "membershipPrice": "سعر الأعضاء",
+    "insufficientTitle": "رصيدك غير كافٍ",
+    "insufficientBody": "تحتاج {amount} إضافية لإتمام الطلب.",
+    "topUp": "شحن المحفظة",
+    "confirmTitle": "تأكيد الطلب",
+    "confirmBody": "سيتم خصم {price} من رصيد محفظتك.",
+    "note": "ملاحظة للفريق",
+    "placeOrder": "تأكيد الشراء",
+    "orderCreatedTitle": "تم إنشاء طلبك",
+    "orderCreatedBody": "رقم الطلب {number}. سنعلمك بكل تحديث.",
+    "viewOrder": "عرض الطلب",
+    "secureNote": "الدفع من رصيد محفظتك · السعر محسوب من الخادم"
+  },
+  "categories": {
+    "title": "الأقسام",
+    "servicesCount": "{count, plural, zero {لا خدمات} one {خدمة واحدة} two {خدمتان} few {# خدمات} many {# خدمة} other {# خدمة}}",
+    "emptyTitle": "لا توجد خدمات في هذا القسم بعد"
+  },
+  "search": {
+    "title": "البحث",
+    "placeholder": "ابحث في كل الخدمات",
+    "clear": "مسح",
+    "recent": "عمليات بحث سابقة",
+    "clearRecent": "مسح السجل",
+    "popular": "خدمات مقترحة",
+    "noResultsTitle": "لا نتائج لـ \"{query}\"",
+    "noResultsBody": "جرّب كلمة أخرى أو تصفّح الأقسام.",
+    "categories": "أقسام",
+    "services": "خدمات"
+  },
+  "orders": {
+    "title": "طلباتي",
+    "filters": {
+      "all": "الكل",
+      "active": "قيد التنفيذ",
+      "completed": "مكتملة",
+      "closed": "ملغاة"
+    },
+    "emptyTitle": "لا توجد طلبات بعد",
+    "emptyBody": "عندما تطلب خدمة ستتابع حالتها من هنا.",
+    "browse": "تصفّح الخدمات",
+    "status": {
+      "pending": "بانتظار المعالجة",
+      "confirmed": "مؤكد",
+      "processing": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "rejected": "مرفوض"
+    },
+    "number": "رقم الطلب",
+    "total": "الإجمالي",
+    "discount": "الخصم",
+    "createdAt": "تاريخ الطلب",
+    "submittedInfo": "المعلومات المرسلة",
+    "timeline": "مراحل الطلب",
+    "delivery": "تفاصيل التسليم",
+    "cancel": "إلغاء الطلب",
+    "cancelConfirm": "سيتم إلغاء الطلب وإعادة المبلغ إلى محفظتك.",
+    "cancelled": "تم إلغاء الطلب واسترداد المبلغ"
+  },
+  "membership": {
+    "title": "العضوية",
+    "level": {
+      "normal": "عادي",
+      "essential": "أساسي",
+      "plus": "بلس"
+    },
+    "expiresAt": "صالحة حتى {date}",
+    "benefits": "المزايا",
+    "yourLevel": "مستواك",
+    "howToUpgrade": "كيف تحصل على بلس؟",
+    "howToUpgradeBody": "سيتم الإعلان قريبًا عن طرق الانضمام إلى بلس. تابع إشعاراتك."
+  },
+  "profile": {
+    "title": "حسابي",
+    "memberSince": "عضو منذ {date}",
+    "preferences": "التفضيلات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
+    "support": "الدعم والمساعدة",
+    "shortcuts": "اختصارات",
+    "arabic": "العربية",
+    "english": "English"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "emptyTitle": "لا إشعارات",
+    "emptyBody": "سنرسل لك هنا تحديثات طلباتك وعروضك."
+  },
+  "errors": {
+    "network_error": "تعذّر الاتصال. تحقّق من الإنترنت وحاول مجددًا.",
+    "unknown_error": "حدث خطأ غير متوقع. حاول مجددًا.",
+    "genericTitle": "حدث خطأ",
+    "notFoundTitle": "غير موجود",
+    "notFoundBody": "ربما تم نقل هذه الصفحة أو لم تعد متاحة."
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "أدخل بريدًا إلكترونيًا صحيحًا",
+    "invalidPhone": "أدخل رقم هاتف صحيحًا",
+    "invalidNumber": "أدخل رقمًا صحيحًا",
+    "invalidFormat": "الصيغة غير صحيحة",
+    "tooLong": "النص أطول من المسموح",
+    "tooShort": "النص أقصر من المطلوب"
+  }
+}

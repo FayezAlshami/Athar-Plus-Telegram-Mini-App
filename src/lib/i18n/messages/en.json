@@ -1,0 +1,212 @@
+{
+  "app": {
+    "name": "Athar Plus",
+    "tagline": "Your digital services, the Athar way"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "orders": "Orders",
+    "wallet": "Wallet",
+    "profile": "Profile",
+    "back": "Back",
+    "search": "Search",
+    "notifications": "Notifications"
+  },
+  "common": {
+    "retry": "Try again",
+    "seeAll": "See all",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied",
+    "loading": "Loading…",
+    "continue": "Continue",
+    "done": "Done",
+    "optional": "Optional",
+    "currentPlan": "Your level"
+  },
+  "gate": {
+    "connecting": "Preparing your account…",
+    "openInTelegramTitle": "Open Athar Plus from Telegram",
+    "openInTelegramBody": "This app runs inside Telegram to keep your account and wallet secure.",
+    "openBot": "Open the bot",
+    "failedTitle": "Couldn't sign you in",
+    "failedBody": "We couldn't verify your session. Try again or reopen the app."
+  },
+  "home": {
+    "greeting": "Hi {name}",
+    "greetingSubtitle": "What do you need today?",
+    "searchPlaceholder": "Search services, e.g. Canva, PUBG…",
+    "categories": "Categories",
+    "featured": "Featured",
+    "popular": "Most ordered",
+    "plusTitle": "Plus membership",
+    "plusBody": "Preferential pricing, priority processing and early access to offers.",
+    "plusCta": "See benefits"
+  },
+  "wallet": {
+    "title": "Wallet",
+    "balance": "Available balance",
+    "deposit": "Deposit",
+    "giftCode": "Gift code",
+    "history": "Activity",
+    "pendingDeposits": "{count, plural, one {# deposit under review} other {# deposits under review}}",
+    "emptyTitle": "No activity yet",
+    "emptyBody": "Deposits, purchases and refunds will appear here.",
+    "localEquivalent": "≈ {amount}",
+    "transactionType": {
+      "deposit": "Deposit",
+      "purchase": "Purchase",
+      "refund": "Refund",
+      "gift_code": "Gift code",
+      "adjustment": "Adjustment"
+    }
+  },
+  "deposit": {
+    "title": "Add funds",
+    "chooseMethod": "Choose a deposit method",
+    "chooseMethodBody": "Funds are added to your wallet after review.",
+    "pendingSpecificationBadge": "Soon",
+    "pendingSpecificationTitle": "This method is being prepared",
+    "pendingSpecificationBody": "We're enabling deposits via {method}. Instructions and transfer steps will appear here once approved.",
+    "amount": "Amount (USD)",
+    "amountHelp": "The amount you will transfer.",
+    "note": "Note",
+    "submit": "Submit deposit request",
+    "submittedTitle": "Deposit request sent",
+    "submittedBody": "Funds will be added after your transfer is reviewed.",
+    "invalidAmount": "Enter a valid amount"
+  },
+  "giftCode": {
+    "title": "Gift code",
+    "subtitle": "Enter a gift code to add credit to your wallet.",
+    "label": "Gift code",
+    "placeholder": "e.g. ATHAR-2026",
+    "redeem": "Redeem",
+    "successTitle": "{amount} added to your wallet",
+    "successBody": "Enjoy your services with Athar Plus."
+  },
+  "product": {
+    "unavailable": "Currently unavailable",
+    "outOfStock": "Out of stock",
+    "buy": "Order now",
+    "buyFor": "Order for {price}",
+    "description": "About this service",
+    "delivery": "How it's delivered",
+    "requiredInfo": "Required information",
+    "fulfillment": {
+      "manual": "Handled by our team",
+      "inventory": "Instant delivery"
+    },
+    "youSave": "You save {amount}",
+    "membershipPrice": "Member price",
+    "insufficientTitle": "Insufficient balance",
+    "insufficientBody": "You need {amount} more to place this order.",
+    "topUp": "Top up wallet",
+    "confirmTitle": "Confirm order",
+    "confirmBody": "{price} will be deducted from your wallet.",
+    "note": "Note for our team",
+    "placeOrder": "Confirm purchase",
+    "orderCreatedTitle": "Order placed",
+    "orderCreatedBody": "Order {number}. We'll keep you posted.",
+    "viewOrder": "View order",
+    "secureNote": "Paid from your wallet · price calculated by our server"
+  },
+  "categories": {
+    "title": "Categories",
+    "servicesCount": "{count, plural, =0 {No services} one {# service} other {# services}}",
+    "emptyTitle": "No services in this category yet"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search all services",
+    "clear": "Clear",
+    "recent": "Recent searches",
+    "clearRecent": "Clear history",
+    "popular": "Suggested",
+    "noResultsTitle": "No results for \"{query}\"",
+    "noResultsBody": "Try another word or browse categories.",
+    "categories": "Categories",
+    "services": "Services"
+  },
+  "orders": {
+    "title": "My orders",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "completed": "Completed",
+      "closed": "Closed"
+    },
+    "emptyTitle": "No orders yet",
+    "emptyBody": "Once you order a service you can follow it here.",
+    "browse": "Browse services",
+    "status": {
+      "pending": "Awaiting processing",
+      "confirmed": "Confirmed",
+      "processing": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected"
+    },
+    "number": "Order number",
+    "total": "Total",
+    "discount": "Discount",
+    "createdAt": "Placed on",
+    "submittedInfo": "Submitted information",
+    "timeline": "Progress",
+    "delivery": "Delivery details",
+    "cancel": "Cancel order",
+    "cancelConfirm": "The order will be cancelled and the amount returned to your wallet.",
+    "cancelled": "Order cancelled and refunded"
+  },
+  "membership": {
+    "title": "Membership",
+    "level": {
+      "normal": "Normal",
+      "essential": "Essential",
+      "plus": "Plus"
+    },
+    "expiresAt": "Valid until {date}",
+    "benefits": "Benefits",
+    "yourLevel": "Your level",
+    "howToUpgrade": "How to get Plus?",
+    "howToUpgradeBody": "Ways to join Plus will be announced soon. Keep an eye on your notifications."
+  },
+  "profile": {
+    "title": "Profile",
+    "memberSince": "Member since {date}",
+    "preferences": "Preferences",
+    "language": "Language",
+    "theme": "Appearance",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "support": "Help & support",
+    "shortcuts": "Shortcuts",
+    "arabic": "العربية",
+    "english": "English"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "emptyTitle": "No notifications",
+    "emptyBody": "Order updates and offers will appear here."
+  },
+  "errors": {
+    "network_error": "Couldn't connect. Check your internet and try again.",
+    "unknown_error": "Something went wrong. Please try again.",
+    "genericTitle": "Something went wrong",
+    "notFoundTitle": "Not found",
+    "notFoundBody": "This page may have moved or is no longer available."
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "invalidPhone": "Enter a valid phone number",
+    "invalidNumber": "Enter a valid number",
+    "invalidFormat": "Invalid format",
+    "tooLong": "This is too long",
+    "tooShort": "This is too short"
+  }
+}
