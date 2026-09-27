@@ -12,6 +12,7 @@ import { queryKeys } from "@/lib/api/query-keys";
 import { LOCALE_COOKIE } from "@/lib/i18n/config";
 import { writeCookie } from "@/lib/cookies";
 import { track } from "@/lib/analytics/events";
+import { warmSession } from "@/features/catalog/warm-session";
 import type { TelegramAdapter } from "@/lib/telegram/adapter";
 import { routeForStartParam } from "@/lib/telegram/start-param";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
@@ -50,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const tokenRef = useRef<string | null>(null);
   const localeRef = useRef(locale);
   const deepLinkHandled = useRef(false);
+  const warmed = useRef(false);
   const initialPath = useRef(pathname);
 
   // Server content is localized via Accept-Language, so a language change refetches everything.
@@ -92,6 +94,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         setOutcome({ attempt, status: "authenticated", errorCode: null });
         track("app_opened", { platform: adapter.platform });
+        if (!warmed.current) {
+          warmed.current = true;
+          warmSession(queryClient);
+        }
 
         if (session.user.locale !== localeRef.current) {
           writeCookie(LOCALE_COOKIE, session.user.locale);
@@ -113,7 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [telegram, signIn, router, attempt]);
+  }, [telegram, signIn, router, attempt, queryClient]);
 
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
   const user = useQuery({ queryKey: queryKeys.profile, queryFn: () => accountApi.profile(), enabled: false }).data ?? null;

@@ -6,7 +6,6 @@ export const duration = {
   fast: 0.18,
   normal: 0.28,
   slow: 0.42,
-  themeReveal: 0.48,
 } as const;
 
 export const easing = {

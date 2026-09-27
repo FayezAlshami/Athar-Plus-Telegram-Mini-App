@@ -60,7 +60,7 @@ export function MembershipScreen() {
       ) : (
         <>
           <PlusCard title={t("level.plus")}>
-            <p className="text-small text-[#f4e9cf]/80">
+            <p className="text-small text-on-plus-muted">
               {data.current_level === "plus" && data.expires_at
                 ? t("expiresAt", { date: formatDateTime(data.expires_at, locale) })
                 : data.levels.find((level) => level.code === "plus")?.description}

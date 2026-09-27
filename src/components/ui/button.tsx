@@ -2,7 +2,8 @@
 
 import { forwardRef, type ReactNode } from "react";
 import { motion, type HTMLMotionProps } from "motion/react";
-import { CircleNotch } from "@phosphor-icons/react";
+import { Check, CircleNotch } from "@phosphor-icons/react";
+import type { SubmitPhase } from "@/hooks/use-submit-state";
 import { pressScale, spring } from "@/lib/animation/tokens";
 import { useHaptics } from "@/lib/telegram/hooks";
 import type { HapticImpact } from "@/lib/telegram/adapter";
@@ -30,6 +31,8 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children">
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
+  /** Visual phase. `success` is only passed after the server confirms the action. */
+  phase?: SubmitPhase;
   fullWidth?: boolean;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
@@ -42,6 +45,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     variant = "primary",
     size = "md",
     loading = false,
+    phase,
     fullWidth = false,
     leadingIcon,
     trailingIcon,
@@ -56,14 +60,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref,
 ) {
   const haptics = useHaptics();
-  const isDisabled = disabled || loading;
+  const isLoading = loading || phase === "loading";
+  const isSuccess = phase === "success";
+  const isDisabled = disabled || isLoading || isSuccess;
 
   return (
     <motion.button
       ref={ref}
       type={type}
       disabled={isDisabled}
-      aria-busy={loading || undefined}
+      aria-busy={isLoading || undefined}
       whileTap={isDisabled ? undefined : { scale: pressScale.button }}
       transition={spring.interactive}
       onClick={(event) => {
@@ -80,12 +86,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       )}
       {...props}
     >
-      <span className={cn("inline-flex items-center gap-[inherit]", loading && "invisible")}>
+      <span className={cn("inline-flex items-center gap-[inherit]", (isLoading || isSuccess) && "invisible")}>
         {leadingIcon}
         {children}
         {trailingIcon}
       </span>
-      {loading && <CircleNotch aria-hidden className="absolute size-5 animate-spin" weight="bold" />}
+      {isLoading && <CircleNotch aria-hidden className="absolute size-5 animate-spin" weight="bold" />}
+      {isSuccess && <Check aria-hidden className="absolute size-5" weight="bold" />}
     </motion.button>
   );
 });

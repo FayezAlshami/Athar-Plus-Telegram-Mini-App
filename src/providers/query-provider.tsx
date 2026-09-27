@@ -3,8 +3,9 @@
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { isApiError } from "@/lib/api/errors";
+import { assertOnline } from "@/lib/network/assert-online";
+import { PRIVATE_STALE_MS } from "@/lib/query/policy";
 
-const STALE_TIME_MS = 30_000;
 const MAX_RETRIES = 2;
 
 function shouldRetry(failureCount: number, error: unknown): boolean {
@@ -17,10 +18,20 @@ export function QueryProvider({ children }: { children: ReactNode }) {
     () =>
       new QueryClient({
         defaultOptions: {
-          queries: { staleTime: STALE_TIME_MS, retry: shouldRetry, refetchOnWindowFocus: false },
-          mutations: { retry: false },
+          queries: {
+            staleTime: PRIVATE_STALE_MS,
+            retry: shouldRetry,
+            refetchOnWindowFocus: true,
+            networkMode: "offlineFirst",
+          },
+          // always: a write fails at once while offline instead of pausing and replaying later.
+          mutations: { retry: false, networkMode: "always" },
         },
-        mutationCache: new MutationCache(),
+        mutationCache: new MutationCache({
+          onMutate: () => {
+            assertOnline();
+          },
+        }),
       }),
   );
 

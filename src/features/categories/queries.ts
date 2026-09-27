@@ -1,17 +1,18 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { catalogApi } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
+import { catalogQueryOptions } from "@/lib/query/policy";
 
 export function useHomeFeed() {
-  return useQuery({ queryKey: queryKeys.home, queryFn: ({ signal }) => catalogApi.home({ signal }) });
+  return useQuery({ ...catalogQueryOptions, queryKey: queryKeys.home, queryFn: ({ signal }) => catalogApi.home({ signal }) });
 }
 
 export function useCategories() {
-  return useQuery({ queryKey: queryKeys.categories, queryFn: ({ signal }) => catalogApi.categories({ signal }), staleTime: 5 * 60_000 });
+  return useQuery({ ...catalogQueryOptions, queryKey: queryKeys.categories, queryFn: ({ signal }) => catalogApi.categories({ signal }) });
 }
 
 export function useCategory(slug: string) {
-  return useQuery({ queryKey: queryKeys.category(slug), queryFn: ({ signal }) => catalogApi.category(slug, { signal }) });
+  return useQuery({ ...catalogQueryOptions, queryKey: queryKeys.category(slug), queryFn: ({ signal }) => catalogApi.category(slug, { signal }) });
 }
 
 export function useCategoryProducts(slug: string) {
@@ -21,5 +22,6 @@ export function useCategoryProducts(slug: string) {
     initialPageParam: 1,
     getNextPageParam: (last) => (last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined),
     placeholderData: keepPreviousData,
+    ...catalogQueryOptions,
   });
 }

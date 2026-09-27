@@ -8,7 +8,7 @@ import { spring } from "@/lib/animation/tokens";
 import { useHaptics } from "@/lib/telegram/hooks";
 import { cn } from "@/lib/cn";
 
-/** The reveal animation expands from the tapped option. */
+/** Swaps the theme class. The sun and moon icons change in place, without a morph. */
 export function ThemeSwitch() {
   const t = useTranslations("profile");
   const { theme, setTheme } = useTheme();
@@ -30,11 +30,10 @@ export function ThemeSwitch() {
             aria-checked={selected}
             whileTap={{ scale: 0.96 }}
             transition={spring.interactive}
-            onClick={(event) => {
+            onClick={() => {
               if (selected) return;
               haptics.impact("soft");
-              const rect = event.currentTarget.getBoundingClientRect();
-              setTheme(value, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+              setTheme(value);
             }}
             className={cn(
               "flex h-12 items-center justify-center gap-2 rounded-md border text-small font-medium transition-colors",

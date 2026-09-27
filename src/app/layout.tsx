@@ -23,13 +23,13 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f2eb" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#070d1b" },
   ],
 };
 
-/** Applies a theme before first paint when no explicit preference cookie exists. */
-const THEME_BOOT_SCRIPT = `(function(){var d=document.documentElement;if(d.dataset.theme)return;var w=window.Telegram&&window.Telegram.WebApp;var s=w&&w.initData?w.colorScheme:null;d.dataset.theme=s||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();`;
+/** Applies the `dark` class before first paint. An explicit cookie wins over Telegram. */
+const THEME_BOOT_SCRIPT = `(function(){var d=document.documentElement;var m=document.cookie.match(/(?:^|; )athar-theme=([^;]*)/);var theme=m?decodeURIComponent(m[1]):null;if(theme!=='dark'&&theme!=='light'){var w=window.Telegram&&window.Telegram.WebApp;var s=w&&w.initData?w.colorScheme:null;theme=s||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}d.classList.toggle('dark',theme==='dark');})();`;
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale();
@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const theme = storedTheme === "dark" || storedTheme === "light" ? storedTheme : undefined;
 
   return (
-    <html lang={locale} dir={directionOf(locale === "en" ? "en" : "ar")} data-theme={theme} suppressHydrationWarning>
+    <html lang={locale} dir={directionOf(locale === "en" ? "en" : "ar")} className={theme === "dark" ? "dark" : undefined} suppressHydrationWarning>
       <head>
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />

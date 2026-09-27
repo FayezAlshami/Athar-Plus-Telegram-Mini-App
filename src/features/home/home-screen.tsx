@@ -66,8 +66,8 @@ export function HomeScreen() {
 
           <Link href="/membership" className="block transition-transform active:scale-[0.99]">
             <PlusCard title={t("home.plusTitle")}>
-              <p className="text-small text-[#f4e9cf]/80">{t("home.plusBody")}</p>
-              <span className="mt-3 inline-flex items-center gap-1.5 text-small font-semibold text-[#d3b068]">
+              <p className="text-small text-on-plus-muted">{t("home.plusBody")}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 text-small font-semibold text-gold">
                 {t("home.plusCta")}
                 <ArrowRight className="size-4 rtl:-scale-x-100" weight="bold" />
               </span>

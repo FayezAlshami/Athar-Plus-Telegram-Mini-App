@@ -13,7 +13,7 @@ import { bannerDestination } from "./banner-target";
 
 const THEME_BACKGROUND: Record<Banner["theme"], string> = {
   navy: "bg-[image:var(--hero-gradient)] text-white",
-  gold: "bg-[image:var(--plus-gradient)] text-[#f4e9cf]",
+  gold: "bg-[image:var(--plus-gradient)] text-on-plus",
   turquoise: "bg-accent text-accent-foreground",
 };
 

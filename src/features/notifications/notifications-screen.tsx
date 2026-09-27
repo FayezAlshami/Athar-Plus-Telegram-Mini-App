@@ -35,7 +35,11 @@ export function NotificationsScreen() {
       {error ? (
         <ErrorState error={error} onRetry={() => refetch()} />
       ) : isPending ? (
-        <Skeleton className="h-64 rounded-lg" />
+        <div className="flex flex-col gap-2">
+          {Array.from({ length: 4 }, (_, index) => (
+            <Skeleton key={index} className="h-20 rounded-lg" />
+          ))}
+        </div>
       ) : data.data.length === 0 ? (
         <EmptyState icon={<BellSimple />} title={t("emptyTitle")} body={t("emptyBody")} />
       ) : (
@@ -47,10 +51,10 @@ export function NotificationsScreen() {
               className={cn("rounded-lg border p-4", notification.read_at ? "border-border bg-surface" : "border-accent/30 bg-accent-soft")}
             >
               <div className="flex items-start justify-between gap-3">
-                <p className="text-card-title">{notification.title}</p>
+                <p className="text-card-title" dir="auto">{notification.title}</p>
                 <span className="shrink-0 text-caption text-muted-foreground">{formatRelative(notification.created_at, locale)}</span>
               </div>
-              {notification.body && <p className="mt-1 text-small text-muted-foreground">{notification.body}</p>}
+              {notification.body && <p className="mt-1 text-small text-muted-foreground" dir="auto">{notification.body}</p>}
             </motion.li>
           ))}
         </motion.ul>

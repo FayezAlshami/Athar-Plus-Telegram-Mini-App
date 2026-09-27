@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Check, Copy } from "@phosphor-icons/react";
 import { useHaptics } from "@/lib/telegram/hooks";
 import { duration } from "@/lib/animation/tokens";
+import { copyText } from "@/lib/clipboard";
 
 const RESET_DELAY_MS = 1600;
 
@@ -19,7 +20,8 @@ export function CopyButton({ value }: { value: string }) {
       type="button"
       aria-label={copied ? t("copied") : t("copy")}
       onClick={async () => {
-        await navigator.clipboard.writeText(value);
+        const ok = await copyText(value);
+        if (!ok) return;
         haptics.notify("success");
         setCopied(true);
         window.setTimeout(() => setCopied(false), RESET_DELAY_MS);

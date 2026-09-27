@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "./tokens.css";
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-sans: var(--font-body);
@@ -21,6 +21,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-on-plus: var(--on-plus);
+  --color-on-plus-muted: var(--on-plus-muted);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
   --color-gold-soft: var(--gold-soft);
@@ -94,6 +96,9 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
+@utility transition-slow {
+  transition: all 0.3s ease;
+}
 
 @layer base {
   html {
@@ -110,6 +115,7 @@
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   :focus-visible {
     outline: 2px solid var(--ring);
@@ -124,25 +130,6 @@
   button:disabled {
     cursor: not-allowed;
   }
-}
-
-/* Theme reveal (View Transitions API). JS drives the clip-path animation. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-::view-transition-new(root) {
-  z-index: 2;
-}
-
-/* Fallback when View Transitions are unavailable. */
-html.theme-crossfade,
-html.theme-crossfade * {
-  transition:
-    background-color 260ms var(--ease-standard),
-    border-color 260ms var(--ease-standard),
-    color 260ms var(--ease-standard) !important;
 }
 
 @keyframes shimmer {

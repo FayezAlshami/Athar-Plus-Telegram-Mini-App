@@ -25,7 +25,16 @@
     "continue": "متابعة",
     "done": "تم",
     "optional": "اختياري",
-    "currentPlan": "مستواك الحالي"
+    "currentPlan": "مستواك الحالي",
+    "offline": "لا يوجد اتصال. الخدمات المحفوظة تبقى متاحة، والطلبات والدفع تنتظر الاتصال.",
+    "offlineReading": "بدون اتصال.",
+    "offlineAction": "هذا الإجراء يحتاج اتصالاً. لم يُرسل شيء.",
+    "lastUpdated": "آخر تحديث {time}",
+    "loadMore": "تحميل المزيد",
+    "backToTop": "العودة للأعلى",
+    "undo": "تراجع",
+    "updateReady": "تتوفر نسخة جديدة",
+    "update": "تحديث"
   },
   "gate": {
     "connecting": "جارٍ تجهيز حسابك…",
@@ -185,7 +194,9 @@
     "support": "الدعم والمساعدة",
     "shortcuts": "اختصارات",
     "arabic": "العربية",
-    "english": "English"
+    "english": "English",
+    "telegramId": "معرّف تيليغرام",
+    "favorites": "الخدمات المحفوظة"
   },
   "notifications": {
     "title": "الإشعارات",

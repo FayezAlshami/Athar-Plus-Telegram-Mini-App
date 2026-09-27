@@ -25,7 +25,16 @@
     "continue": "Continue",
     "done": "Done",
     "optional": "Optional",
-    "currentPlan": "Your level"
+    "currentPlan": "Your level",
+    "offline": "No connection. Saved services stay available. Orders and payments wait.",
+    "offlineReading": "Offline.",
+    "offlineAction": "This needs a connection. Nothing was sent.",
+    "lastUpdated": "Last updated {time}",
+    "loadMore": "Load more",
+    "backToTop": "Back to top",
+    "undo": "Undo",
+    "updateReady": "A new version is ready",
+    "update": "Update"
   },
   "gate": {
     "connecting": "Preparing your account…",
@@ -129,7 +138,19 @@
     "noResultsTitle": "No results for \"{query}\"",
     "noResultsBody": "Try another word or browse categories.",
     "categories": "Categories",
-    "services": "Services"
+    "services": "Services",
+    "suggestions": "Suggestions",
+    "seeAllResults": "See all results"
+  },
+  "favorites": {
+    "title": "Saved services",
+    "emptyTitle": "Nothing saved yet",
+    "emptyBody": "Tap the heart on a service to keep it here.",
+    "save": "Save service",
+    "saved": "Saved",
+    "removed": "Removed from saved",
+    "removeFailed": "Couldn't update saved services",
+    "pending": "Saving"
   },
   "orders": {
     "title": "My orders",
@@ -185,13 +206,17 @@
     "support": "Help & support",
     "shortcuts": "Shortcuts",
     "arabic": "العربية",
-    "english": "English"
+    "english": "English",
+    "telegramId": "Telegram ID",
+    "favorites": "Saved services"
   },
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "emptyTitle": "No notifications",
-    "emptyBody": "Order updates and offers will appear here."
+    "emptyBody": "Order updates and offers will appear here.",
+    "dismiss": "Dismiss",
+    "dismissed": "Notification dismissed"
   },
   "errors": {
     "network_error": "Couldn't connect. Check your internet and try again.",
