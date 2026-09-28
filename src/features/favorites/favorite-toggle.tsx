@@ -103,14 +103,14 @@ export function FavoriteToggle({
         });
       }}
       className={cn(
-        "relative inline-flex size-9 items-center justify-center rounded-full border border-border bg-surface-elevated/95 text-muted-foreground shadow-sm backdrop-blur-sm transition-colors",
-        saved && "border-danger/30 text-danger",
+        "relative inline-flex size-9 items-center justify-center rounded-full border border-white/20 bg-foreground/30 text-white shadow-sm backdrop-blur-md transition-colors",
+        saved && "border-white/35 bg-foreground/40",
         className,
       )}
     >
       <span ref={burstRef} aria-hidden className="pointer-events-none absolute inset-0">
         {Array.from({ length: BURST }, (_, index) => (
-          <span key={index} className="absolute left-1/2 top-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-danger opacity-0" />
+          <span key={index} className="absolute left-1/2 top-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-0" />
         ))}
       </span>
       <AnimatedHeartIcon filled={saved} pulsing={pulse} />

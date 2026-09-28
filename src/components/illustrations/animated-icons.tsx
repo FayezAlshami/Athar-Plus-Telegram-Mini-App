@@ -54,12 +54,12 @@ export function AnimatedHeartEmpty({ className }: { className?: string }) {
 export function AnimatedHeartIcon({ filled, pulsing }: { filled: boolean; pulsing?: boolean }) {
   const reduce = useReducedMotion();
   return (
-    <motion.svg aria-hidden viewBox="0 0 24 24" className="size-5" animate={pulsing && !reduce ? { scale: [1, 1.22, 1] } : undefined} transition={{ duration: 0.35 }}>
+    <motion.svg aria-hidden viewBox="0 0 24 24" className="size-5 text-white" animate={pulsing && !reduce ? { scale: [1, 1.22, 1] } : undefined} transition={{ duration: 0.35 }}>
       <path
         d="M12 20.5s-6.5-4.2-6.5-9.4C5.5 7.6 8.4 5 12 5c1.6 0 2.9.7 3.8 1.6.9-.9 2.2-1.6 3.8-1.6 3.6 0 6.5 2.6 6.5 6.1 0 5.2-6.5 9.4-6.5 9.4z"
         fill={filled ? "currentColor" : "none"}
         stroke="currentColor"
-        strokeWidth="1.8"
+        strokeWidth="1.75"
         strokeLinejoin="round"
       />
     </motion.svg>

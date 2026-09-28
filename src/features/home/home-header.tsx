@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BellSimple } from "@phosphor-icons/react";
-import { BackButton } from "@/components/layout/back-button";
 import { Avatar } from "@/components/ui/avatar";
 import { LevelBadge } from "@/components/shared/level-badge";
 import { SplitHeadline } from "@/components/motion/split-headline";
@@ -19,7 +18,6 @@ export function HomeHeader() {
 
   return (
     <header className="flex items-center gap-3">
-      <BackButton />
       <Link href="/profile" aria-label={t("nav.profile")}>
         <Avatar name={user?.first_name ?? "A"} src={user?.photo_url} />
       </Link>

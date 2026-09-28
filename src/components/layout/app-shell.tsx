@@ -17,7 +17,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const goBack = useGoBack();
   useScrollRestoration();
 
-  useTelegramBackButton(true, goBack);
+  useTelegramBackButton(pathname !== "/", goBack);
 
   return (
     <AuthGate>
