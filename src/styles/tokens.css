@@ -17,7 +17,7 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --app-height: 100dvh;
-  --bottom-nav-height: 68px;
+  --bottom-nav-height: 84px;
   --content-max-width: 640px;
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
@@ -57,6 +57,11 @@
   --shadow-sm: 0 1px 2px rgb(14 26 51 / 0.05), 0 1px 1px rgb(14 26 51 / 0.03);
   --shadow-md: 0 6px 20px -8px rgb(14 26 51 / 0.14), 0 2px 6px -2px rgb(14 26 51 / 0.06);
   --shadow-lg: 0 20px 44px -18px rgb(14 26 51 / 0.24);
+  --nav-glass: color-mix(in srgb, var(--surface) 78%, transparent);
+  --nav-glass-border: color-mix(in srgb, #ffffff 70%, var(--border));
+  --nav-glass-highlight: rgb(255 255 255 / 0.86);
+  --nav-glass-shadow: 0 16px 40px -18px rgb(14 26 51 / 0.34), 0 4px 14px -8px rgb(14 26 51 / 0.14);
+  --nav-indicator: color-mix(in srgb, var(--accent) 20%, rgb(255 255 255 / 0.78));
   --hero-gradient: linear-gradient(135deg, #0f2a55 0%, #13396b 55%, #17616a 100%);
   --plus-gradient: linear-gradient(135deg, #1a1508 0%, #3a2c10 60%, #6b5320 100%);
 }
@@ -91,6 +96,11 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
   --shadow-md: 0 8px 24px -10px rgb(0 0 0 / 0.55);
   --shadow-lg: 0 24px 48px -20px rgb(0 0 0 / 0.7);
+  --nav-glass: color-mix(in srgb, var(--surface-elevated) 58%, transparent);
+  --nav-glass-border: rgb(255 255 255 / 0.14);
+  --nav-glass-highlight: rgb(255 255 255 / 0.22);
+  --nav-glass-shadow: 0 18px 44px -16px rgb(0 0 0 / 0.72), 0 2px 10px rgb(0 0 0 / 0.38);
+  --nav-indicator: color-mix(in srgb, var(--accent) 36%, rgb(255 255 255 / 0.08));
   --hero-gradient: linear-gradient(135deg, #0e2448 0%, #0f2f57 55%, #0f4f55 100%);
   --plus-gradient: linear-gradient(135deg, #15110a 0%, #2c2212 60%, #4f3d19 100%);
 }

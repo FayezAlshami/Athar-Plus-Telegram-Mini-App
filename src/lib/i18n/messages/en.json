@@ -11,7 +11,8 @@
     "profile": "Profile",
     "back": "Back",
     "search": "Search",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "primary": "Primary"
   },
   "common": {
     "retry": "Try again",
