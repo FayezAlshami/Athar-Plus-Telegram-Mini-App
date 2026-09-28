@@ -22,10 +22,7 @@ export function BottomNav() {
   const haptics = useHaptics();
   const reduce = useReducedMotion();
   const listRef = useRef<HTMLUListElement>(null);
-  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
-  const [indicator, setIndicator] = useState<{ x: number; width: number } | null>(null);
-
-  const activeIndex = PRIMARY_DESTINATIONS.findIndex(({ href }) => href === pathname);
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
 
   const warm = (href: string) => {
     router.prefetch(href);
@@ -34,31 +31,35 @@ export function BottomNav() {
 
   useLayoutEffect(() => {
     const list = listRef.current;
-    const item = activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
-    if (!list || !item) {
-      setIndicator(null);
-      return;
-    }
+    if (!list) return;
 
     const measure = () => {
+      const item = list.querySelector<HTMLLIElement>("li[data-nav-active]");
+      if (!item) {
+        setIndicator(null);
+        return;
+      }
       const listBox = list.getBoundingClientRect();
       const itemBox = item.getBoundingClientRect();
       setIndicator({
-        x: itemBox.left - listBox.left + INSET,
+        left: itemBox.left - listBox.left + INSET,
         width: Math.max(itemBox.width - INSET * 2, 0),
       });
     };
 
     measure();
+    const raf = requestAnimationFrame(measure);
     const observer = new ResizeObserver(measure);
     observer.observe(list);
-    observer.observe(item);
+    const activeItem = list.querySelector("li[data-nav-active]");
+    if (activeItem) observer.observe(activeItem);
     window.addEventListener("resize", measure);
     return () => {
+      cancelAnimationFrame(raf);
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [pathname, activeIndex]);
+  }, [pathname]);
 
   return (
     <nav
@@ -75,27 +76,21 @@ export function BottomNav() {
             aria-hidden
             className="pointer-events-none absolute bottom-1.5 top-1.5 rounded-full bg-[var(--nav-indicator)] shadow-[inset_0_1px_0_var(--nav-glass-highlight),0_8px_16px_-10px_color-mix(in_srgb,var(--accent)_65%,transparent)]"
             initial={false}
-            animate={{ x: indicator.x, width: indicator.width }}
+            animate={{ left: indicator.left, width: indicator.width }}
             transition={
               reduce
                 ? { duration: 0 }
                 : {
-                    x: spring.interactive,
+                    left: spring.interactive,
                     width: { type: "spring", stiffness: 260, damping: 26, mass: 0.8 },
                   }
             }
           />
         )}
-        {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon: Icon }, index) => {
+        {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon: Icon }) => {
           const active = pathname === href;
           return (
-            <li
-              key={href}
-              ref={(node) => {
-                itemRefs.current[index] = node;
-              }}
-              className="relative z-10 flex-1"
-            >
+            <li key={href} data-nav-active={active ? "" : undefined} className="relative z-10 flex-1">
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
