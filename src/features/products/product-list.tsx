@@ -8,13 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Price } from "@/components/shared/money";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
+import { usePrefetchProduct } from "@/features/catalog/use-prefetch-catalog";
+import { FavoriteToggle } from "@/features/favorites/favorite-toggle";
 import { ProductImage } from "./product-image";
 
-export function ProductRow({ product }: { product: Product }) {
+export function ProductRow({ product, showFavorite = false }: { product: Product; showFavorite?: boolean }) {
   const t = useTranslations("product");
+  const prefetch = usePrefetchProduct<HTMLLIElement>(product.id, product.image_url);
+
   return (
-    <motion.li variants={fadeUp}>
-      <Card href={`/products/${product.id}`} className="flex items-center gap-3 p-2.5">
+    <motion.li variants={fadeUp} ref={prefetch.ref} onMouseEnter={prefetch.onMouseEnter} onTouchStart={prefetch.onTouchStart}>
+      <Card href={`/products/${product.id}`} className="relative flex items-center gap-3 p-2.5">
+        {showFavorite && <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2 top-2 z-10 size-8" />}
         <ProductImage src={product.image_url} alt={product.name} sizes="72px" className="size-[72px] shrink-0 rounded-md" />
         <div className="min-w-0 flex-1">
           <p dir="auto" className="truncate text-card-title">{product.name}</p>
@@ -29,10 +34,12 @@ export function ProductRow({ product }: { product: Product }) {
   );
 }
 
-export function ProductList({ products }: { products: Product[] }) {
+export function ProductList({ products, showFavorite = false }: { products: Product[]; showFavorite?: boolean }) {
   return (
     <motion.ul variants={listContainer} initial="hidden" animate="visible" className="grid gap-2.5 md:grid-cols-2">
-      {products.map((product) => <ProductRow key={product.id} product={product} />)}
+      {products.map((product) => (
+        <ProductRow key={product.id} product={product} showFavorite={showFavorite} />
+      ))}
     </motion.ul>
   );
 }

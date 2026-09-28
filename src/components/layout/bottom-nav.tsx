@@ -1,18 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { spring } from "@/lib/animation/tokens";
+import { prefetchPrimaryRoute } from "@/features/catalog/prefetch-primary-routes";
 import { useHaptics } from "@/lib/telegram/hooks";
 import { cn } from "@/lib/cn";
 import { PRIMARY_DESTINATIONS } from "./navigation";
 
 export function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const t = useTranslations("nav");
   const haptics = useHaptics();
+
+  const warm = (href: string) => {
+    router.prefetch(href);
+    prefetchPrimaryRoute(queryClient, href);
+  };
 
   return (
     <nav
@@ -27,6 +36,8 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
+                onMouseEnter={() => !active && warm(href)}
+                onTouchStart={() => !active && warm(href)}
                 onClick={() => !active && haptics.selection()}
                 className={cn(
                   "relative flex h-full flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors duration-200",

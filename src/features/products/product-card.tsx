@@ -8,15 +8,19 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Price } from "@/components/shared/money";
 import { fadeUp } from "@/lib/animation/variants";
+import { usePrefetchProduct } from "@/features/catalog/use-prefetch-catalog";
+import { FavoriteToggle } from "@/features/favorites/favorite-toggle";
 import { ProductImage } from "./product-image";
 
 /** Rail card: identity, name, final price, and at most one status/benefit label. */
 export function ProductCard({ product }: { product: Product }) {
   const t = useTranslations();
   const memberPrice = product.price.membership_discount_minor > 0;
+  const prefetch = usePrefetchProduct(product.id, product.image_url);
 
   return (
-    <motion.div variants={fadeUp} className="w-[168px] shrink-0">
+    <motion.div variants={fadeUp} className="relative w-[168px] shrink-0" ref={prefetch.ref} onMouseEnter={prefetch.onMouseEnter} onTouchStart={prefetch.onTouchStart}>
+      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute start-2 top-2 z-10" />
       <Card href={`/products/${product.id}`} className="flex h-full flex-col overflow-hidden">
         <ProductImage src={product.image_url} alt={product.name} sizes="168px" className="aspect-[4/3]" />
         <div className="flex flex-1 flex-col gap-2 p-3">

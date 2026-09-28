@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
  * Prefetches a route and its query as soon as a card is hovered, touched, or near the viewport.
  * The work runs once per mount.
  */
-export function usePrefetchOnIntent(href: string, prefetchData?: () => void) {
+export function usePrefetchOnIntent<E extends HTMLElement = HTMLDivElement>(href: string, prefetchData?: () => void) {
   const router = useRouter();
   const ran = useRef(false);
-  const nodeRef = useRef<HTMLDivElement | null>(null);
+  const nodeRef = useRef<E | null>(null);
   const prefetchDataRef = useRef(prefetchData);
   prefetchDataRef.current = prefetchData;
 

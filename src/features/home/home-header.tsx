@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BellSimple } from "@phosphor-icons/react";
+import { BackButton } from "@/components/layout/back-button";
 import { Avatar } from "@/components/ui/avatar";
 import { LevelBadge } from "@/components/shared/level-badge";
+import { SplitHeadline } from "@/components/motion/split-headline";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useNotifications } from "@/features/notifications/queries";
 
@@ -12,15 +14,17 @@ export function HomeHeader() {
   const t = useTranslations();
   const { user } = useAuth();
   const notifications = useNotifications();
-  const unread = notifications.data?.meta.unread_count ?? 0;
+  const unread = notifications.data?.pages[0]?.meta.unread_count ?? 0;
+  const greeting = t("home.greeting", { name: user?.first_name ?? "" });
 
   return (
     <header className="flex items-center gap-3">
+      <BackButton />
       <Link href="/profile" aria-label={t("nav.profile")}>
         <Avatar name={user?.first_name ?? "A"} src={user?.photo_url} />
       </Link>
       <div className="min-w-0 flex-1">
-        <p dir="auto" className="truncate text-card-title">{t("home.greeting", { name: user?.first_name ?? "" })}</p>
+        <SplitHeadline text={greeting} className="truncate text-card-title" />
         <p className="text-caption text-muted-foreground">{t("home.greetingSubtitle")}</p>
       </div>
       {user && user.membership.level !== "normal" && <LevelBadge level={user.membership.level} />}

@@ -15,8 +15,8 @@ export function DepositMethodScreen({ code }: { code: string }) {
   const { data, isPending, error, refetch } = usePaymentMethods();
   const method = data?.find((candidate) => candidate.code === code);
 
-  if (error) return <PageContainer withNav={false}><ErrorState error={error} onRetry={() => refetch()} /></PageContainer>;
-  if (isPending) return <PageContainer withNav={false}><Skeleton className="h-11 w-40" /><Skeleton className="h-48 rounded-lg" /></PageContainer>;
+  if (error) return <PageContainer withNav={false}><PageHeader title={t("title")} /><ErrorState error={error} onRetry={() => refetch()} /></PageContainer>;
+  if (isPending) return <PageContainer withNav={false}><PageHeader title={t("title")} /><Skeleton className="h-48 rounded-lg" /></PageContainer>;
   if (!method) return <PageContainer withNav={false}><PageHeader title={t("title")} /><ErrorState error={null} /></PageContainer>;
 
   const { icon: Icon, DepositForm } = paymentMethodModule(method.code);

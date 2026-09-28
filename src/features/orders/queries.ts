@@ -4,10 +4,17 @@ import { queryKeys } from "@/lib/api/query-keys";
 import { assertOnline } from "@/lib/network/assert-online";
 import { privateQueryOptions } from "@/lib/query/policy";
 
-export function useOrders(status?: OrderStatusGroup) {
+export interface OrderListFilters {
+  status?: OrderStatusGroup;
+  from?: string;
+  to?: string;
+  q?: string;
+}
+
+export function useOrders(filters: OrderListFilters = {}) {
   return useInfiniteQuery({
-    queryKey: queryKeys.orders(status),
-    queryFn: ({ pageParam, signal }) => ordersApi.list({ page: pageParam, status }, { signal }),
+    queryKey: queryKeys.orders(filters),
+    queryFn: ({ pageParam, signal }) => ordersApi.list({ page: pageParam, ...filters }, { signal }),
     initialPageParam: 1,
     getNextPageParam: (last) => (last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined),
     ...privateQueryOptions,

@@ -20,7 +20,6 @@ export function CategoriesScreen() {
     <PageContainer>
       <PageHeader
         title={t("categories.title")}
-        showBack={false}
         trailing={
           <Link href="/search" aria-label={t("nav.search")} className="flex size-11 items-center justify-center rounded-full border border-border bg-surface-elevated">
             <MagnifyingGlass className="size-[22px]" />

@@ -1,7 +1,7 @@
 /*
  * Athar Plus design tokens.
  * Brand: deep navy (trust), Athar turquoise (action/life), restrained gold
- * (Plus/premium only), warm ivory (calm surfaces). Components consume only
+ * (Plus/premium only), white surfaces. Components consume only
  * semantic tokens, never raw colors.
  */
 :root {
@@ -30,11 +30,11 @@
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --surface: #fffdf8;
+  --surface: #ffffff;
   --surface-elevated: #ffffff;
-  --surface-sunken: #ece7dc;
+  --surface-sunken: #f4f4f5;
   --foreground: #0e1a33;
-  --muted: #e6e1d6;
+  --muted: #f1f2f4;
   --muted-foreground: #5b6477;
   --border: rgb(14 26 51 / 0.09);
   --border-strong: rgb(14 26 51 / 0.16);

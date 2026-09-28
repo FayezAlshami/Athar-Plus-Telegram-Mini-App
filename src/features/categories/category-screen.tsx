@@ -19,7 +19,7 @@ export function CategoryScreen({ slug }: { slug: string }) {
 
   return (
     <PageContainer withNav={false}>
-      {category.data ? <PageHeader title={category.data.name} /> : <Skeleton className="h-11 w-40" />}
+      <PageHeader title={category.data?.name ?? ""} />
       {category.data?.description && <p className="-mt-3 text-small text-muted-foreground">{category.data.description}</p>}
 
       {products.error ? (

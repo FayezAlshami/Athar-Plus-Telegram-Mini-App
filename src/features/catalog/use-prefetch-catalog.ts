@@ -4,22 +4,26 @@ import { useQueryClient } from "@tanstack/react-query";
 import { catalogApi } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
 import { catalogQueryOptions } from "@/lib/query/policy";
+import { prefetchImage } from "@/lib/images/prefetch-image";
 import { usePrefetchOnIntent } from "@/hooks/use-prefetch-on-intent";
 
-export function usePrefetchProduct(id: number) {
+export function usePrefetchProduct<E extends HTMLElement = HTMLDivElement>(id: number, imageUrl?: string | null) {
   const client = useQueryClient();
-  return usePrefetchOnIntent(`/products/${id}`, () => {
-    void client.prefetchQuery({
-      ...catalogQueryOptions,
-      queryKey: queryKeys.product(String(id)),
-      queryFn: ({ signal }) => catalogApi.product(String(id), { signal }),
-    });
+  return usePrefetchOnIntent<E>(`/products/${id}`, () => {
+    prefetchImage(imageUrl);
+    void client
+      .fetchQuery({
+        ...catalogQueryOptions,
+        queryKey: queryKeys.product(String(id)),
+        queryFn: ({ signal }) => catalogApi.product(String(id), { signal }),
+      })
+      .then((product) => prefetchImage(product.image_url));
   });
 }
 
-export function usePrefetchCategory(slug: string) {
+export function usePrefetchCategory<E extends HTMLElement = HTMLDivElement>(slug: string) {
   const client = useQueryClient();
-  return usePrefetchOnIntent(`/categories/${slug}`, () => {
+  return usePrefetchOnIntent<E>(`/categories/${slug}`, () => {
     void client.prefetchQuery({
       ...catalogQueryOptions,
       queryKey: queryKeys.category(slug),

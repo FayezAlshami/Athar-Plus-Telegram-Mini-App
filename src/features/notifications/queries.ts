@@ -1,13 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { accountApi } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
+import { privateQueryOptions } from "@/lib/query/policy";
 
 const POLL_INTERVAL_MS = 60_000;
 
 export function useNotifications() {
-  return useQuery({
+  return useInfiniteQuery({
+    ...privateQueryOptions,
     queryKey: queryKeys.notifications,
-    queryFn: ({ signal }) => accountApi.notifications(1, { signal }),
+    queryFn: ({ pageParam, signal }) => accountApi.notifications(pageParam, { signal }),
+    initialPageParam: 1,
+    getNextPageParam: (last) =>
+      last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined,
     refetchInterval: POLL_INTERVAL_MS,
   });
 }

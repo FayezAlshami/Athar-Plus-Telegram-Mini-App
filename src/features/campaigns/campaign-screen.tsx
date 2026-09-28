@@ -18,7 +18,7 @@ export function CampaignScreen({ slug }: { slug: string }) {
   });
 
   if (error) return <PageContainer withNav={false}><PageHeader title="" /><ErrorState error={error} onRetry={() => refetch()} /></PageContainer>;
-  if (isPending) return <PageContainer withNav={false}><Skeleton className="h-40 rounded-xl" /><Skeleton className="h-64 rounded-lg" /></PageContainer>;
+  if (isPending) return <PageContainer withNav={false}><PageHeader title="" /><Skeleton className="h-40 rounded-xl" /><Skeleton className="h-64 rounded-lg" /></PageContainer>;
 
   return (
     <PageContainer withNav={false}>

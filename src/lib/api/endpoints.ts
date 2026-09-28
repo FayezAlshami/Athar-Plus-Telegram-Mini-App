@@ -53,13 +53,29 @@ export const walletApi = {
 
 export type OrderStatusGroup = "active" | "completed" | "closed";
 
+export interface OrderListSummary {
+  total: number;
+  completed: number;
+  failed: number;
+  completed_amount_minor: number;
+  currency: string;
+}
+
 export const ordersApi = {
-  list: (query: { page: number; status?: OrderStatusGroup }, { signal }: Signal = {}) =>
-    apiFetch<Paginated<Order>>("/orders", { query, signal }),
+  list: (
+    query: { page: number; status?: OrderStatusGroup; from?: string; to?: string; q?: string },
+    { signal }: Signal = {},
+  ) => apiFetch<Paginated<Order> & { summary: OrderListSummary }>("/orders", { query, signal }),
   get: (id: string, { signal }: Signal = {}) => apiRequest<OrderDetail>(`/orders/${id}`, { signal }),
   create: (input: CreateOrderInput, idempotencyKey: string) =>
     apiRequest<OrderDetail>("/orders", { method: "POST", body: input, idempotencyKey }),
   cancel: (id: string) => apiRequest<OrderDetail>(`/orders/${id}/cancel`, { method: "POST" }),
+};
+
+export const favoritesApi = {
+  list: (page: number, { signal }: Signal = {}) => apiFetch<Paginated<Product>>("/favorites", { query: { page }, signal }),
+  add: (productId: number) => apiRequest<Product>("/favorites", { method: "POST", body: { product_id: productId } }),
+  remove: (productId: number) => apiFetch<void>(`/favorites/${productId}`, { method: "DELETE" }),
 };
 
 export const accountApi = {

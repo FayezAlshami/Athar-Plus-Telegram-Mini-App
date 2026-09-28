@@ -15,7 +15,12 @@ import { THEME_COOKIE } from "@/lib/constants/storage-keys";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("app");
-  return { title: t("name"), description: t("tagline"), robots: { index: false } };
+  return {
+    title: t("name"),
+    description: t("tagline"),
+    robots: { index: false },
+    manifest: "/manifest.webmanifest",
+  };
 }
 
 export const viewport: Viewport = {

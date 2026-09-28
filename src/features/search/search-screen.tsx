@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "motion/react";
 import { ClockCounterClockwise, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
+import { BackButton } from "@/components/layout/back-button";
 import { Chip } from "@/components/ui/chip";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -51,7 +52,9 @@ export function SearchScreen() {
 
   return (
     <PageContainer withNav={false}>
-      <motion.form
+      <div className="flex items-center gap-2">
+        <BackButton />
+        <motion.form
         role="search"
         onSubmit={(event) => {
           event.preventDefault();
@@ -61,7 +64,7 @@ export function SearchScreen() {
         initial={{ opacity: 0, scaleX: 0.92 }}
         animate={{ opacity: 1, scaleX: 1 }}
         transition={spring.entrance}
-        className="sticky top-[calc(var(--safe-top)+8px)] z-30 flex h-12 items-center gap-2 rounded-full border border-border-strong bg-surface-elevated px-4 shadow-md focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
+        className="sticky top-[calc(var(--safe-top)+8px)] z-30 flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full border border-border-strong bg-surface-elevated px-4 shadow-md focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
       >
         <MagnifyingGlass aria-hidden className="size-5 shrink-0 text-muted-foreground" />
         <input
@@ -96,6 +99,7 @@ export function SearchScreen() {
           )}
         </AnimatePresence>
       </motion.form>
+      </div>
 
       {!active ? (
         <>

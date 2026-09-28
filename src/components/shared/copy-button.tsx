@@ -7,10 +7,11 @@ import { Check, Copy } from "@phosphor-icons/react";
 import { useHaptics } from "@/lib/telegram/hooks";
 import { duration } from "@/lib/animation/tokens";
 import { copyText } from "@/lib/clipboard";
+import { cn } from "@/lib/cn";
 
 const RESET_DELAY_MS = 1600;
 
-export function CopyButton({ value }: { value: string }) {
+export function CopyButton({ value, className }: { value: string; className?: string }) {
   const t = useTranslations("common");
   const haptics = useHaptics();
   const [copied, setCopied] = useState(false);
@@ -26,7 +27,7 @@ export function CopyButton({ value }: { value: string }) {
         setCopied(true);
         window.setTimeout(() => setCopied(false), RESET_DELAY_MS);
       }}
-      className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors active:bg-muted"
+      className={cn("inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors active:bg-muted", className)}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span

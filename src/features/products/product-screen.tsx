@@ -15,6 +15,7 @@ import { Price } from "@/components/shared/money";
 import { StructuredText } from "@/components/shared/structured-text";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
 import { track } from "@/lib/analytics/events";
+import { FavoriteToggle } from "@/features/favorites/favorite-toggle";
 import { ProductImage } from "./product-image";
 import { PurchaseSheet } from "./purchase-sheet";
 import { useProduct } from "./queries";
@@ -40,6 +41,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
   if (isPending) {
     return (
       <PageContainer withNav={false}>
+        <PageHeader title="" />
         <Skeleton className="aspect-[16/10] w-full rounded-xl" />
         <Skeleton className="h-7 w-2/3" />
         <Skeleton className="h-24 w-full" />
@@ -54,8 +56,9 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
       <PageContainer withNav={false}>
         <PageHeader title={product.category?.name ?? ""} />
         <motion.div variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-6">
-          <motion.div variants={fadeUp}>
+          <motion.div variants={fadeUp} className="relative">
             <ProductImage src={product.image_url} alt={product.name} sizes="(max-width: 640px) 100vw, 640px" priority className="aspect-[16/10] rounded-xl shadow-md" />
+            <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-3 top-3" />
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-col gap-3">

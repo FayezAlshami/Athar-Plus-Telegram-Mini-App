@@ -33,6 +33,7 @@
     "loadMore": "Load more",
     "backToTop": "Back to top",
     "undo": "Undo",
+    "draftRestored": "Your draft was restored",
     "updateReady": "A new version is ready",
     "update": "Update"
   },
@@ -150,7 +151,8 @@
     "saved": "Saved",
     "removed": "Removed from saved",
     "removeFailed": "Couldn't update saved services",
-    "pending": "Saving"
+    "pending": "Saving",
+    "browse": "Browse services"
   },
   "orders": {
     "title": "My orders",
@@ -163,6 +165,23 @@
     "emptyTitle": "No orders yet",
     "emptyBody": "Once you order a service you can follow it here.",
     "browse": "Browse services",
+    "searchPlaceholder": "Order number, product, or player ID",
+    "from": "From",
+    "to": "To",
+    "period": "Period",
+    "pickDate": "Choose a date",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "clearPeriod": "Clear period",
+    "applyPeriod": "Show orders",
+    "noResultsTitle": "No matching orders",
+    "noResultsBody": "Try another period or search.",
+    "stats": {
+      "total": "Total orders",
+      "completed": "Completed",
+      "failed": "Cancelled or failed",
+      "completedAmount": "Completed amount"
+    },
     "status": {
       "pending": "Awaiting processing",
       "confirmed": "Confirmed",
@@ -208,6 +227,9 @@
     "arabic": "العربية",
     "english": "English",
     "telegramId": "Telegram ID",
+    "balance": "Balance",
+    "totalSpent": "Total spent",
+    "spentNote": "From completed orders",
     "favorites": "Saved services"
   },
   "notifications": {

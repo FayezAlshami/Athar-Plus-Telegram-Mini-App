@@ -21,6 +21,7 @@ export interface Product {
   status: ProductStatus;
   is_purchasable: boolean;
   is_featured: boolean;
+  is_favorite?: boolean;
   category?: { id: number; slug: string; name: string };
   price: ProductPrice;
 }

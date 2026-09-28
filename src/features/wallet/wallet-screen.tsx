@@ -21,7 +21,7 @@ export function WalletScreen() {
 
   return (
     <PageContainer>
-      <PageHeader title={t("wallet.title")} showBack={false} />
+      <PageHeader title={t("wallet.title")} />
       {wallet.error ? <ErrorState error={wallet.error} onRetry={() => wallet.refetch()} /> : <WalletCard wallet={wallet.data} />}
 
       <Section title={t("wallet.history")}>

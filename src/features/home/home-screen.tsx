@@ -1,9 +1,10 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/shared/error-state";
@@ -16,33 +17,25 @@ import { PlusCard } from "@/features/memberships/plus-card";
 import { ProductRail, ProductRailSkeleton } from "@/features/products/product-rail";
 import { WalletCard } from "@/features/wallet/wallet-card";
 import { useWallet } from "@/features/wallet/queries";
+import { AnimatedOrbitAccent } from "@/components/illustrations/animated-icons";
+import { HomeSearch } from "@/features/search/home-search";
 import { HomeHeader } from "./home-header";
-
-function SearchTrigger() {
-  const t = useTranslations("home");
-  return (
-    <Link
-      href="/search"
-      className="flex h-12 items-center gap-3 rounded-full border border-border bg-surface px-4 text-muted-foreground shadow-sm transition-transform active:scale-[0.99]"
-    >
-      <MagnifyingGlass className="size-5" />
-      <span className="truncate text-small">{t("searchPlaceholder")}</span>
-    </Link>
-  );
-}
 
 export function HomeScreen() {
   const t = useTranslations();
   const feed = useHomeFeed();
   const wallet = useWallet();
+  const [searching, setSearching] = useState(false);
+  const onActiveChange = useCallback((active: boolean) => setSearching(active), []);
 
   return (
-    <PageContainer>
+    <PageContainer className="relative">
+      <AnimatedOrbitAccent className="pointer-events-none absolute -end-6 top-16 size-28 opacity-70" />
       <HomeHeader />
-      <SearchTrigger />
-      <WalletCard wallet={wallet.data} compact />
+      <HomeSearch onActiveChange={onActiveChange} />
+      {searching ? null : <WalletCard wallet={wallet.data} compact />}
 
-      {feed.error ? (
+      {!searching && (feed.error ? (
         <ErrorState error={feed.error} onRetry={() => feed.refetch()} />
       ) : (
         <>
@@ -80,7 +73,7 @@ export function HomeScreen() {
             </Section>
           )}
         </>
-      )}
+      ))}
     </PageContainer>
   );
 }

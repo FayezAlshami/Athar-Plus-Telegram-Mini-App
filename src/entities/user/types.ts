@@ -8,6 +8,9 @@ export interface User {
   username: string | null;
   photo_url: string | null;
   locale: Locale;
+  telegram_id: number;
+  spent_minor: number;
+  currency: string;
   membership: { level: MembershipLevelCode; expires_at: string | null };
   member_since: string | null;
 }

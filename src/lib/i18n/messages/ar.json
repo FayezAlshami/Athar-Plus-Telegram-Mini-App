@@ -33,6 +33,7 @@
     "loadMore": "تحميل المزيد",
     "backToTop": "العودة للأعلى",
     "undo": "تراجع",
+    "draftRestored": "استعدنا مسودتك",
     "updateReady": "تتوفر نسخة جديدة",
     "update": "تحديث"
   },
@@ -138,7 +139,19 @@
     "noResultsTitle": "لا نتائج لـ \"{query}\"",
     "noResultsBody": "جرّب كلمة أخرى أو تصفّح الأقسام.",
     "categories": "أقسام",
-    "services": "خدمات"
+    "services": "خدمات",
+    "suggestions": "اقتراحات"
+  },
+  "favorites": {
+    "title": "الخدمات المحفوظة",
+    "emptyTitle": "لا توجد خدمات محفوظة",
+    "emptyBody": "اضغط القلب على الخدمة لتظهر هنا.",
+    "save": "حفظ الخدمة",
+    "saved": "تم الحفظ",
+    "removed": "أُزيلت من المحفوظات",
+    "removeFailed": "تعذر تحديث المحفوظات",
+    "pending": "جارٍ الحفظ",
+    "browse": "تصفّح الخدمات"
   },
   "orders": {
     "title": "طلباتي",
@@ -151,6 +164,23 @@
     "emptyTitle": "لا توجد طلبات بعد",
     "emptyBody": "عندما تطلب خدمة ستتابع حالتها من هنا.",
     "browse": "تصفّح الخدمات",
+    "searchPlaceholder": "رقم الطلب، اسم المنتج أو معرّف اللاعب",
+    "from": "من",
+    "to": "إلى",
+    "period": "الفترة",
+    "pickDate": "اختر تاريخاً",
+    "previousMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي",
+    "clearPeriod": "مسح الفترة",
+    "applyPeriod": "عرض الطلبات",
+    "noResultsTitle": "لا طلبات مطابقة",
+    "noResultsBody": "جرّب فترة أو كلمة بحث مختلفة.",
+    "stats": {
+      "total": "إجمالي الطلبات",
+      "completed": "مكتملة",
+      "failed": "ملغاة أو فاشلة",
+      "completedAmount": "مبلغ المكتملة"
+    },
     "status": {
       "pending": "بانتظار المعالجة",
       "confirmed": "مؤكد",
@@ -196,6 +226,9 @@
     "arabic": "العربية",
     "english": "English",
     "telegramId": "معرّف تيليغرام",
+    "balance": "الرصيد",
+    "totalSpent": "الإنفاق الكلي",
+    "spentNote": "من الطلبات المكتملة",
     "favorites": "الخدمات المحفوظة"
   },
   "notifications": {

@@ -12,20 +12,23 @@ import { ErrorState } from "@/components/shared/error-state";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
 import { formatRelative } from "@/lib/formatting/dates";
 import { cn } from "@/lib/cn";
+import { LoadMore } from "@/components/shared/load-more";
 import { useMarkAllNotificationsRead, useNotifications } from "./queries";
 
 export function NotificationsScreen() {
   const t = useTranslations("notifications");
   const locale = useLocale();
-  const { data, isPending, error, refetch } = useNotifications();
+  const { data, isPending, error, refetch, hasNextPage, isFetchingNextPage, fetchNextPage } = useNotifications();
   const markAllRead = useMarkAllNotificationsRead();
+  const items = data?.pages.flatMap((page) => page.data) ?? [];
+  const unread = data?.pages[0]?.meta.unread_count ?? 0;
 
   return (
     <PageContainer withNav={false}>
       <PageHeader
         title={t("title")}
         trailing={
-          data && data.meta.unread_count > 0 ? (
+          data && unread > 0 ? (
             <Button size="sm" variant="ghost" loading={markAllRead.isPending} onClick={() => markAllRead.mutate()}>
               {t("markAllRead")}
             </Button>
@@ -40,11 +43,12 @@ export function NotificationsScreen() {
             <Skeleton key={index} className="h-20 rounded-lg" />
           ))}
         </div>
-      ) : data.data.length === 0 ? (
+      ) : items.length === 0 ? (
         <EmptyState icon={<BellSimple />} title={t("emptyTitle")} body={t("emptyBody")} />
       ) : (
+        <>
         <motion.ul variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-2">
-          {data.data.map((notification) => (
+          {items.map((notification) => (
             <motion.li
               key={notification.id}
               variants={fadeUp}
@@ -58,6 +62,8 @@ export function NotificationsScreen() {
             </motion.li>
           ))}
         </motion.ul>
+        <LoadMore hasNext={Boolean(hasNextPage)} isFetching={isFetchingNextPage} onLoadMore={() => fetchNextPage()} />
+        </>
       )}
     </PageContainer>
   );

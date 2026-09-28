@@ -1,0 +1,10 @@
+{
+  "name": "Athar Plus",
+  "short_name": "Athar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#178f89",
+  "lang": "ar",
+  "dir": "auto"
+}

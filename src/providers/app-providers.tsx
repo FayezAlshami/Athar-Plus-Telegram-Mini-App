@@ -6,6 +6,7 @@ import { AuthProvider } from "@/features/auth/auth-provider";
 import { TelegramProvider } from "@/lib/telegram/telegram-provider";
 import { QueryProvider } from "./query-provider";
 import { ThemeProvider } from "./theme-provider";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { AppToaster } from "@/components/ui/toast";
 
 export function AppProviders({ children }: { children: ReactNode }) {
@@ -17,6 +18,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
             <AuthProvider>
               {children}
               <AppToaster />
+              <ServiceWorkerRegister />
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
