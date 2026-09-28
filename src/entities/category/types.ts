@@ -7,4 +7,5 @@ export interface Category {
   image_url: string | null;
   accent_color: string | null;
   products_count?: number;
+  children?: Category[];
 }
