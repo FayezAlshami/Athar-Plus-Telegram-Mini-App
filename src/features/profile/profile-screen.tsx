@@ -11,7 +11,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LevelBadge } from "@/components/shared/level-badge";
 import { Money } from "@/components/shared/money";
 import { CopyButton } from "@/components/shared/copy-button";
-import { ButterflyMark } from "@/components/shared/butterfly";
 import { Section } from "@/components/shared/section";
 import { formatDateTime } from "@/lib/formatting/dates";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
@@ -34,55 +33,53 @@ export function ProfileScreen() {
       <PageHeader title={t("profile.title")} />
 
       {user ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 shadow-sm">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm">
+          <div className="flex items-start gap-4">
             <Avatar name={user.first_name} src={user.photo_url} size={56} />
             <div className="min-w-0 flex-1">
-              <p dir="auto" className="truncate text-section-title">{[user.first_name, user.last_name].filter(Boolean).join(" ")}</p>
-              {user.username && <p className="text-small text-muted-foreground" dir="ltr">@{user.username}</p>}
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p dir="auto" className="truncate text-section-title">{[user.first_name, user.last_name].filter(Boolean).join(" ")}</p>
+                  {user.username && <p className="text-small text-accent" dir="ltr">@{user.username}</p>}
+                </div>
+                <LevelBadge level={user.membership.level} />
+              </div>
               {user.member_since && (
-                <p className="text-caption text-muted-foreground">{t("profile.memberSince", { date: formatDateTime(user.member_since, locale) })}</p>
+                <p className="mt-0.5 text-caption text-muted-foreground">{t("profile.memberSince", { date: formatDateTime(user.member_since, locale) })}</p>
               )}
+              <span className="mt-2 inline-flex max-w-full items-center gap-1 rounded-full bg-accent-soft px-2.5 py-1.5">
+                <CopyButton value={String(user.telegram_id)} className="size-7 shrink-0" />
+                <span dir="ltr" className="truncate text-caption font-medium tabular-nums text-foreground">
+                  {t("profile.idLabel")}: {user.telegram_id}
+                </span>
+              </span>
             </div>
-            <LevelBadge level={user.membership.level} />
           </div>
-          <div className="flex items-center justify-between gap-2 border-t border-border pt-3">
-            <span className="text-caption text-muted-foreground">{t("profile.telegramId")}</span>
-            <span className="flex min-w-0 items-center gap-1">
-              <span dir="ltr" className="truncate text-small font-medium tabular-nums">{user.telegram_id}</span>
-              <CopyButton value={String(user.telegram_id)} className="size-8" />
-            </span>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              href="/wallet"
+              className="flex min-h-[92px] flex-col justify-between rounded-xl bg-accent-soft p-3.5 transition-transform active:scale-[0.98]"
+            >
+              <span className="text-caption font-medium text-muted-foreground">{t("profile.balance")}</span>
+              {wallet.data ? (
+                <Money amountMinor={wallet.data.balance_minor} currency={wallet.data.currency} className="self-start text-[1.75rem] font-bold leading-none text-accent" />
+              ) : (
+                <Skeleton className="h-8 w-20" />
+              )}
+            </Link>
+            <Link
+              href="/orders"
+              className="flex min-h-[92px] flex-col justify-between rounded-xl bg-accent-soft p-3.5 transition-transform active:scale-[0.98]"
+            >
+              <span className="text-caption font-medium text-muted-foreground">{t("profile.totalSpent")}</span>
+              <Money amountMinor={user.spent_minor} currency={user.currency} className="self-start text-[1.75rem] font-bold leading-none text-accent" />
+            </Link>
           </div>
         </div>
       ) : (
-        <Skeleton className="h-24 rounded-xl" />
+        <Skeleton className="h-40 rounded-xl" />
       )}
-
-      <div className="grid grid-cols-2 overflow-hidden rounded-xl shadow-md">
-        <Link href="/wallet" className="relative min-h-[132px] bg-[image:var(--hero-gradient)] p-4 text-white">
-          <ButterflyMark className="pointer-events-none absolute -bottom-7 -end-5 size-28 text-white/10" />
-          <span className="inline-flex items-center gap-1.5 text-caption text-white/75">
-            <Wallet className="size-4" weight="duotone" />
-            {t("profile.balance")}
-          </span>
-          {wallet.data ? (
-            <Money amountMinor={wallet.data.balance_minor} currency={wallet.data.currency} className="relative mt-2 block text-[1.65rem] leading-none text-white" />
-          ) : (
-            <Skeleton className="relative mt-3 h-8 w-24 bg-white/15" />
-          )}
-          <span className="relative mt-4 inline-flex text-caption font-medium text-white/80">{t("wallet.deposit")}</span>
-        </Link>
-        <Link href="/orders" className="relative min-h-[132px] border-s border-border bg-surface p-4">
-          <span className="absolute inset-y-4 start-0 w-1 rounded-full bg-accent" />
-          <span className="text-caption text-muted-foreground">{t("profile.totalSpent")}</span>
-          {user ? (
-            <Money amountMinor={user.spent_minor} currency={user.currency} className="mt-2 block text-[1.65rem] leading-none" />
-          ) : (
-            <Skeleton className="mt-3 h-8 w-24" />
-          )}
-          <span className="mt-4 block text-caption text-muted-foreground">{t("profile.spentNote")}</span>
-        </Link>
-      </div>
 
       <Section title={t("profile.shortcuts")}>
         <ListGroup>

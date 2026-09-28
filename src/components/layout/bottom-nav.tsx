@@ -22,7 +22,10 @@ export function BottomNav() {
   const haptics = useHaptics();
   const reduce = useReducedMotion();
   const listRef = useRef<HTMLUListElement>(null);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [indicator, setIndicator] = useState<{ x: number; width: number } | null>(null);
+
+  const activeIndex = PRIMARY_DESTINATIONS.findIndex(({ href }) => href === pathname);
 
   const warm = (href: string) => {
     router.prefetch(href);
@@ -31,23 +34,31 @@ export function BottomNav() {
 
   useLayoutEffect(() => {
     const list = listRef.current;
-    const active = list?.querySelector<HTMLElement>('[aria-current="page"]');
-    if (!list || !active) return;
+    const item = activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
+    if (!list || !item) {
+      setIndicator(null);
+      return;
+    }
 
     const measure = () => {
       const listBox = list.getBoundingClientRect();
-      const item = active.getBoundingClientRect();
+      const itemBox = item.getBoundingClientRect();
       setIndicator({
-        x: item.left - listBox.left - list.clientLeft + INSET,
-        width: Math.max(item.width - INSET * 2, 0),
+        x: itemBox.left - listBox.left + INSET,
+        width: Math.max(itemBox.width - INSET * 2, 0),
       });
     };
 
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(list);
-    return () => observer.disconnect();
-  }, [pathname]);
+    observer.observe(item);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [pathname, activeIndex]);
 
   return (
     <nav
@@ -75,10 +86,16 @@ export function BottomNav() {
             }
           />
         )}
-        {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon: Icon }) => {
+        {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon: Icon }, index) => {
           const active = pathname === href;
           return (
-            <li key={href} className="relative z-10 flex-1">
+            <li
+              key={href}
+              ref={(node) => {
+                itemRefs.current[index] = node;
+              }}
+              className="relative z-10 flex-1"
+            >
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}

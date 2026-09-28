@@ -228,6 +228,7 @@
     "arabic": "العربية",
     "english": "English",
     "telegramId": "Telegram ID",
+    "idLabel": "ID",
     "balance": "Balance",
     "totalSpent": "Total spent",
     "spentNote": "From completed orders",

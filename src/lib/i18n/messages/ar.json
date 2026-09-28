@@ -227,6 +227,7 @@
     "arabic": "العربية",
     "english": "English",
     "telegramId": "معرّف تيليغرام",
+    "idLabel": "ID",
     "balance": "الرصيد",
     "totalSpent": "الإنفاق الكلي",
     "spentNote": "من الطلبات المكتملة",

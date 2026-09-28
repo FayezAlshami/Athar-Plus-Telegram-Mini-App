@@ -61,7 +61,7 @@
   --nav-glass-border: color-mix(in srgb, #ffffff 70%, var(--border));
   --nav-glass-highlight: rgb(255 255 255 / 0.86);
   --nav-glass-shadow: 0 16px 40px -18px rgb(14 26 51 / 0.34), 0 4px 14px -8px rgb(14 26 51 / 0.14);
-  --nav-indicator: color-mix(in srgb, var(--accent) 20%, rgb(255 255 255 / 0.78));
+  --nav-indicator: #d1e9e8;
   --hero-gradient: linear-gradient(135deg, #0f2a55 0%, #13396b 55%, #17616a 100%);
   --plus-gradient: linear-gradient(135deg, #1a1508 0%, #3a2c10 60%, #6b5320 100%);
 }
