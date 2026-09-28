@@ -23,7 +23,7 @@ export function usePrefetchProduct<E extends HTMLElement = HTMLDivElement>(id: n
 
 export function usePrefetchCategory<E extends HTMLElement = HTMLDivElement>(slug: string) {
   const client = useQueryClient();
-  return usePrefetchOnIntent<E>(`/categories/${slug}`, () => {
+  return usePrefetchOnIntent<E>(`/categories/${encodeURIComponent(slug)}`, () => {
     void client.prefetchQuery({
       ...catalogQueryOptions,
       queryKey: queryKeys.category(slug),

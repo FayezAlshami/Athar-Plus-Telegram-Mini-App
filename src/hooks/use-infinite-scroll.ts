@@ -6,7 +6,10 @@ import { useEffect, useRef } from "react";
 export function useInfiniteScroll(enabled: boolean, isFetching: boolean, onLoadMore: () => void) {
   const ref = useRef<HTMLDivElement | null>(null);
   const callback = useRef(onLoadMore);
-  callback.current = onLoadMore;
+
+  useEffect(() => {
+    callback.current = onLoadMore;
+  });
 
   useEffect(() => {
     const node = ref.current;

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CheckCircle, Circle } from "@phosphor-icons/react";
+import { CheckCircle, CircleDashed, Package, XCircle } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -16,8 +16,24 @@ import { Money } from "@/components/shared/money";
 import { Section } from "@/components/shared/section";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { formatDateTime } from "@/lib/formatting/dates";
+import { ProductImage } from "@/features/products/product-image";
+import { cn } from "@/lib/cn";
 import { OrderStatusBadge } from "./order-status-badge";
 import { useCancelOrder, useOrder } from "./queries";
+
+function OrderSkeleton() {
+  return (
+    <>
+      <div className="flex min-h-11 items-center gap-3">
+        <Skeleton className="size-11 rounded-full" />
+        <Skeleton className="h-6 w-40" />
+      </div>
+      <Skeleton className="h-44 rounded-xl" />
+      <Skeleton className="h-32 rounded-lg" />
+      <Skeleton className="h-40 rounded-lg" />
+    </>
+  );
+}
 
 export function OrderScreen({ id }: { id: string }) {
   const t = useTranslations("orders");
@@ -28,39 +44,69 @@ export function OrderScreen({ id }: { id: string }) {
   const cancelOrder = useCancelOrder();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  if (error) return <PageContainer withNav={false}><PageHeader title={t("title")} /><ErrorState error={error} onRetry={() => refetch()} /></PageContainer>;
-  if (isPending) return <PageContainer withNav={false}><Skeleton className="h-11 w-40" /><Skeleton className="h-40 rounded-lg" /><Skeleton className="h-40 rounded-lg" /></PageContainer>;
+  if (error) {
+    return (
+      <PageContainer withNav={false}>
+        <PageHeader title={t("title")} />
+        <ErrorState error={error} onRetry={() => refetch()} />
+      </PageContainer>
+    );
+  }
+  if (isPending) {
+    return (
+      <PageContainer withNav={false}>
+        <OrderSkeleton />
+      </PageContainer>
+    );
+  }
+
+  const failed = order.status === "cancelled" || order.status === "rejected";
 
   return (
     <PageContainer withNav={false}>
-      <PageHeader title={order.product.name ?? t("title")} />
+      <PageHeader title={t("title")} subtitle={order.number} />
 
-      <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 shadow-sm">
-        <div className="flex items-center justify-between">
-          <span className="text-small text-muted-foreground">{t("number")}</span>
-          <span className="flex items-center gap-1">
-            <span className="text-card-title" dir="ltr">{order.number}</span>
-            <CopyButton value={order.number} />
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <OrderStatusBadge status={order.status} />
-          <Money amountMinor={order.total_minor} currency={order.currency} className="text-xl" />
-        </div>
-        {order.discount_minor > 0 && (
-          <div className="flex items-center justify-between text-small">
-            <span className="text-muted-foreground">{t("discount")}</span>
-            <Money amountMinor={order.discount_minor} currency={order.currency} className="text-success" />
+      <section className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <ProductImage src={order.product.image_url} alt={order.product.name ?? ""} sizes="56px" className="size-14 shrink-0 rounded-md" />
+          <div className="min-w-0 flex-1">
+            <p dir="auto" className="line-clamp-2 text-card-title">{order.product.name ?? t("title")}</p>
+            <p className="text-caption text-muted-foreground">{formatDateTime(order.created_at, locale)}</p>
           </div>
-        )}
-        <p className="text-caption text-muted-foreground">{t("createdAt")}: {formatDateTime(order.created_at, locale)}</p>
-      </div>
+          <OrderStatusBadge status={order.status} />
+        </div>
+
+        <dl className="flex flex-col gap-2.5 rounded-md bg-surface-sunken p-3.5 text-small">
+          <div className="flex items-center justify-between gap-3">
+            <dt className="text-muted-foreground">{t("number")}</dt>
+            <dd className="flex items-center gap-0.5">
+              <span dir="ltr" className="font-display font-semibold tabular-nums">{order.number}</span>
+              <CopyButton value={order.number} className="-me-2 size-8" />
+            </dd>
+          </div>
+          {order.discount_minor > 0 && (
+            <div className="flex items-center justify-between gap-3">
+              <dt className="text-muted-foreground">{t("discount")}</dt>
+              <dd dir="ltr" className="text-success">
+                −<Money amountMinor={order.discount_minor} currency={order.currency} />
+              </dd>
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-3 border-t border-border pt-2.5">
+            <dt className="font-medium">{t("total")}</dt>
+            <dd>
+              <Money amountMinor={order.total_minor} currency={order.currency} className={cn("text-xl", failed && "text-muted-foreground line-through")} />
+            </dd>
+          </div>
+        </dl>
+      </section>
 
       {order.delivery && (
         <Section title={t("delivery")}>
-          <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success-soft p-4">
-            <code dir="ltr" className="min-w-0 flex-1 break-all text-body">{order.delivery}</code>
-            <CopyButton value={order.delivery} />
+          <div className="flex items-start gap-2 rounded-lg border border-success/30 bg-success-soft p-4">
+            <Package className="mt-0.5 size-5 shrink-0 text-success" weight="duotone" />
+            <code dir="ltr" className="min-w-0 flex-1 select-all whitespace-pre-wrap break-all font-mono text-small text-foreground">{order.delivery}</code>
+            <CopyButton value={order.delivery} className="-my-1.5 -me-1.5" />
           </div>
         </Section>
       )}
@@ -69,21 +115,34 @@ export function OrderScreen({ id }: { id: string }) {
         <Section title={t("submittedInfo")}>
           <ListGroup>
             {order.inputs.map((input) => (
-              <ListItem key={input.key} title={<span dir="auto">{input.value}</span>} subtitle={input.label} />
+              <ListItem
+                key={input.key}
+                title={<span dir="auto">{input.value}</span>}
+                subtitle={input.label}
+                trailing={<CopyButton value={input.value} className="-me-2" />}
+              />
             ))}
           </ListGroup>
         </Section>
       )}
 
       <Section title={t("timeline")}>
-        <ol className="flex flex-col gap-3 ps-1">
+        <ol className="flex flex-col rounded-lg border border-border bg-surface p-4 shadow-sm">
           {order.timeline.map((step, index) => {
             const last = index === order.timeline.length - 1;
+            const stepFailed = step.status === "cancelled" || step.status === "rejected";
+            const Icon = last ? (stepFailed ? XCircle : CheckCircle) : CircleDashed;
             return (
-              <li key={`${step.status}-${step.at}`} className="flex items-center gap-3">
-                {last ? <CheckCircle className="size-5 text-accent" weight="fill" /> : <Circle className="size-5 text-muted-foreground" />}
-                <span className="flex-1 text-small">{t(`status.${step.status}`)}</span>
-                <span className="text-caption text-muted-foreground">{formatDateTime(step.at, locale)}</span>
+              <li key={`${step.status}-${step.at}`} className="relative flex gap-3 pb-4 last:pb-0">
+                {!last && <span aria-hidden className="absolute start-[9px] top-6 bottom-0 w-0.5 rounded-full bg-border" />}
+                <Icon
+                  className={cn("relative size-5 shrink-0", last ? (stepFailed ? "text-danger" : "text-accent") : "text-muted-foreground")}
+                  weight={last ? "fill" : "bold"}
+                />
+                <div className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-3">
+                  <span className={cn("text-small", last ? "font-semibold text-foreground" : "text-muted-foreground")}>{t(`status.${step.status}`)}</span>
+                  <span className="text-caption text-muted-foreground">{formatDateTime(step.at, locale)}</span>
+                </div>
               </li>
             );
           })}
@@ -116,7 +175,7 @@ export function OrderScreen({ id }: { id: string }) {
           >
             {tCommon("confirm")}
           </Button>
-          <Button variant="ghost" fullWidth onClick={() => setConfirmOpen(false)}>
+          <Button variant="ghost" fullWidth onClick={() => setConfirmOpen(false)} disabled={cancelOrder.isPending}>
             {tCommon("cancel")}
           </Button>
         </div>

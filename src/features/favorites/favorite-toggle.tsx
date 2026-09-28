@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import gsap from "gsap";
+import { motion, useReducedMotion } from "motion/react";
 import { Heart } from "@phosphor-icons/react";
 import { toast } from "@/components/ui/toast";
 import { armDelayedCommit, UNDO_WINDOW_MS, type DelayedCommit } from "@/lib/feedback/delayed-commit";
@@ -31,31 +31,17 @@ export function FavoriteToggle({
   const toggle = useToggleFavorite();
   const [saved, setSaved] = useState(isFavorite);
   const [pulse, setPulse] = useState(false);
-  const burstRef = useRef<HTMLSpanElement>(null);
+  // Each save bumps the key, remounting the burst so it replays.
+  const [burst, setBurst] = useState(0);
+  const reduce = useReducedMotion();
   const pending = useRef<DelayedCommit | null>(null);
 
-  useEffect(() => setSaved(isFavorite), [isFavorite]);
-
-  const playBurst = () => {
-    const root = burstRef.current;
-    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const dots = root.querySelectorAll("span");
-    dots.forEach((dot, index) => {
-      const angle = (index / BURST) * Math.PI * 2;
-      gsap.fromTo(
-        dot,
-        { x: 0, y: 0, scale: 0.3, opacity: 1 },
-        {
-          x: Math.cos(angle) * 18,
-          y: Math.sin(angle) * 18,
-          scale: 1,
-          opacity: 0,
-          duration: 0.48,
-          ease: "power2.out",
-        },
-      );
-    });
-  };
+  // Follow server truth when it changes (render-time sync, no extra effect pass).
+  const [syncedFavorite, setSyncedFavorite] = useState(isFavorite);
+  if (syncedFavorite !== isFavorite) {
+    setSyncedFavorite(isFavorite);
+    setSaved(isFavorite);
+  }
 
   return (
     <button
@@ -74,7 +60,7 @@ export function FavoriteToggle({
         if (next) {
           setPulse(true);
           window.setTimeout(() => setPulse(false), 400);
-          playBurst();
+          if (!reduce) setBurst((value) => value + 1);
           haptics.impact("light");
         }
         const armed = armDelayedCommit({
@@ -108,11 +94,22 @@ export function FavoriteToggle({
         className,
       )}
     >
-      <span ref={burstRef} aria-hidden className="pointer-events-none absolute inset-0">
-        {Array.from({ length: BURST }, (_, index) => (
-          <span key={index} className="absolute left-1/2 top-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-0" />
-        ))}
-      </span>
+      {burst > 0 && (
+          <span key={burst} aria-hidden className="pointer-events-none absolute inset-0">
+            {Array.from({ length: BURST }, (_, index) => {
+              const angle = (index / BURST) * Math.PI * 2;
+              return (
+                <motion.span
+                  key={index}
+                  className="absolute left-1/2 top-1/2 -ml-[3px] -mt-[3px] size-1.5 rounded-full bg-white"
+                  initial={{ x: 0, y: 0, scale: 0.3, opacity: 1 }}
+                  animate={{ x: Math.cos(angle) * 18, y: Math.sin(angle) * 18, scale: 1, opacity: 0 }}
+                  transition={{ duration: 0.48, ease: [0.2, 0, 0, 1] }}
+                />
+              );
+            })}
+          </span>
+      )}
       <Heart
         className={cn("size-[18px] drop-shadow-sm", saved ? "text-danger" : "text-white")}
         weight="fill"

@@ -14,7 +14,7 @@ export function ProductRail({ products }: { products: Product[] }) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
-      className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&>*]:snap-start"
+      className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*]:snap-start"
     >
       {products.map((product) => <ProductCard key={product.id} product={product} />)}
     </motion.div>

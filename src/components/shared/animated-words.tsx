@@ -7,7 +7,8 @@ const WORD_STAGGER = 0.06;
 
 /**
  * Word-level reveal. Arabic is never split into characters, which would
- * break letter shaping; words keep their joined forms intact.
+ * break letter shaping; words keep their joined forms intact. Only opacity and
+ * transform animate, so it stays on the compositor even on low-end devices.
  */
 export function AnimatedWords({ text, className, as = "p" }: { text: string; className?: string; as?: "h1" | "h2" | "p" }) {
   const Tag = motion[as];
@@ -20,7 +21,7 @@ export function AnimatedWords({ text, className, as = "p" }: { text: string; cla
           key={`${word}-${index}`}
           aria-hidden
           className="inline-block whitespace-pre"
-          variants={{ hidden: { opacity: 0, y: 10, filter: "blur(4px)" }, visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: spring.entrance } }}
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: spring.entrance } }}
         >
           {index < words.length - 1 ? `${word} ` : word}
         </motion.span>

@@ -38,12 +38,12 @@ function SearchProductHit({
   active: boolean;
   onSelect: () => void;
 }) {
-  const prefetch = usePrefetchProduct<HTMLLIElement>(product.id, product.image_url);
+  const { ref: prefetchRef, onMouseEnter: prefetchOnHover, onTouchStart: prefetchOnTouch } = usePrefetchProduct<HTMLLIElement>(product.id, product.image_url);
   return (
-    <li ref={prefetch.ref} onMouseEnter={prefetch.onMouseEnter} onTouchStart={prefetch.onTouchStart} onClick={onSelect}>
+    <li className="relative" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch} onClick={onSelect}>
       <Card
         href={`/products/${product.id}`}
-        className={active ? "flex items-center gap-3 bg-accent-soft p-2.5 ring-2 ring-accent" : "flex items-center gap-3 p-2.5"}
+        className={active ? "flex items-center gap-3 bg-accent-soft p-2.5 pe-12 ring-2 ring-accent" : "flex items-center gap-3 p-2.5 pe-12"}
       >
         <ProductImage src={product.image_url} alt={product.name} sizes="56px" className="size-14 shrink-0 rounded-md" />
         <div className="min-w-0 flex-1">
@@ -53,17 +53,17 @@ function SearchProductHit({
           {product.category && <p className="truncate text-caption text-muted-foreground">{product.category.name}</p>}
         </div>
         <Price price={product.price} />
-        <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="size-8" />
       </Card>
+      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2.5 top-1/2 z-10 size-8 -translate-y-1/2" />
     </li>
   );
 }
 
 function SearchCategoryHit({ category, query, active }: { category: Category; query: string; active: boolean }) {
-  const prefetch = usePrefetchCategory<HTMLLIElement>(category.slug);
+  const { ref: prefetchRef, onMouseEnter: prefetchOnHover, onTouchStart: prefetchOnTouch } = usePrefetchCategory<HTMLLIElement>(category.slug);
   return (
-    <li ref={prefetch.ref} onMouseEnter={prefetch.onMouseEnter} onTouchStart={prefetch.onTouchStart}>
-      <Card href={`/categories/${category.slug}`} className={active ? "flex items-center gap-2 bg-accent-soft p-3 ring-2 ring-accent" : "flex items-center gap-2 p-3"}>
+    <li ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
+      <Card href={`/categories/${encodeURIComponent(category.slug)}`} className={active ? "flex items-center gap-2 bg-accent-soft p-3 ring-2 ring-accent" : "flex items-center gap-2 p-3"}>
         <CategoryIcon name={category.icon} className="size-4 text-accent" />
         <span dir="auto" className="truncate text-small font-medium">
           <Highlight text={category.name} query={query} />
@@ -93,20 +93,23 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
   const categories = search.data?.categories ?? [];
   const products = search.data?.products ?? [];
   const hits = [
-    ...categories.map((category) => ({ kind: "category" as const, href: `/categories/${category.slug}` })),
+    ...categories.map((category) => ({ kind: "category" as const, href: `/categories/${encodeURIComponent(category.slug)}` })),
     ...products.map((product) => ({ kind: "product" as const, href: `/products/${product.id}` })),
   ];
 
-  useEffect(() => {
+  // A new query resets keyboard selection to the first hit.
+  const [indexedQuery, setIndexedQuery] = useState(debounced);
+  if (indexedQuery !== debounced) {
+    setIndexedQuery(debounced);
     setActiveIndex(0);
-  }, [debounced]);
+  }
 
   useEffect(() => {
     if (!search.data) return;
     for (const product of search.data.products.slice(0, 6)) prefetchImage(product.image_url);
     const firstCategory = search.data.categories[0];
     const firstProduct = search.data.products[0];
-    if (firstCategory) router.prefetch(`/categories/${firstCategory.slug}`);
+    if (firstCategory) router.prefetch(`/categories/${encodeURIComponent(firstCategory.slug)}`);
     else if (firstProduct) router.prefetch(`/products/${firstProduct.id}`);
   }, [search.data, router]);
 

@@ -17,7 +17,6 @@ import { PlusCard } from "@/features/memberships/plus-card";
 import { ProductRail, ProductRailSkeleton } from "@/features/products/product-rail";
 import { WalletCard } from "@/features/wallet/wallet-card";
 import { useWallet } from "@/features/wallet/queries";
-import { AnimatedOrbitAccent } from "@/components/illustrations/animated-icons";
 import { HomeSearch } from "@/features/search/home-search";
 import { HomeHeader } from "./home-header";
 
@@ -29,8 +28,7 @@ export function HomeScreen() {
   const onActiveChange = useCallback((active: boolean) => setSearching(active), []);
 
   return (
-    <PageContainer className="relative">
-      <AnimatedOrbitAccent className="pointer-events-none absolute -end-6 top-16 size-28 opacity-70" />
+    <PageContainer>
       <HomeHeader />
       <HomeSearch onActiveChange={onActiveChange} />
       {searching ? null : <WalletCard wallet={wallet.data} compact />}
@@ -39,15 +37,15 @@ export function HomeScreen() {
         <ErrorState error={feed.error} onRetry={() => feed.refetch()} />
       ) : (
         <>
-          {feed.data ? <BannerCarousel banners={feed.data.banners} /> : <Skeleton className="h-40 rounded-xl" />}
+          {feed.data ? <BannerCarousel banners={feed.data.banners} /> : <Skeleton className="aspect-[2/1] max-h-52 min-h-40 rounded-xl" />}
 
           <Section title={t("home.categories")} action={{ label: t("common.seeAll"), href: "/categories" }}>
             {feed.data ? (
-              <motion.div variants={listContainer} initial="hidden" animate="visible" className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none]">
+              <motion.div variants={listContainer} initial="hidden" animate="visible" className="-mx-4 flex snap-x gap-2 overflow-x-auto scroll-px-4 px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {feed.data.categories.map((category) => <CategoryCard key={category.id} category={category} compact />)}
               </motion.div>
             ) : (
-              <div className="flex gap-3">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="size-16 rounded-lg" />)}</div>
+              <div className="flex gap-4">{Array.from({ length: 4 }, (_, i) => <div key={i} className="flex w-[80px] flex-col items-center gap-2"><Skeleton className="size-16 rounded-lg" /><Skeleton className="h-3 w-12" /></div>)}</div>
             )}
           </Section>
 

@@ -116,10 +116,20 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
             {(a11y) => <Textarea {...a11y} rows={2} {...form.register("customer_note")} />}
           </Field>
 
-          <div className="flex items-center justify-between rounded-md bg-surface-sunken px-4 py-3">
-            <span className="text-small text-muted-foreground">{t("orders.total")}</span>
-            <Money amountMinor={price.final_minor} currency={price.currency} className="text-lg" />
-          </div>
+          <dl className="flex flex-col gap-2 rounded-md bg-surface-sunken px-4 py-3">
+            <div className="flex items-center justify-between gap-3">
+              <dt className="text-small text-muted-foreground">{t("product.yourBalance")}</dt>
+              <dd className="text-small">
+                {balance !== undefined ? <Money amountMinor={balance} currency={wallet.data?.currency ?? price.currency} /> : "…"}
+              </dd>
+            </div>
+            <div className="flex items-center justify-between gap-3 border-t border-border pt-2">
+              <dt className="text-small font-medium">{t("orders.total")}</dt>
+              <dd>
+                <Money amountMinor={price.final_minor} currency={price.currency} className="text-lg" />
+              </dd>
+            </div>
+          </dl>
 
           {insufficient ? (
             <div className="flex flex-col gap-3 rounded-md border border-warning/30 bg-warning-soft p-4">

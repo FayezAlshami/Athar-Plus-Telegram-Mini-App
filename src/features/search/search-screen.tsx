@@ -138,7 +138,7 @@ export function SearchScreen() {
             <Section title={t("categories")}>
               <div className="flex flex-wrap gap-2">
                 {results.categories.map((category) => (
-                  <Link key={category.id} href={`/categories/${category.slug}`} className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3.5 text-small font-medium">
+                  <Link key={category.id} href={`/categories/${encodeURIComponent(category.slug)}`} className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3.5 text-small font-medium">
                     <CategoryIcon name={category.icon} className="size-4 text-accent" />
                     <Highlight text={category.name} query={debounced} />
                   </Link>

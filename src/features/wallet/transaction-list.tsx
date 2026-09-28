@@ -31,11 +31,12 @@ export function TransactionList({ transactions }: { transactions: WalletTransact
           return (
             <ListItem
               key={transaction.id}
-              icon={<Icon className={credit ? "text-success" : "text-foreground"} />}
+              iconTone={credit ? "success" : "neutral"}
+              icon={<Icon weight="bold" />}
               title={t(transaction.type)}
               subtitle={formatDateTime(transaction.created_at, locale)}
               trailing={
-                <span className={cn("text-card-title", credit ? "text-success" : "text-foreground")} dir="ltr">
+                <span className={cn("shrink-0 text-card-title tabular-nums", credit ? "text-success" : "text-foreground")} dir="ltr">
                   {credit ? "+" : "−"}
                   <Money amountMinor={transaction.amount_minor} currency={transaction.currency} />
                 </span>

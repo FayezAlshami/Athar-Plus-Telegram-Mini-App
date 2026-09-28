@@ -4,10 +4,10 @@ import { useTranslations } from "next-intl";
 import { Receipt } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ErrorState } from "@/components/shared/error-state";
+import { LoadMore } from "@/components/shared/load-more";
 import { Section } from "@/components/shared/section";
 import { useWallet, useWalletTransactions } from "./queries";
 import { TransactionList } from "./transaction-list";
@@ -28,17 +28,13 @@ export function WalletScreen() {
         {transactions.error ? (
           <ErrorState error={transactions.error} onRetry={() => transactions.refetch()} />
         ) : transactions.isPending ? (
-          <Skeleton className="h-64 rounded-lg" />
+          <div className="flex flex-col gap-2">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-[60px] rounded-lg" />)}</div>
         ) : items.length === 0 ? (
           <EmptyState icon={<Receipt />} title={t("wallet.emptyTitle")} body={t("wallet.emptyBody")} />
         ) : (
           <>
             <TransactionList transactions={items} />
-            {transactions.hasNextPage && (
-              <Button variant="ghost" loading={transactions.isFetchingNextPage} onClick={() => transactions.fetchNextPage()}>
-                {t("common.seeAll")}
-              </Button>
-            )}
+            <LoadMore hasNext={Boolean(transactions.hasNextPage)} isFetching={transactions.isFetchingNextPage} onLoadMore={() => transactions.fetchNextPage()} />
           </>
         )}
       </Section>

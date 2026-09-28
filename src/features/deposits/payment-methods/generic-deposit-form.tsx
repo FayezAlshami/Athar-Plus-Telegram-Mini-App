@@ -12,7 +12,7 @@ import { Input, Textarea } from "@/components/ui/input";
 import { SuccessMoment } from "@/components/shared/success-moment";
 import { createIdempotencyKey } from "@/lib/api/idempotency";
 import { useErrorMessage } from "@/lib/api/use-error-message";
-import { parseMajorToMinor } from "@/lib/formatting/money";
+import { formatMoney, parseMajorToMinor } from "@/lib/formatting/money";
 import { useHaptics } from "@/lib/telegram/hooks";
 import { useCreateDeposit } from "../queries";
 
@@ -29,8 +29,19 @@ export function GenericDepositForm({ method }: { method: PaymentMethod }) {
   const [idempotencyKey] = useState(createIdempotencyKey);
   const [submitted, setSubmitted] = useState(false);
 
+  const min = method.min_amount_minor ?? 1;
+  const max = method.max_amount_minor;
+  const rangeHelp = max
+    ? t("deposit.amountRange", { min: formatMoney(min, "USD"), max: formatMoney(max, "USD") })
+    : method.min_amount_minor
+      ? t("deposit.amountMin", { min: formatMoney(min, "USD") })
+      : t("deposit.amountHelp");
+
   const schema = z.object({
-    amount: z.string().refine((value) => (parseMajorToMinor(value) ?? 0) > 0, t("deposit.invalidAmount")),
+    amount: z.string().refine((value) => {
+      const minor = parseMajorToMinor(value);
+      return minor !== null && minor >= min && (max === null || minor <= max);
+    }, t("deposit.invalidAmount")),
     customer_note: z.string().max(500, t("validation.tooLong")),
   });
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { amount: "", customer_note: "" } });
@@ -59,8 +70,8 @@ export function GenericDepositForm({ method }: { method: PaymentMethod }) {
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-      <Field label={t("deposit.amount")} required helpText={t("deposit.amountHelp")} error={form.formState.errors.amount?.message}>
-        {(a11y) => <Input {...a11y} {...form.register("amount")} inputMode="decimal" dir="ltr" placeholder="10" />}
+      <Field label={t("deposit.amount")} required helpText={rangeHelp} error={form.formState.errors.amount?.message}>
+        {(a11y) => <Input {...a11y} {...form.register("amount")} inputMode="decimal" dir="ltr" autoComplete="off" placeholder="10" className="font-display text-lg tabular-nums" />}
       </Field>
       <Field label={t("deposit.note")} helpText={t("common.optional")} error={form.formState.errors.customer_note?.message}>
         {(a11y) => <Textarea {...a11y} {...form.register("customer_note")} rows={2} />}

@@ -1,4 +1,4 @@
-import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { catalogApi } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
 import { catalogQueryOptions } from "@/lib/query/policy";
@@ -21,7 +21,6 @@ export function useCategoryProducts(slug: string) {
     queryFn: ({ pageParam, signal }) => catalogApi.products({ category: slug, page: pageParam }, { signal }),
     initialPageParam: 1,
     getNextPageParam: (last) => (last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined),
-    placeholderData: keepPreviousData,
     ...catalogQueryOptions,
   });
 }

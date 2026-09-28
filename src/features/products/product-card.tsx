@@ -16,21 +16,21 @@ import { ProductImage } from "./product-image";
 export function ProductCard({ product }: { product: Product }) {
   const t = useTranslations();
   const memberPrice = product.price.membership_discount_minor > 0;
-  const prefetch = usePrefetchProduct(product.id, product.image_url);
+  const { ref: prefetchRef, onMouseEnter: prefetchOnHover, onTouchStart: prefetchOnTouch } = usePrefetchProduct(product.id, product.image_url);
 
   return (
-    <motion.div variants={fadeUp} className="relative w-[168px] shrink-0" ref={prefetch.ref} onMouseEnter={prefetch.onMouseEnter} onTouchStart={prefetch.onTouchStart}>
+    <motion.div variants={fadeUp} className="relative w-[168px] shrink-0" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
       <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute start-2 top-2 z-10" />
       <Card href={`/products/${product.id}`} className="flex h-full flex-col overflow-hidden">
         <ProductImage src={product.image_url} alt={product.name} sizes="168px" className="aspect-[4/3]" />
         <div className="flex flex-1 flex-col gap-2 p-3">
-          <p dir="auto" className="line-clamp-2 text-card-title">{product.name}</p>
+          <p dir="auto" className="line-clamp-2 min-h-[3.1em] text-card-title">{product.name}</p>
           <div className="mt-auto flex flex-col gap-1.5">
             <Price price={product.price} />
             {!product.is_purchasable ? (
-              <Badge tone="warning">{t("product.unavailable")}</Badge>
+              <Badge tone="warning" className="self-start">{t("product.unavailable")}</Badge>
             ) : memberPrice ? (
-              <Badge tone="gold" icon={<Crown weight="fill" />}>{t("product.membershipPrice")}</Badge>
+              <Badge tone="gold" icon={<Crown weight="fill" />} className="self-start">{t("product.membershipPrice")}</Badge>
             ) : null}
           </div>
         </div>
