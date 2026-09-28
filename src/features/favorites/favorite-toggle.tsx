@@ -115,7 +115,7 @@ export function FavoriteToggle({
       </span>
       <Heart
         className={cn("size-[18px] drop-shadow-sm", saved ? "text-danger" : "text-white")}
-        weight={saved ? "fill" : "regular"}
+        weight="fill"
       />
     </button>
   );
