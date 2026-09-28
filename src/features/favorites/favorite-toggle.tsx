@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import gsap from "gsap";
+import { Heart } from "@phosphor-icons/react";
 import { toast } from "@/components/ui/toast";
-import { AnimatedHeartIcon } from "@/components/illustrations/animated-icons";
 import { armDelayedCommit, UNDO_WINDOW_MS, type DelayedCommit } from "@/lib/feedback/delayed-commit";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { useErrorMessage } from "@/lib/api/use-error-message";
@@ -103,8 +103,8 @@ export function FavoriteToggle({
         });
       }}
       className={cn(
-        "relative inline-flex size-9 items-center justify-center rounded-full border border-white/20 bg-foreground/30 text-white shadow-sm backdrop-blur-md transition-colors",
-        saved && "border-white/35 bg-foreground/40",
+        "relative inline-flex size-9 items-center justify-center rounded-full border border-white/25 bg-neutral-600/85 text-white shadow-md backdrop-blur-sm transition-transform",
+        pulse && "scale-110",
         className,
       )}
     >
@@ -113,7 +113,10 @@ export function FavoriteToggle({
           <span key={index} className="absolute left-1/2 top-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-0" />
         ))}
       </span>
-      <AnimatedHeartIcon filled={saved} pulsing={pulse} />
+      <Heart
+        className={cn("size-[18px] drop-shadow-sm", saved ? "text-danger" : "text-white")}
+        weight={saved ? "fill" : "regular"}
+      />
     </button>
   );
 }
