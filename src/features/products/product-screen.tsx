@@ -4,7 +4,7 @@ import { formatMoney } from "@/lib/formatting/money";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { Lightning, ShieldCheck, UserGear } from "@phosphor-icons/react";
+import { Lightning, ShareNetwork, ShieldCheck, UserGear } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,9 @@ import { StructuredText } from "@/components/shared/structured-text";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
 import { track } from "@/lib/analytics/events";
 import { FavoriteToggle } from "@/features/favorites/favorite-toggle";
+import { useProfile } from "@/features/memberships/queries";
+import { useTelegramState } from "@/lib/telegram/telegram-provider";
+import { miniAppDeepLink, productStartParam } from "@/lib/telegram/start-param";
 import { ProductImage } from "./product-image";
 import { PurchaseSheet } from "./purchase-sheet";
 import { useProduct } from "./queries";
@@ -23,7 +26,20 @@ import { useProduct } from "./queries";
 export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
   const t = useTranslations();
   const { data: product, isPending, error, refetch } = useProduct(idOrSlug);
+  const profile = useProfile();
+  const telegram = useTelegramState();
   const [purchaseOpen, setPurchaseOpen] = useState(false);
+
+  const shareProduct = () => {
+    if (!product) return;
+    const bot = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME;
+    if (!bot) return;
+    const startParam = productStartParam(product.id, profile.data?.referral.code);
+    const url = miniAppDeepLink(bot, startParam);
+    const share = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(t("product.shareText"))}`;
+    if (telegram.status === "ready") telegram.adapter.openTelegramLink(share);
+    else window.open(share, "_blank", "noopener,noreferrer");
+  };
 
   useEffect(() => {
     if (product) track("product_viewed", { product_id: product.id });
@@ -96,11 +112,16 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/92 pb-[calc(var(--safe-bottom)+12px)] pt-3 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[var(--content-max-width)] flex-col gap-2 px-4">
-          <Button size="lg" fullWidth disabled={!product.is_purchasable} onClick={() => setPurchaseOpen(true)} haptic="medium">
-            {product.is_purchasable
-              ? t("product.buyFor", { price: formatMoney(product.price.final_minor, product.price.currency) })
-              : t("product.unavailable")}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="lg" fullWidth disabled={!product.is_purchasable} onClick={() => setPurchaseOpen(true)} haptic="medium">
+              {product.is_purchasable
+                ? t("product.buyFor", { price: formatMoney(product.price.final_minor, product.price.currency) })
+                : t("product.unavailable")}
+            </Button>
+            <Button size="lg" variant="secondary" aria-label={t("product.share")} onClick={shareProduct} haptic="light" className="shrink-0 px-4">
+              <ShareNetwork className="size-5" />
+            </Button>
+          </div>
           <p className="flex items-center justify-center gap-1.5 text-caption text-muted-foreground">
             <ShieldCheck className="size-4 text-success" weight="fill" />
             {t("product.secureNote")}

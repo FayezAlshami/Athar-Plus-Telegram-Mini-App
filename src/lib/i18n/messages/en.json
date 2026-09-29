@@ -106,6 +106,8 @@
     "outOfStock": "Out of stock",
     "buy": "Order now",
     "buyFor": "Order for {price}",
+    "share": "Share",
+    "shareText": "Check this product on Athar Plus",
     "description": "About this service",
     "delivery": "How it's delivered",
     "requiredInfo": "Required information",
@@ -236,6 +238,8 @@
     "totalSpent": "Total spent",
     "spentNote": "From completed orders",
     "favorites": "Saved services",
+    "referrals": "Product referrals",
+    "referralStats": "{signups} signups · {orders} orders",
     "addToHome": "Add to Home Screen",
     "addToHomeHint": "A shortcut to the app on your phone",
     "addedToHome": "Added to Home Screen"

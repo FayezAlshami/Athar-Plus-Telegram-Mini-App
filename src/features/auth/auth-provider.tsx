@@ -14,7 +14,7 @@ import { writeCookie } from "@/lib/cookies";
 import { track } from "@/lib/analytics/events";
 import { warmSession } from "@/features/catalog/warm-session";
 import type { TelegramAdapter } from "@/lib/telegram/adapter";
-import { routeForStartParam } from "@/lib/telegram/start-param";
+import { parseStartParam } from "@/lib/telegram/start-param";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 
 type AuthStatus = "authenticating" | "authenticated" | "failed" | "unavailable";
@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           router.refresh();
         }
 
-        const deepLink = routeForStartParam(session.start_param ?? adapter.startParam);
+        const deepLink = parseStartParam(session.start_param ?? adapter.startParam).route;
         if (deepLink && !deepLinkHandled.current && initialPath.current === "/") {
           deepLinkHandled.current = true;
           router.push(deepLink);

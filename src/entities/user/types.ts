@@ -13,6 +13,7 @@ export interface User {
   currency: string;
   membership: { level: MembershipLevelCode; expires_at: string | null };
   member_since: string | null;
+  referral: { code: string | null; signups: number; orders: number };
 }
 
 export interface AuthSession {

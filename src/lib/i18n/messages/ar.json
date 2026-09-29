@@ -106,6 +106,8 @@
     "outOfStock": "نفد المخزون",
     "buy": "اطلب الآن",
     "buyFor": "اطلب بـ {price}",
+    "share": "مشاركة",
+    "shareText": "شوف هذا المنتج على Athar Plus",
     "description": "تفاصيل الخدمة",
     "delivery": "طريقة التنفيذ",
     "requiredInfo": "المعلومات المطلوبة",
@@ -235,6 +237,8 @@
     "totalSpent": "الإنفاق الكلي",
     "spentNote": "من الطلبات المكتملة",
     "favorites": "الخدمات المحفوظة",
+    "referrals": "إحالات المنتجات",
+    "referralStats": "{signups} تسجيل · {orders} طلب",
     "addToHome": "إضافة إلى الشاشة الرئيسية",
     "addToHomeHint": "اختصار للتطبيق على موبايلك",
     "addedToHome": "مضاف إلى الشاشة الرئيسية"

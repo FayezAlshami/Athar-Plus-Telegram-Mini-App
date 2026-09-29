@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Wallet } from "@phosphor-icons/react";
+import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, UsersThree, Wallet } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
@@ -169,6 +169,14 @@ export function ProfileScreen() {
       <Section title={t("profile.shortcuts")}>
         <ListGroup>
           <ListItem href="/favorites" iconTone="danger" icon={<Heart weight="fill" />} title={t("profile.favorites")} />
+          {user?.referral.code && (
+            <ListItem
+              iconTone="accent"
+              icon={<UsersThree weight="duotone" />}
+              title={t("profile.referrals")}
+              subtitle={t("profile.referralStats", { signups: user.referral.signups, orders: user.referral.orders })}
+            />
+          )}
           <ListItem href="/membership" iconTone="gold" icon={<Crown weight="fill" />} title={t("membership.title")} />
           <ListItem href="/orders" iconTone="accent" icon={<Receipt weight="duotone" />} title={t("nav.orders")} />
           <ListItem href="/wallet" iconTone="accent" icon={<Wallet weight="duotone" />} title={t("nav.wallet")} />
