@@ -234,7 +234,10 @@
     "balance": "الرصيد",
     "totalSpent": "الإنفاق الكلي",
     "spentNote": "من الطلبات المكتملة",
-    "favorites": "الخدمات المحفوظة"
+    "favorites": "الخدمات المحفوظة",
+    "addToHome": "إضافة إلى الشاشة الرئيسية",
+    "addToHomeHint": "اختصار للتطبيق على موبايلك",
+    "addedToHome": "مضاف إلى الشاشة الرئيسية"
   },
   "notifications": {
     "title": "الإشعارات",

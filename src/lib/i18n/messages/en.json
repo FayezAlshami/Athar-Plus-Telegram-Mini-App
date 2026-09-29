@@ -235,7 +235,10 @@
     "balance": "Balance",
     "totalSpent": "Total spent",
     "spentNote": "From completed orders",
-    "favorites": "Saved services"
+    "favorites": "Saved services",
+    "addToHome": "Add to Home Screen",
+    "addToHomeHint": "A shortcut to the app on your phone",
+    "addedToHome": "Added to Home Screen"
   },
   "notifications": {
     "title": "Notifications",

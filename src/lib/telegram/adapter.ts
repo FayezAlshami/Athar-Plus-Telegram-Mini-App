@@ -34,4 +34,11 @@ export interface TelegramAdapter {
   openLink(url: string): void;
   openTelegramLink(url: string): void;
   close(): void;
+
+  /** Bot API 8.0 home-screen shortcut. `unsupported` outside mobile Telegram. */
+  checkHomeScreenStatus(): Promise<HomeScreenStatus>;
+  addToHomeScreen(): void;
+  onHomeScreenAdded(handler: () => void): () => void;
 }
+
+export type HomeScreenStatus = "unsupported" | "unknown" | "added" | "missed";

@@ -32,6 +32,8 @@ export interface TelegramWebApp {
   ready(): void;
   expand(): void;
   close(): void;
+  addToHomeScreen?(): void;
+  checkHomeScreenStatus?(callback: (status: "unsupported" | "unknown" | "added" | "missed") => void): void;
   setHeaderColor(color: string): void;
   setBackgroundColor(color: string): void;
   setBottomBarColor?(color: string): void;

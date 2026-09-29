@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTelegramState } from "./telegram-provider";
-import type { HapticImpact, HapticNotice } from "./adapter";
+import type { HapticImpact, HapticNotice, HomeScreenStatus } from "./adapter";
 
 /** Safe haptics: silently no-op before readiness or outside Telegram. */
 export function useHaptics() {
@@ -38,4 +38,31 @@ export function useTelegramBackButton(enabled: boolean, onBack: () => void) {
       adapter.hideBackButton();
     };
   }, [state, enabled]);
+}
+
+/** Home-screen shortcut availability for the current Telegram client. */
+export function useHomeScreenShortcut() {
+  const state = useTelegramState();
+  const [status, setStatus] = useState<HomeScreenStatus | "checking">("checking");
+
+  useEffect(() => {
+    if (state.status !== "ready") return;
+    const adapter = state.adapter;
+    let cancelled = false;
+    adapter.checkHomeScreenStatus().then((next) => {
+      if (!cancelled) setStatus(next);
+    });
+    const detach = adapter.onHomeScreenAdded(() => setStatus("added"));
+    return () => {
+      cancelled = true;
+      detach();
+    };
+  }, [state]);
+
+  const add = () => {
+    if (state.status !== "ready") return;
+    state.adapter.addToHomeScreen();
+  };
+
+  return { status, add };
 }

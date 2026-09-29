@@ -54,4 +54,11 @@ export class MockTelegramAdapter implements TelegramAdapter {
     window.open(url, "_blank", "noopener,noreferrer");
   }
   close() {}
+  checkHomeScreenStatus() {
+    return Promise.resolve("unsupported" as const);
+  }
+  addToHomeScreen() {}
+  onHomeScreenAdded() {
+    return () => undefined;
+  }
 }

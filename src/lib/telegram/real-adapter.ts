@@ -1,4 +1,4 @@
-import type { HapticImpact, HapticNotice, TelegramAdapter } from "./adapter";
+import type { HapticImpact, HapticNotice, HomeScreenStatus, TelegramAdapter } from "./adapter";
 import type { TelegramWebApp } from "./web-app";
 
 const ZERO_INSET = { top: 0, bottom: 0, left: 0, right: 0 };
@@ -87,6 +87,25 @@ export class RealTelegramAdapter implements TelegramAdapter {
   }
   close() {
     this.webApp.close();
+  }
+
+  checkHomeScreenStatus() {
+    if (!this.supports("8.0") || !this.webApp.checkHomeScreenStatus) {
+      return Promise.resolve("unsupported" as const);
+    }
+    return new Promise<HomeScreenStatus>((resolve) => {
+      this.webApp.checkHomeScreenStatus?.((status) => resolve(status));
+    });
+  }
+
+  addToHomeScreen() {
+    if (this.supports("8.0")) this.webApp.addToHomeScreen?.();
+  }
+
+  onHomeScreenAdded(handler: () => void) {
+    if (!this.supports("8.0")) return () => undefined;
+    this.webApp.onEvent("homeScreenAdded", handler);
+    return () => this.webApp.offEvent("homeScreenAdded", handler);
   }
 
   private supports(version: string) {

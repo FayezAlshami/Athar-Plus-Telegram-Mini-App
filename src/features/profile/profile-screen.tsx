@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, BellSimple, Crown, Gift, Headset, Heart, Plus, Receipt, Wallet } from "@phosphor-icons/react";
+import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Wallet } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
@@ -16,6 +16,7 @@ import { CopyButton } from "@/components/shared/copy-button";
 import { Section } from "@/components/shared/section";
 import { fadeUp } from "@/lib/animation/variants";
 import { formatDateTime } from "@/lib/formatting/dates";
+import { useHomeScreenShortcut } from "@/lib/telegram/hooks";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 import { useProfile } from "@/features/memberships/queries";
 import { useNotifications } from "@/features/notifications/queries";
@@ -83,6 +84,7 @@ export function ProfileScreen() {
   const wallet = useWallet();
   const notifications = useNotifications();
   const unread = notifications.data?.pages[0]?.meta.unread_count ?? 0;
+  const homeScreen = useHomeScreenShortcut();
   const fullName = user ? [user.first_name, user.last_name].filter(Boolean).join(" ") : "";
 
   const openSupport = () => {
@@ -171,6 +173,23 @@ export function ProfileScreen() {
           <ListItem href="/orders" iconTone="accent" icon={<Receipt weight="duotone" />} title={t("nav.orders")} />
           <ListItem href="/wallet" iconTone="accent" icon={<Wallet weight="duotone" />} title={t("nav.wallet")} />
           <ListItem href="/gift-codes" iconTone="gold" icon={<Gift weight="duotone" />} title={t("giftCode.title")} />
+          {(homeScreen.status === "missed" || homeScreen.status === "unknown") && (
+            <ListItem
+              iconTone="accent"
+              icon={<DeviceMobile weight="duotone" />}
+              title={t("profile.addToHome")}
+              subtitle={t("profile.addToHomeHint")}
+              onClick={homeScreen.add}
+              showChevron
+            />
+          )}
+          {homeScreen.status === "added" && (
+            <ListItem
+              iconTone="success"
+              icon={<Check weight="bold" />}
+              title={t("profile.addedToHome")}
+            />
+          )}
           <ListItem
             href="/notifications"
             iconTone="neutral"
