@@ -31,7 +31,7 @@ export function GiftCodeScreen() {
 
   const schema = z.object({ code: z.string().trim().min(MIN_CODE_LENGTH, t("validation.tooShort")).max(64, t("validation.tooLong")) });
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { code: "" } });
-  useTelegramClosingConfirmation(!redemption && (form.formState.isDirty || redeem.isPending));
+  useTelegramClosingConfirmation(!redemption);
 
   const submit = form.handleSubmit(({ code }) =>
     redeem.mutate(code, {

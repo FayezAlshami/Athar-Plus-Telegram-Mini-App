@@ -141,8 +141,8 @@ export function useTelegramSafeArea(): TelegramSafeAreas & { isFullscreen: boole
 }
 
 /**
- * Protects Telegram's native close (X). Enable while a form is unsaved or
- * a submit is in flight; release after success, cancel, reset, or unmount.
+ * Extra native close (X) protection for a screen or sheet. The Telegram host
+ * already keeps a session guard; release after success, cancel, or unmount.
  */
 export function useTelegramClosingConfirmation(isDirty: boolean) {
   const state = useTelegramState();

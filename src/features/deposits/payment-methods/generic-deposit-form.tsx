@@ -45,7 +45,7 @@ export function GenericDepositForm({ method }: { method: PaymentMethod }) {
     customer_note: z.string().max(500, t("validation.tooLong")),
   });
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { amount: "", customer_note: "" } });
-  useTelegramClosingConfirmation(!submitted && (form.formState.isDirty || createDeposit.isPending));
+  useTelegramClosingConfirmation(!submitted);
 
   if (submitted) {
     return <SuccessMoment title={t("deposit.submittedTitle")} body={t("deposit.submittedBody")} />;

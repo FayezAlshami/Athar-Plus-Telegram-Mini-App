@@ -11,15 +11,20 @@ export interface ClosingConfirmationHost {
 
 let holds = 0;
 let host: ClosingConfirmationHost | null = null;
+let hostEnabled = false;
 
 function syncHost(): void {
   if (!host) return;
-  if (holds > 0) host.enableClosingConfirmation();
+  const shouldEnable = holds > 0;
+  if (shouldEnable === hostEnabled) return;
+  hostEnabled = shouldEnable;
+  if (shouldEnable) host.enableClosingConfirmation();
   else host.disableClosingConfirmation();
 }
 
 export function bindClosingConfirmationHost(next: ClosingConfirmationHost | null): void {
   host = next;
+  hostEnabled = false;
   syncHost();
 }
 
@@ -44,6 +49,7 @@ export function closingConfirmationHolds(): number {
 export function resetClosingConfirmation(): void {
   holds = 0;
   host = null;
+  hostEnabled = false;
 }
 
 export function canConfirmAppClose(

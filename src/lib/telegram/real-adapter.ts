@@ -109,11 +109,14 @@ export class RealTelegramAdapter implements TelegramAdapter {
   }
 
   enableClosingConfirmation() {
-    if (canConfirmAppClose(this.webApp)) this.webApp.enableClosingConfirmation();
+    if (!canConfirmAppClose(this.webApp)) return;
+    notifyTelegramReady(this.webApp);
+    this.webApp.enableClosingConfirmation();
   }
 
   disableClosingConfirmation() {
-    if (canConfirmAppClose(this.webApp)) this.webApp.disableClosingConfirmation();
+    if (!canConfirmAppClose(this.webApp)) return;
+    this.webApp.disableClosingConfirmation();
   }
 
   openLink(url: string) {
