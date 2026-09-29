@@ -22,3 +22,4 @@ export { applyTelegramThemeParams, normalizeColorScheme } from "./telegram-theme
 export { combineSafeAreaInsets, resolveSafeAreas } from "./telegram-safe-area";
 export { createHapticControls, hapticsAllowed } from "./telegram-haptics";
 export { hasNotifiedTelegramReady, notifyTelegramReady } from "./telegram-ready";
+export { holdClosingConfirmation } from "./telegram-closing-confirmation";

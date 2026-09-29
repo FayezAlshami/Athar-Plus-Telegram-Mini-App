@@ -52,7 +52,7 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
   const price = product.price;
   const balance = wallet.data?.balance_minor;
   const shortfall = balance !== undefined ? price.final_minor - balance : 0;
-  const isDirty = open && !placedOrder && (form.formState.isDirty || createOrder.isPending);
+  const isDirty = open && !placedOrder;
 
   useTelegramClosingConfirmation(isDirty);
 

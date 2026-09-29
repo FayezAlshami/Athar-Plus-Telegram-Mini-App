@@ -2,6 +2,7 @@ import type { HapticImpact, HapticNotice, HomeScreenStatus, TelegramAdapter } fr
 import type { TelegramThemeParams } from "./telegram.types";
 import { combineSafeAreaInsets, ZERO_INSET } from "./telegram-safe-area";
 import { normalizeColorScheme } from "./telegram-theme";
+import { canConfirmAppClose } from "./telegram-closing-confirmation";
 import { notifyTelegramReady } from "./telegram-ready";
 import type { TelegramWebApp } from "./web-app";
 
@@ -108,11 +109,11 @@ export class RealTelegramAdapter implements TelegramAdapter {
   }
 
   enableClosingConfirmation() {
-    if (this.supports("6.2")) this.webApp.enableClosingConfirmation?.();
+    if (canConfirmAppClose(this.webApp)) this.webApp.enableClosingConfirmation();
   }
 
   disableClosingConfirmation() {
-    if (this.supports("6.2")) this.webApp.disableClosingConfirmation?.();
+    if (canConfirmAppClose(this.webApp)) this.webApp.disableClosingConfirmation();
   }
 
   openLink(url: string) {

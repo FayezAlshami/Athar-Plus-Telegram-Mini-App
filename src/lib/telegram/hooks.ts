@@ -7,6 +7,7 @@ import type { HomeScreenStatus } from "./adapter";
 import type { TelegramColorScheme, TelegramSafeAreas, TelegramThemeParams } from "./telegram.types";
 import { createHapticControls } from "./telegram-haptics";
 import { resolveSafeAreas, ZERO_INSET } from "./telegram-safe-area";
+import { holdClosingConfirmation } from "./telegram-closing-confirmation";
 import { fallbackColorScheme } from "./telegram-theme";
 
 /** Safe haptics: silently no-op before readiness, outside Telegram, or with reduced motion. */
@@ -140,17 +141,14 @@ export function useTelegramSafeArea(): TelegramSafeAreas & { isFullscreen: boole
 }
 
 /**
- * Telegram Mini App close protection. Enable only while important input is dirty.
- * Always released on unmount, successful submit, cancel, or a clean form.
+ * Protects Telegram's native close (X). Enable while a form is unsaved or
+ * a submit is in flight; release after success, cancel, reset, or unmount.
  */
 export function useTelegramClosingConfirmation(isDirty: boolean) {
   const state = useTelegramState();
 
   useEffect(() => {
-    if (state.status !== "ready") return;
-    const adapter = state.adapter;
-    if (isDirty) adapter.enableClosingConfirmation();
-    else adapter.disableClosingConfirmation();
-    return () => adapter.disableClosingConfirmation();
+    if (state.status !== "ready") return holdClosingConfirmation(false);
+    return holdClosingConfirmation(isDirty);
   }, [state, isDirty]);
 }

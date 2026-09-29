@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useSyncExternalStore, type ReactN
 import type { TelegramAdapter } from "./adapter";
 import { resolveTelegramAdapter } from "./resolve-adapter";
 import { applyCssVariables, resolveSafeAreas, safeAreaCssVariables } from "./telegram-safe-area";
+import { bindClosingConfirmationHost } from "./telegram-closing-confirmation";
 import { applyTelegramThemeParams } from "./telegram-theme";
 
 type TelegramState = { status: "loading" } | { status: "unavailable" } | { status: "ready"; adapter: TelegramAdapter };
@@ -43,11 +44,13 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     if (state.status !== "ready") return;
     const adapter = state.adapter;
     adapter.ready();
+    bindClosingConfirmationHost(adapter);
     applyHostChrome(adapter);
     adapter.requestFullscreen();
     const stopViewport = adapter.onViewportChange(() => applyHostChrome(adapter));
     const stopTheme = adapter.onThemeChange(() => applyTelegramThemeParams(adapter.themeParams()));
     return () => {
+      bindClosingConfirmationHost(null);
       stopViewport();
       stopTheme();
     };
