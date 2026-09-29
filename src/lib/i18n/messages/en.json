@@ -157,6 +157,7 @@
     "saved": "Saved",
     "removed": "Removed from saved",
     "removeFailed": "Couldn't update saved services",
+    "listError": "Couldn't load saved services. Try again.",
     "pending": "Saving",
     "browse": "Browse services"
   },

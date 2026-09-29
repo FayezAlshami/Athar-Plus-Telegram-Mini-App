@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import type { Product } from "@/entities/product/types";
 import type { Paginated } from "@/entities/shared";
+import { isApiError } from "@/lib/api/errors";
 import { favoritesApi } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
 import { assertOnline } from "@/lib/network/assert-online";
@@ -23,7 +24,11 @@ export function useToggleFavorite() {
     mutationFn: async ({ productId, save }: { productId: number; save: boolean }) => {
       assertOnline();
       if (save) return favoritesApi.add(productId);
-      await favoritesApi.remove(productId);
+      try {
+        await favoritesApi.remove(productId);
+      } catch (error) {
+        if (!(isApiError(error) && error.status === 404)) throw error;
+      }
       return null;
     },
     onSuccess: (_data, { productId, save }) => {

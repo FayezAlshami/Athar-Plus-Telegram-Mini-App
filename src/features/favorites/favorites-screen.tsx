@@ -9,6 +9,7 @@ import { ErrorState } from "@/components/shared/error-state";
 import { LoadMore } from "@/components/shared/load-more";
 import { AnimatedHeartEmpty } from "@/components/illustrations/animated-icons";
 import { ProductList, ProductListSkeleton } from "@/features/products/product-list";
+import { isApiError } from "@/lib/api/errors";
 import { useFavorites } from "./queries";
 
 export function FavoritesScreen() {
@@ -20,7 +21,7 @@ export function FavoritesScreen() {
     <PageContainer withNav={false}>
       <PageHeader title={t("title")} />
       {error ? (
-        <ErrorState error={error} onRetry={() => refetch()} />
+        <ErrorState error={isApiError(error) && error.code === "not_found" ? t("listError") : error} onRetry={() => refetch()} />
       ) : isPending ? (
         <ProductListSkeleton rows={4} />
       ) : items.length === 0 ? (

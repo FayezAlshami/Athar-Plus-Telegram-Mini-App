@@ -10,13 +10,14 @@ import { EmptyState } from "./empty-state";
 export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const t = useTranslations();
   const message = useErrorMessage();
+  const body = typeof error === "string" ? error : message(error);
   const offline = isApiError(error) && error.isNetworkError;
 
   return (
     <EmptyState
       icon={offline ? <WifiSlash /> : <WarningCircle />}
       title={t("errors.genericTitle")}
-      body={message(error)}
+      body={body}
       action={onRetry && <Button variant="secondary" onClick={onRetry}>{t("common.retry")}</Button>}
     />
   );

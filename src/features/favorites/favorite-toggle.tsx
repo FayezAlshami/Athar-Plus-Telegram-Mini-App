@@ -82,8 +82,16 @@ export function FavoriteToggle({
           action: {
             label: tCommon("undo"),
             onClick: () => {
-              if (!armed.undo()) return;
+              const cancelled = armed.undo();
               setSaved(!next);
+              if (cancelled) return;
+              toggle.mutate(
+                { productId, save: !next },
+                { onError: (error) => {
+                  setSaved(next);
+                  toast.error(errorMessage(error));
+                } },
+              );
             },
           },
         });
