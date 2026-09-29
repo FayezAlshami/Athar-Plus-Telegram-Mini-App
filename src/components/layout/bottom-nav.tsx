@@ -22,7 +22,7 @@ export function BottomNav() {
   const haptics = useHaptics();
   const reduce = useReducedMotion();
   const listRef = useRef<HTMLUListElement>(null);
-  const [indicator, setIndicator] = useState<{ x: number; width: number } | null>(null);
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
 
   const warm = (href: string) => {
     router.prefetch(href);
@@ -39,11 +39,11 @@ export function BottomNav() {
         setIndicator(null);
         return;
       }
-      // offsetLeft is measured from the list's padding edge — the same origin as the
-      // indicator's `left: 0` — so it is exact in both LTR and RTL.
+      const listBox = list.getBoundingClientRect();
+      const itemBox = item.getBoundingClientRect();
       setIndicator({
-        x: item.offsetLeft + INSET,
-        width: Math.max(item.offsetWidth - INSET * 2, 0),
+        left: itemBox.left - listBox.left - list.clientLeft + INSET,
+        width: Math.max(itemBox.width - INSET * 2, 0),
       });
     };
 
@@ -74,14 +74,15 @@ export function BottomNav() {
         {indicator && (
           <motion.span
             aria-hidden
-            className="pointer-events-none absolute bottom-1.5 left-0 top-1.5 rounded-full bg-[var(--nav-indicator)] shadow-[inset_0_1px_0_var(--nav-glass-highlight),0_8px_16px_-10px_color-mix(in_srgb,var(--accent)_65%,transparent)]"
+            className="pointer-events-none absolute bottom-1.5 top-1.5 rounded-full bg-[var(--nav-indicator)] shadow-[inset_0_1px_0_var(--nav-glass-highlight),0_8px_16px_-10px_color-mix(in_srgb,var(--accent)_65%,transparent)]"
             initial={false}
-            animate={{ x: indicator.x, width: indicator.width }}
+            animate={{ left: indicator.left, width: indicator.width }}
+            style={{ x: 0 }}
             transition={
               reduce
                 ? { duration: 0 }
                 : {
-                    x: spring.interactive,
+                    left: spring.interactive,
                     width: { type: "spring", stiffness: 260, damping: 26, mass: 0.8 },
                   }
             }
