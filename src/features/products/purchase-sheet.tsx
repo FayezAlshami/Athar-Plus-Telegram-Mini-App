@@ -18,7 +18,7 @@ import { createIdempotencyKey } from "@/lib/api/idempotency";
 import { isApiError } from "@/lib/api/errors";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { track } from "@/lib/analytics/events";
-import { useHaptics } from "@/lib/telegram/hooks";
+import { useHaptics, useTelegramClosingConfirmation } from "@/lib/telegram/hooks";
 import { useWallet } from "@/features/wallet/queries";
 import { buildOrderFormSchema, type OrderFormValues } from "./order-form-schema";
 import { DynamicField } from "./dynamic-field";
@@ -52,6 +52,9 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
   const price = product.price;
   const balance = wallet.data?.balance_minor;
   const shortfall = balance !== undefined ? price.final_minor - balance : 0;
+  const isDirty = open && !placedOrder && (form.formState.isDirty || createOrder.isPending);
+
+  useTelegramClosingConfirmation(isDirty);
 
   const submit = form.handleSubmit((values) => {
     track("order_started", { product_id: product.id });
@@ -84,6 +87,7 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
     if (!next) {
       setPlacedOrder(null);
       createOrder.reset();
+      form.reset();
     }
   };
 

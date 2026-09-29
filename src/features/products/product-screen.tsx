@@ -111,7 +111,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
       </PageContainer>
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/92 pb-[calc(var(--safe-bottom)+12px)] pt-3 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[var(--content-max-width)] flex-col gap-2 px-4">
+        <div className="mx-auto flex max-w-[var(--content-max-width)] flex-col gap-2 ps-[max(1rem,var(--safe-left))] pe-[max(1rem,var(--safe-right))]">
           <div className="flex items-center gap-2">
             <Button size="lg" fullWidth disabled={!product.is_purchasable} onClick={() => setPurchaseOpen(true)} haptic="medium">
               {product.is_purchasable

@@ -5,6 +5,7 @@ import { THEME_COOKIE } from "@/lib/constants/storage-keys";
 import { readCookie, writeCookie } from "@/lib/cookies";
 import { track } from "@/lib/analytics/events";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
+import { normalizeColorScheme } from "@/lib/telegram/telegram-theme";
 
 export type Theme = "light" | "dark";
 
@@ -36,8 +37,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Follow Telegram's scheme until the user chooses explicitly.
   useEffect(() => {
-    if (telegram.status !== "ready" || readCookie(THEME_COOKIE)) return;
-    applyTheme(telegram.adapter.colorScheme);
+    if (telegram.status !== "ready") return;
+    const adapter = telegram.adapter;
+    const followHost = () => {
+      if (readCookie(THEME_COOKIE)) return;
+      applyTheme(normalizeColorScheme(adapter.colorScheme));
+    };
+    followHost();
+    return adapter.onThemeChange(followHost);
   }, [telegram]);
 
   // Keep Telegram's header/background in sync with the brand surfaces.

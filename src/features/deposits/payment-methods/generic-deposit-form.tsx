@@ -13,7 +13,7 @@ import { SuccessMoment } from "@/components/shared/success-moment";
 import { createIdempotencyKey } from "@/lib/api/idempotency";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { formatMoney, parseMajorToMinor } from "@/lib/formatting/money";
-import { useHaptics } from "@/lib/telegram/hooks";
+import { useHaptics, useTelegramClosingConfirmation } from "@/lib/telegram/hooks";
 import { useCreateDeposit } from "../queries";
 
 /**
@@ -45,6 +45,7 @@ export function GenericDepositForm({ method }: { method: PaymentMethod }) {
     customer_note: z.string().max(500, t("validation.tooLong")),
   });
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { amount: "", customer_note: "" } });
+  useTelegramClosingConfirmation(!submitted && (form.formState.isDirty || createDeposit.isPending));
 
   if (submitted) {
     return <SuccessMoment title={t("deposit.submittedTitle")} body={t("deposit.submittedBody")} />;
@@ -77,7 +78,7 @@ export function GenericDepositForm({ method }: { method: PaymentMethod }) {
         {(a11y) => <Textarea {...a11y} {...form.register("customer_note")} rows={2} />}
       </Field>
       {createDeposit.error && <p role="alert" className="text-small text-danger">{errorMessage(createDeposit.error)}</p>}
-      <Button type="submit" size="lg" fullWidth loading={createDeposit.isPending}>
+      <Button type="submit" size="lg" fullWidth loading={createDeposit.isPending} haptic="light">
         {t("deposit.submit")}
       </Button>
     </form>

@@ -17,7 +17,7 @@ import { SuccessMoment } from "@/components/shared/success-moment";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { formatMoney } from "@/lib/formatting/money";
 import { track } from "@/lib/analytics/events";
-import { useHaptics } from "@/lib/telegram/hooks";
+import { useHaptics, useTelegramClosingConfirmation } from "@/lib/telegram/hooks";
 import { useRedeemGiftCode } from "@/features/wallet/queries";
 
 const MIN_CODE_LENGTH = 4;
@@ -31,6 +31,7 @@ export function GiftCodeScreen() {
 
   const schema = z.object({ code: z.string().trim().min(MIN_CODE_LENGTH, t("validation.tooShort")).max(64, t("validation.tooLong")) });
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { code: "" } });
+  useTelegramClosingConfirmation(!redemption && (form.formState.isDirty || redeem.isPending));
 
   const submit = form.handleSubmit(({ code }) =>
     redeem.mutate(code, {
@@ -79,7 +80,7 @@ export function GiftCodeScreen() {
               />
             )}
           </Field>
-          <Button type="submit" size="lg" fullWidth loading={redeem.isPending}>
+          <Button type="submit" size="lg" fullWidth loading={redeem.isPending} haptic="light">
             {t("giftCode.redeem")}
           </Button>
         </form>

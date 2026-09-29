@@ -6,7 +6,7 @@ export function PageContainer({ children, withNav = true, className }: { childre
   return (
     <main
       className={cn(
-        "mx-auto flex w-full max-w-[var(--content-max-width)] flex-col gap-6 px-4 pt-[calc(var(--safe-top)+12px)]",
+        "mx-auto flex w-full max-w-[var(--content-max-width)] flex-col gap-6 pt-[calc(var(--safe-top)+12px)] ps-[max(1rem,var(--safe-left))] pe-[max(1rem,var(--safe-right))]",
         withNav ? "pb-[calc(var(--bottom-nav-height)+var(--safe-bottom)+28px)]" : "pb-[calc(var(--safe-bottom)+120px)]",
         className,
       )}

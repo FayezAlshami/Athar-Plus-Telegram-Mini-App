@@ -64,7 +64,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label={t("primary")}
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.75rem,var(--safe-bottom))]"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 ps-[max(0.75rem,var(--safe-left))] pe-[max(0.75rem,var(--safe-right))] pb-[max(0.75rem,var(--safe-bottom))]"
     >
       <ul
         ref={listRef}

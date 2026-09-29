@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AuthSession, User } from "@/entities/user/types";
 import { configureApiSession } from "@/lib/api/client";
-import { accountApi, authApi } from "@/lib/api/endpoints";
+import { accountApi } from "@/lib/api/endpoints";
 import { isApiError } from "@/lib/api/errors";
 import { queryKeys } from "@/lib/api/query-keys";
 import { LOCALE_COOKIE } from "@/lib/i18n/config";
@@ -15,6 +15,7 @@ import { track } from "@/lib/analytics/events";
 import { warmSession } from "@/features/catalog/warm-session";
 import type { TelegramAdapter } from "@/lib/telegram/adapter";
 import { parseStartParam } from "@/lib/telegram/start-param";
+import { authenticateFromHost } from "@/lib/telegram/telegram-auth";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 
 type AuthStatus = "authenticating" | "authenticated" | "failed" | "unavailable";
@@ -31,10 +32,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function authenticate(adapter: TelegramAdapter): Promise<AuthSession> {
-  if (adapter.kind === "mock" && adapter.user) {
-    return authApi.development({ ...adapter.user });
-  }
-  return authApi.telegram(adapter.initData);
+  return authenticateFromHost(adapter);
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {

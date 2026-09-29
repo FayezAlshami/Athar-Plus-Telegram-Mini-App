@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { useTelegramBackButton } from "@/lib/telegram/hooks";
+import { useNotifyTelegramReady, useTelegramBackButton } from "@/lib/telegram/hooks";
 import { useScrollRestoration } from "@/hooks/use-scroll-restoration";
 import { AuthGate } from "./auth-gate";
 import { useGoBack } from "./back-button";
@@ -16,6 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isPrimary = isPrimaryDestination(pathname);
   const goBack = useGoBack();
   useScrollRestoration();
+  useNotifyTelegramReady();
 
   useTelegramBackButton(pathname !== "/", goBack);
 

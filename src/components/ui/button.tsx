@@ -49,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     fullWidth = false,
     leadingIcon,
     trailingIcon,
-    haptic = "light",
+    haptic = false,
     className,
     disabled,
     onClick,

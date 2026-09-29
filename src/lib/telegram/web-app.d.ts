@@ -1,3 +1,5 @@
+import type { TelegramThemeParams } from "./telegram.types";
+
 /** Minimal typing of the Telegram WebApp surface this app uses. */
 export interface TelegramWebAppUser {
   id: number;
@@ -25,13 +27,20 @@ export interface TelegramWebApp {
   version: string;
   platform: string;
   colorScheme: "light" | "dark";
+  themeParams: TelegramThemeParams;
   viewportStableHeight: number;
+  isFullscreen?: boolean;
+  isClosingConfirmationEnabled?: boolean;
   safeAreaInset?: TelegramSafeAreaInset;
   contentSafeAreaInset?: TelegramSafeAreaInset;
   isVersionAtLeast(version: string): boolean;
   ready(): void;
   expand(): void;
   close(): void;
+  requestFullscreen?(): void;
+  exitFullscreen?(): void;
+  enableClosingConfirmation?(): void;
+  disableClosingConfirmation?(): void;
   addToHomeScreen?(): void;
   checkHomeScreenStatus?(callback: (status: "unsupported" | "unknown" | "added" | "missed") => void): void;
   setHeaderColor(color: string): void;

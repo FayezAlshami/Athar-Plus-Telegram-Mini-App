@@ -1,7 +1,9 @@
 import type { HapticImpact, HapticNotice, HomeScreenStatus, TelegramAdapter } from "./adapter";
+import type { TelegramThemeParams } from "./telegram.types";
+import { combineSafeAreaInsets, ZERO_INSET } from "./telegram-safe-area";
+import { normalizeColorScheme } from "./telegram-theme";
+import { notifyTelegramReady } from "./telegram-ready";
 import type { TelegramWebApp } from "./web-app";
-
-const ZERO_INSET = { top: 0, bottom: 0, left: 0, right: 0 };
 
 export class RealTelegramAdapter implements TelegramAdapter {
   readonly kind = "telegram" as const;
@@ -21,13 +23,16 @@ export class RealTelegramAdapter implements TelegramAdapter {
     return this.webApp.initDataUnsafe.start_param ?? null;
   }
   get colorScheme() {
-    return this.webApp.colorScheme;
+    return normalizeColorScheme(this.webApp.colorScheme);
   }
 
   ready() {
-    this.webApp.ready();
     this.webApp.expand();
     if (this.supports("7.7")) this.webApp.disableVerticalSwipes?.();
+  }
+
+  notifyReady() {
+    notifyTelegramReady(this.webApp);
   }
 
   setChromeColors({ header, background }: { header: string; background: string }) {
@@ -37,23 +42,46 @@ export class RealTelegramAdapter implements TelegramAdapter {
     if (this.supports("7.10")) this.webApp.setBottomBarColor?.(background);
   }
 
+  themeParams(): TelegramThemeParams {
+    return this.webApp.themeParams ?? {};
+  }
+
+  onThemeChange(handler: () => void) {
+    this.webApp.onEvent("themeChanged", handler);
+    return () => this.webApp.offEvent("themeChanged", handler);
+  }
+
+  deviceSafeArea() {
+    return this.webApp.safeAreaInset ?? ZERO_INSET;
+  }
+
+  contentSafeArea() {
+    return this.webApp.contentSafeAreaInset ?? ZERO_INSET;
+  }
+
   safeAreaInsets() {
-    const device = this.webApp.safeAreaInset ?? ZERO_INSET;
-    const content = this.webApp.contentSafeAreaInset ?? ZERO_INSET;
-    return {
-      top: device.top + content.top,
-      bottom: device.bottom + content.bottom,
-      left: device.left + content.left,
-      right: device.right + content.right,
-    };
+    return combineSafeAreaInsets(this.deviceSafeArea(), this.contentSafeArea());
   }
 
   viewportHeight() {
     return this.webApp.viewportStableHeight || null;
   }
 
+  isFullscreen() {
+    return Boolean(this.webApp.isFullscreen);
+  }
+
+  requestFullscreen() {
+    if (!this.supports("8.0") || !this.webApp.requestFullscreen) return;
+    try {
+      this.webApp.requestFullscreen();
+    } catch {
+      // Progressive enhancement — the app stays expanded.
+    }
+  }
+
   onViewportChange(handler: () => void) {
-    const events = ["viewportChanged", "safeAreaChanged", "contentSafeAreaChanged"];
+    const events = ["viewportChanged", "safeAreaChanged", "contentSafeAreaChanged", "fullscreenChanged", "fullscreenFailed"];
     events.forEach((event) => this.webApp.onEvent(event, handler));
     return () => events.forEach((event) => this.webApp.offEvent(event, handler));
   }
@@ -77,6 +105,14 @@ export class RealTelegramAdapter implements TelegramAdapter {
   }
   selection() {
     if (this.supports("6.1")) this.webApp.HapticFeedback.selectionChanged();
+  }
+
+  enableClosingConfirmation() {
+    if (this.supports("6.2")) this.webApp.enableClosingConfirmation?.();
+  }
+
+  disableClosingConfirmation() {
+    if (this.supports("6.2")) this.webApp.disableClosingConfirmation?.();
   }
 
   openLink(url: string) {

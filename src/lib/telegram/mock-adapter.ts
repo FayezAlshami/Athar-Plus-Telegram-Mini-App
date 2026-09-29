@@ -1,4 +1,8 @@
 import type { TelegramAdapter } from "./adapter";
+import type { TelegramThemeParams } from "./telegram.types";
+import { notifyTelegramReady } from "./telegram-ready";
+import { ZERO_INSET } from "./telegram-safe-area";
+import { fallbackColorScheme } from "./telegram-theme";
 import type { TelegramWebAppUser } from "./web-app";
 
 /**
@@ -25,17 +29,36 @@ export class MockTelegramAdapter implements TelegramAdapter {
   constructor() {
     const params = new URLSearchParams(window.location.search);
     this.startParam = params.get("startapp");
-    this.colorScheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    this.colorScheme = fallbackColorScheme();
   }
 
   ready() {}
+  notifyReady() {
+    notifyTelegramReady(null);
+  }
   setChromeColors() {}
+  themeParams(): TelegramThemeParams {
+    return {};
+  }
+  onThemeChange() {
+    return () => undefined;
+  }
+  deviceSafeArea() {
+    return ZERO_INSET;
+  }
+  contentSafeArea() {
+    return ZERO_INSET;
+  }
   safeAreaInsets() {
-    return { top: 0, bottom: 0, left: 0, right: 0 };
+    return ZERO_INSET;
   }
   viewportHeight() {
     return null;
   }
+  isFullscreen() {
+    return false;
+  }
+  requestFullscreen() {}
   onViewportChange(handler: () => void) {
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
@@ -47,6 +70,8 @@ export class MockTelegramAdapter implements TelegramAdapter {
   impact() {}
   notify() {}
   selection() {}
+  enableClosingConfirmation() {}
+  disableClosingConfirmation() {}
   openLink(url: string) {
     window.open(url, "_blank", "noopener,noreferrer");
   }

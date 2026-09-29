@@ -23,7 +23,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
       onClick={async () => {
         const ok = await copyText(value);
         if (!ok) return;
-        haptics.notify("success");
+        haptics.selection();
         setCopied(true);
         window.setTimeout(() => setCopied(false), RESET_DELAY_MS);
       }}
