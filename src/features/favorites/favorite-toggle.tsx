@@ -89,7 +89,7 @@ export function FavoriteToggle({
         });
       }}
       className={cn(
-        "relative inline-flex size-9 items-center justify-center rounded-full border border-white/25 bg-neutral-600/85 text-white shadow-md backdrop-blur-sm transition-transform",
+        "inline-flex size-9 items-center justify-center rounded-full border border-white/25 bg-neutral-600/85 text-white shadow-md backdrop-blur-sm transition-transform",
         pulse && "scale-110",
         className,
       )}
