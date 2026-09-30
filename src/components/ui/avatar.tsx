@@ -9,7 +9,7 @@ export function Avatar({ name, src, size = 44, className }: { name: string; src?
     >
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element -- Telegram CDN avatars, tiny and pre-sized
-        <img src={src} alt="" width={size} height={size} className="size-full object-cover" />
+        <img src={src} alt="" width={size} height={size} className="block size-full rounded-full object-cover" />
       ) : (
         <span aria-hidden>{initials}</span>
       )}
