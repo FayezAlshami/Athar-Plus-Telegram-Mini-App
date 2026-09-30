@@ -44,7 +44,10 @@
     "openInTelegramBody": "هذا التطبيق يعمل داخل تيليجرام لحماية حسابك ومحفظتك.",
     "openBot": "فتح البوت",
     "failedTitle": "تعذّر تسجيل الدخول",
-    "failedBody": "حدث خطأ أثناء التحقق من جلستك. حاول مجددًا أو أعد فتح التطبيق."
+    "failedBody": "حدث خطأ أثناء التحقق من جلستك. حاول مجددًا أو أعد فتح التطبيق.",
+    "writeAccessTitle": "اسمح للبوت بمراسلتك",
+    "writeAccessBody": "أثر بلس يحتاج إرسال تحديثات الطلب والإيداع والعروض عبر البوت. بدون هذه الصلاحية لا يمكن استخدام التطبيق.",
+    "allowBot": "السماح للبوت"
   },
   "home": {
     "greeting": "أهلًا {name}",
@@ -90,6 +93,10 @@
     "submit": "إرسال طلب الإيداع",
     "submittedTitle": "تم إرسال طلب الإيداع",
     "submittedBody": "سيُضاف الرصيد إلى محفظتك بعد مراجعة التحويل.",
+    "confirmSubmit": "إرسال طلب إيداع بقيمة {amount}؟ لن يُخصم شيء قبل المراجعة.",
+    "stepSent": "أُرسل",
+    "stepReview": "قيد المراجعة",
+    "stepDone": "تم",
     "invalidAmount": "أدخل مبلغًا صحيحًا"
   },
   "giftCode": {
@@ -98,6 +105,7 @@
     "label": "كود الهدية",
     "placeholder": "مثال: ATHAR-2026",
     "redeem": "استخدام الكود",
+    "confirmRedeem": "استخدام هذا الكود وإضافة الرصيد إلى محفظتك؟",
     "successTitle": "تمت إضافة {amount} إلى محفظتك",
     "successBody": "استمتع بخدماتك مع أثر بلس."
   },
@@ -108,6 +116,8 @@
     "buyFor": "اطلب بـ {price}",
     "share": "مشاركة",
     "shareText": "شوف هذا المنتج على Athar Plus",
+    "shareStory": "مشاركة كقصة",
+    "closeImage": "إغلاق الصورة",
     "description": "تفاصيل الخدمة",
     "delivery": "طريقة التنفيذ",
     "requiredInfo": "المعلومات المطلوبة",
@@ -125,6 +135,12 @@
     "confirmBody": "سيتم خصم {price} من رصيد محفظتك.",
     "note": "ملاحظة للفريق",
     "placeOrder": "تأكيد الشراء",
+    "stepProduct": "المنتج",
+    "stepDetails": "البيانات",
+    "stepConfirm": "التأكيد",
+    "continueToDetails": "متابعة",
+    "backToDetails": "رجوع للبيانات",
+    "confirmCharge": "سيتم خصم {price} من رصيد محفظتك. هل تريد المتابعة؟",
     "orderCreatedTitle": "تم إنشاء طلبك",
     "orderCreatedBody": "رقم الطلب {number}. سنعلمك بكل تحديث.",
     "viewOrder": "عرض الطلب",
@@ -239,6 +255,9 @@
     "spentNote": "من الطلبات المكتملة",
     "favorites": "الخدمات المحفوظة",
     "referrals": "إحالات المنتجات",
+    "shareReferral": "مشاركة دعوتي",
+    "telegramPremium": "تيليجرام بريميوم",
+    "addToHomePrompt": "أضف أثر بلس إلى شاشتك الرئيسية لفتحه بلمسة.",
     "referralStats": "{signups} تسجيل · {orders} طلب",
     "addToHome": "إضافة إلى الشاشة الرئيسية",
     "addToHomeHint": "اختصار للتطبيق على موبايلك",

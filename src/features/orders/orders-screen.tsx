@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { MagnifyingGlass, Receipt } from "@phosphor-icons/react";
+import { MagnifyingGlass, Receipt, X } from "@phosphor-icons/react";
 import type { Order } from "@/entities/order/types";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -21,6 +21,8 @@ import type { OrderStatusGroup } from "@/lib/api/endpoints";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { formatRelative } from "@/lib/formatting/dates";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
+import { useHideKeyboard } from "@/lib/telegram/hooks";
+import { cn } from "@/lib/cn";
 import { DateRangeField } from "./date-range-field";
 import { OrderStatusBadge } from "./order-status-badge";
 import { useOrders } from "./queries";
@@ -35,11 +37,13 @@ function OrderCard({ order }: { order: Order }) {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p dir="auto" className="truncate text-card-title">{order.product.name}</p>
-            <p className="text-caption text-muted-foreground" dir="ltr">{order.number}</p>
+            <p className="truncate text-caption text-muted-foreground"><bdi dir="ltr">{order.number}</bdi></p>
           </div>
-          <OrderStatusBadge status={order.status} />
+          <span className="shrink-0">
+            <OrderStatusBadge status={order.status} />
+          </span>
         </div>
-        <div className="flex items-center justify-between text-small">
+        <div className="flex items-center justify-between gap-3 text-small">
           <span className="text-muted-foreground">{formatRelative(order.created_at, locale)}</span>
           <Money amountMinor={order.total_minor} currency={order.currency} />
         </div>
@@ -50,15 +54,17 @@ function OrderCard({ order }: { order: Order }) {
 
 function StatCard({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="rounded-lg border border-border bg-surface p-3 shadow-sm">
-      <p className="text-caption text-muted-foreground">{label}</p>
-      <div className="mt-1 text-section-title">{value}</div>
+    <div className="min-w-0 rounded-lg border border-border bg-surface p-3 shadow-sm">
+      <p className="truncate text-caption text-muted-foreground">{label}</p>
+      <div className="mt-1 truncate text-section-title tabular-nums">{value}</div>
     </div>
   );
 }
 
 export function OrdersScreen() {
   const t = useTranslations("orders");
+  const tSearch = useTranslations("search");
+  const hideKeyboard = useHideKeyboard();
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [from, setFrom] = useState("");
@@ -77,20 +83,40 @@ export function OrdersScreen() {
   return (
     <PageContainer>
       <PageHeader title={t("title")} />
-      <div className="relative">
+      <form
+        role="search"
+        className="relative"
+        onSubmit={(event) => {
+          event.preventDefault();
+          hideKeyboard();
+        }}
+      >
         <MagnifyingGlass aria-hidden className="pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
         <Input
+          type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => event.key === "Escape" && setQuery("")}
           placeholder={t("searchPlaceholder")}
+          aria-label={t("searchPlaceholder")}
           enterKeyHint="search"
-          className="ps-11"
+          className="ps-11 pe-12 [&::-webkit-search-cancel-button]:hidden"
         />
-      </div>
+        {query && (
+          <button
+            type="button"
+            aria-label={tSearch("clear")}
+            onClick={() => setQuery("")}
+            className="absolute end-2.5 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
+          >
+            <X className="size-3.5" weight="bold" />
+          </button>
+        )}
+      </form>
       <DateRangeField from={from} to={to} onChange={({ from: nextFrom, to: nextTo }) => { setFrom(nextFrom); setTo(nextTo); }} />
 
       {orders.isPending ? (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2" role="status" aria-busy="true">
           {Array.from({ length: 4 }, (_, index) => <Skeleton key={index} className="h-[72px] rounded-lg" />)}
         </div>
       ) : summary ? (
@@ -117,14 +143,20 @@ export function OrdersScreen() {
           icon={<Receipt />}
           title={filtered ? t("noResultsTitle") : t("emptyTitle")}
           body={filtered ? t("noResultsBody") : t("emptyBody")}
-          action={!filtered ? <Link href="/categories" className="text-button text-accent">{t("browse")}</Link> : undefined}
+          action={!filtered ? <Link href="/categories" className="inline-flex h-11 items-center justify-center rounded-md bg-accent-soft px-5 text-button text-accent transition-transform duration-150 active:scale-[0.97]">{t("browse")}</Link> : undefined}
         />
       ) : (
         <>
-          <motion.ul key={`${filter}-${debouncedQuery}-${from}-${to}`} variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-2.5">
+          <motion.ul
+            variants={listContainer}
+            initial="hidden"
+            animate="visible"
+            aria-busy={orders.isPlaceholderData || undefined}
+            className={cn("flex flex-col gap-2.5 transition-opacity duration-200", orders.isPlaceholderData && "opacity-50")}
+          >
             {items.map((order) => <OrderCard key={order.id} order={order} />)}
           </motion.ul>
-          <LoadMore hasNext={Boolean(orders.hasNextPage)} isFetching={orders.isFetchingNextPage} onLoadMore={() => orders.fetchNextPage()} />
+          <LoadMore hasNext={Boolean(orders.hasNextPage) && !orders.isPlaceholderData} isFetching={orders.isFetchingNextPage} onLoadMore={() => orders.fetchNextPage()} />
         </>
       )}
     </PageContainer>

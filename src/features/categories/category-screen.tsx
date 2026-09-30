@@ -23,11 +23,13 @@ export function CategoryScreen({ slug }: { slug: string }) {
   const children = category.data?.children ?? [];
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
       {category.data ? (
         <PageHeader title={category.data.name} />
+      ) : category.error ? (
+        <PageHeader title={t("categories.title")} />
       ) : (
-        <div className="flex min-h-11 items-center gap-3">
+        <div className="flex min-h-11 items-center gap-3" role="status" aria-busy="true">
           <Skeleton className="size-11 rounded-full" />
           <Skeleton className="h-6 w-40" />
         </div>
@@ -40,7 +42,7 @@ export function CategoryScreen({ slug }: { slug: string }) {
             <motion.div key={child.id} variants={fadeUp}>
               <Link
                 href={`/categories/${encodeURIComponent(child.slug)}`}
-                className="flex h-full items-center gap-3 rounded-lg border border-border bg-surface p-3 shadow-sm transition-transform duration-150 active:scale-[0.98]"
+                className="flex h-full items-center gap-3 rounded-lg border border-border bg-surface p-3 shadow-sm transition-[scale,background-color] duration-150 active:scale-[0.98] active:bg-muted/40"
               >
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent [&_svg]:size-5">
                   <CategoryIcon name={child.icon} />

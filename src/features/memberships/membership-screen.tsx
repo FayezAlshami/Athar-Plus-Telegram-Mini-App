@@ -51,7 +51,7 @@ export function MembershipScreen() {
   useEffect(() => track("plus_viewed"), []);
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
       <PageHeader title={t("title")} />
       {error ? (
         <ErrorState error={error} onRetry={() => refetch()} />

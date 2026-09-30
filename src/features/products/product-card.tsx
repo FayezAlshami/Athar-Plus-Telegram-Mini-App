@@ -20,7 +20,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <motion.div variants={fadeUp} className="relative w-[168px] shrink-0 self-start" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
-      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute start-2 top-2 z-20" />
+      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2 top-2 z-20" />
       <Card href={`/products/${product.id}`} className="flex flex-col overflow-hidden">
         <ProductImage src={product.image_url} alt={product.name} sizes="168px" className="aspect-[4/3]" />
         <div className="flex flex-col gap-2 p-3">

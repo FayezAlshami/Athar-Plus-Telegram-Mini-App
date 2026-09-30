@@ -9,6 +9,7 @@ import { createHapticControls } from "./telegram-haptics";
 import { resolveSafeAreas, ZERO_INSET } from "./telegram-safe-area";
 import { holdClosingConfirmation } from "./telegram-closing-confirmation";
 import { fallbackColorScheme } from "./telegram-theme";
+import { suppressVerticalSwipes } from "./telegram-vertical-swipes";
 
 /** Safe haptics: silently no-op before readiness, outside Telegram, or with reduced motion. */
 export function useHaptics() {
@@ -151,4 +152,84 @@ export function useTelegramClosingConfirmation(isDirty: boolean) {
     if (state.status !== "ready") return holdClosingConfirmation(false);
     return holdClosingConfirmation(isDirty);
   }, [state, isDirty]);
+}
+
+export function useTelegramDialogs() {
+  const state = useTelegramState();
+  const adapter = state.status === "ready" ? state.adapter : null;
+  return {
+    confirm: (message: string) => (adapter ? adapter.showConfirm(message) : Promise.resolve(window.confirm(message))),
+    alert: (message: string) => {
+      if (adapter) return adapter.showAlert(message);
+      window.alert(message);
+      return Promise.resolve();
+    },
+  };
+}
+
+export interface TelegramBottomButtonSpec {
+  text: string;
+  enabled?: boolean;
+  onClick: () => void;
+}
+
+/** Shows Telegram's Main/Secondary buttons while mounted. Hidden on unmount. */
+export function useTelegramBottomButtons(options: {
+  active: boolean;
+  main: TelegramBottomButtonSpec | null;
+  secondary: TelegramBottomButtonSpec | null;
+}): { usingNative: boolean } {
+  const state = useTelegramState();
+  const mainClick = useRef(options.main?.onClick);
+  const secondaryClick = useRef(options.secondary?.onClick);
+  useEffect(() => {
+    mainClick.current = options.main?.onClick;
+    secondaryClick.current = options.secondary?.onClick;
+  });
+
+  const usingNative = state.status === "ready" && state.adapter.hasBottomButtons();
+
+  useEffect(() => {
+    if (state.status !== "ready" || !usingNative) return;
+    const adapter = state.adapter;
+    if (!options.active) {
+      const hideMain = adapter.setMainButton(null, () => undefined);
+      const hideSecondary = adapter.setSecondaryButton(null, () => undefined);
+      return () => {
+        hideMain();
+        hideSecondary();
+      };
+    }
+    const releaseMain = adapter.setMainButton(
+      options.main ? { text: options.main.text, enabled: options.main.enabled !== false } : null,
+      () => mainClick.current?.(),
+    );
+    const releaseSecondary = adapter.setSecondaryButton(
+      options.secondary ? { text: options.secondary.text, enabled: options.secondary.enabled !== false } : null,
+      () => secondaryClick.current?.(),
+    );
+    return () => {
+      releaseMain();
+      releaseSecondary();
+    };
+  }, [state, usingNative, options.active, options.main?.text, options.main?.enabled, options.secondary?.text, options.secondary?.enabled]);
+
+  return { usingNative };
+}
+
+export function useHideKeyboard() {
+  const state = useTelegramState();
+  return () => {
+    if (state.status === "ready") state.adapter.hideKeyboard();
+    else if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  };
+}
+
+/** Blocks Telegram's swipe-to-close while `held` (open sheet or viewer). */
+export function useSuppressVerticalSwipes(held: boolean) {
+  const state = useTelegramState();
+  useEffect(() => {
+    if (state.status !== "ready") return;
+    return suppressVerticalSwipes(held);
+  }, [state, held]);
 }

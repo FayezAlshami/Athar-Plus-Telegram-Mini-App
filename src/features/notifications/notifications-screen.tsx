@@ -34,12 +34,12 @@ export function NotificationsScreen() {
   const unread = data?.pages[0]?.meta.unread_count ?? 0;
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
       <PageHeader
         title={t("title")}
         trailing={
           data && unread > 0 ? (
-            <Button size="sm" variant="ghost" loading={markAllRead.isPending} onClick={() => markAllRead.mutate()}>
+            <Button size="sm" variant="ghost" className="-me-2 text-accent" loading={markAllRead.isPending} onClick={() => markAllRead.mutate()}>
               {t("markAllRead")}
             </Button>
           ) : null
@@ -48,7 +48,7 @@ export function NotificationsScreen() {
       {error ? (
         <ErrorState error={error} onRetry={() => refetch()} />
       ) : isPending ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" role="status" aria-busy="true">
           {Array.from({ length: 4 }, (_, index) => (
             <Skeleton key={index} className="h-20 rounded-lg" />
           ))}
@@ -57,12 +57,12 @@ export function NotificationsScreen() {
         <EmptyState icon={<BellSimple />} title={t("emptyTitle")} body={t("emptyBody")} />
       ) : (
         <>
-        <motion.ul variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-2">
-          {items.map((notification) => (
-            <NotificationRow key={notification.id} notification={notification} locale={locale} />
-          ))}
-        </motion.ul>
-        <LoadMore hasNext={Boolean(hasNextPage)} isFetching={isFetchingNextPage} onLoadMore={() => fetchNextPage()} />
+          <motion.ul variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-2">
+            {items.map((notification) => (
+              <NotificationRow key={notification.id} notification={notification} locale={locale} />
+            ))}
+          </motion.ul>
+          <LoadMore hasNext={Boolean(hasNextPage)} isFetching={isFetchingNextPage} onLoadMore={() => fetchNextPage()} />
         </>
       )}
     </PageContainer>
@@ -76,19 +76,21 @@ function NotificationRow({ notification, locale }: { notification: AppNotificati
   return (
     <motion.li
       variants={fadeUp}
-      className={cn("relative flex gap-3 rounded-lg border p-4 shadow-sm", unread ? "border-accent/30 bg-accent-soft" : "border-border bg-surface")}
+      className={cn("flex gap-3 rounded-lg border p-4 shadow-sm transition-colors duration-300", unread ? "border-accent/30 bg-accent-soft" : "border-border bg-surface")}
     >
-      <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-md", unread ? "bg-accent text-accent-foreground" : "bg-surface-sunken text-muted-foreground")}>
+      <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-md transition-colors duration-300", unread ? "bg-accent text-accent-foreground" : "bg-surface-sunken text-muted-foreground")}>
         <Icon className="size-5" weight="duotone" />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-3">
-          <p className="text-card-title" dir="auto">{notification.title}</p>
-          <span className="shrink-0 text-caption text-muted-foreground">{formatRelative(notification.created_at, locale)}</span>
+          <p className="min-w-0 break-words text-card-title" dir="auto">{notification.title}</p>
+          <span className="flex shrink-0 items-center gap-1.5 pt-0.5 text-caption text-muted-foreground">
+            {formatRelative(notification.created_at, locale)}
+            {unread && <span aria-hidden className="size-2 rounded-full bg-accent" />}
+          </span>
         </div>
-        {notification.body && <p className="mt-1 whitespace-pre-line text-small text-muted-foreground" dir="auto">{notification.body}</p>}
+        {notification.body && <p className="mt-1 whitespace-pre-line break-words text-small text-muted-foreground" dir="auto">{notification.body}</p>}
       </div>
-      {unread && <span aria-hidden className="absolute end-2 top-2 size-2 rounded-full bg-accent" />}
     </motion.li>
   );
 }

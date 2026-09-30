@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
+import { CaretRight } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +22,7 @@ export function DepositMethodsScreen() {
   useEffect(() => track("deposit_started"), []);
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
       <PageHeader title={t("title")} />
       <div>
         <h2 className="text-section-title">{t("chooseMethod")}</h2>
@@ -30,7 +31,7 @@ export function DepositMethodsScreen() {
       {error ? (
         <ErrorState error={error} onRetry={() => refetch()} />
       ) : isPending ? (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3" role="status" aria-busy="true">
           <Skeleton className="h-20 rounded-lg" />
           <Skeleton className="h-20 rounded-lg" />
         </div>
@@ -41,14 +42,18 @@ export function DepositMethodsScreen() {
             return (
               <motion.li key={method.code} variants={fadeUp}>
                 <Card href={`/wallet/deposit/${method.code}`} className="flex items-center gap-4 p-4">
-                  <span className="flex size-12 items-center justify-center rounded-md bg-accent-soft text-accent">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
                     <Icon className="size-6" weight="duotone" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-card-title">{method.name}</span>
                     {method.description && <span className="block truncate text-small text-muted-foreground">{method.description}</span>}
                   </span>
-                  {method.availability !== "available" && <Badge tone="gold">{t("pendingSpecificationBadge")}</Badge>}
+                  {method.availability !== "available" ? (
+                    <Badge tone="gold" className="shrink-0">{t("pendingSpecificationBadge")}</Badge>
+                  ) : (
+                    <CaretRight aria-hidden className="size-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
+                  )}
                 </Card>
               </motion.li>
             );

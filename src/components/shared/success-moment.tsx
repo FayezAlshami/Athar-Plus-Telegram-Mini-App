@@ -23,7 +23,9 @@ export function SuccessMoment({ title, body, actions }: { title: string; body?: 
           animate={{ scale: 1.6, opacity: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
         />
-        <ButterflyMark animated className="size-11" />
+        <motion.span animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 0.6, ease: "easeOut" }}>
+          <ButterflyMark animated className="size-11" />
+        </motion.span>
       </motion.div>
       <AnimatedWords as="h2" text={title} className="text-page-title" />
       {body && (

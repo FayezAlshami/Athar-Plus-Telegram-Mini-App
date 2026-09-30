@@ -28,7 +28,18 @@ export function WalletScreen() {
         {transactions.error ? (
           <ErrorState error={transactions.error} onRetry={() => transactions.refetch()} />
         ) : transactions.isPending ? (
-          <div className="flex flex-col gap-2">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-[60px] rounded-lg" />)}</div>
+          <div className="flex flex-col divide-y divide-border overflow-hidden rounded-lg border border-border bg-surface" role="status" aria-busy="true">
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+                <Skeleton className="size-10 rounded-sm" />
+                <div className="flex flex-1 flex-col gap-1.5">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+                <Skeleton className="h-4 w-14" />
+              </div>
+            ))}
+          </div>
         ) : items.length === 0 ? (
           <EmptyState icon={<Receipt />} title={t("wallet.emptyTitle")} body={t("wallet.emptyBody")} />
         ) : (

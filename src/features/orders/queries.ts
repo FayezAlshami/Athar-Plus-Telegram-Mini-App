@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ordersApi, type OrderStatusGroup } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
 import { assertOnline } from "@/lib/network/assert-online";
@@ -17,6 +17,8 @@ export function useOrders(filters: OrderListFilters = {}) {
     queryFn: ({ pageParam, signal }) => ordersApi.list({ page: pageParam, ...filters }, { signal }),
     initialPageParam: 1,
     getNextPageParam: (last) => (last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined),
+    // Changing a filter keeps the current list on screen until the new one arrives, instead of flashing skeletons.
+    placeholderData: keepPreviousData,
     ...privateQueryOptions,
   });
 }

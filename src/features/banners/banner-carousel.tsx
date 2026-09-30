@@ -20,6 +20,13 @@ const THEME_BACKGROUND: Record<Banner["theme"], string> = {
 
 const AUTOPLAY_MS = 6000;
 
+/** Distance between two slide starts (width + gap). */
+function slideStep(track: HTMLElement): number {
+  const [first, second] = Array.from(track.children) as HTMLElement[];
+  if (!first) return track.clientWidth;
+  return second ? Math.abs(second.offsetLeft - first.offsetLeft) : first.offsetWidth;
+}
+
 function BannerSlide({ banner, index }: { banner: Banner; index: number }) {
   const router = useRouter();
   const telegram = useTelegramState();
@@ -83,12 +90,10 @@ export function BannerCarousel({ banners }: { banners: Banner[] }) {
 
   const scrollToIndex = useCallback((index: number) => {
     const track = trackRef.current;
-    const [first, second] = Array.from(track?.children ?? []) as HTMLElement[];
-    if (!track || !first) return;
-    const step = second ? Math.abs(second.offsetLeft - first.offsetLeft) : track.clientWidth;
+    if (!track) return;
     // RTL scroll offsets run from 0 towards negative values.
     const sign = getComputedStyle(track).direction === "rtl" ? -1 : 1;
-    track.scrollTo({ left: sign * index * step, behavior: "smooth" });
+    track.scrollTo({ left: sign * index * slideStep(track), behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -109,12 +114,14 @@ export function BannerCarousel({ banners }: { banners: Banner[] }) {
         ref={trackRef}
         onScroll={(event) => {
           const el = event.currentTarget;
-          const index = Math.min(Math.round(Math.abs(el.scrollLeft) / Math.max(el.clientWidth, 1)), banners.length - 1);
+          // Slides are separated by a gap, so a page is slide width + gap, not the track width.
+          const index = Math.min(Math.round(Math.abs(el.scrollLeft) / Math.max(slideStep(el), 1)), banners.length - 1);
+          if (index === activeRef.current) return;
           activeRef.current = index;
           setActive(index);
         }}
         onPointerDown={() => setInteracted(true)}
-        className="flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain"
       >
         {banners.map((banner, index) => <BannerSlide key={banner.id} banner={banner} index={index} />)}
       </div>

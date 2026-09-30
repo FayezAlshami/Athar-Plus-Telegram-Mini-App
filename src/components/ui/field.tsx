@@ -35,7 +35,7 @@ export function Field({ label, required, helpText, error, children }: FieldProps
 }
 
 export const controlClasses = cn(
-  "w-full rounded-md border border-border-strong bg-surface-elevated px-4 text-body text-foreground",
+  "w-full rounded-md border border-border-strong bg-surface-elevated px-4 text-base leading-normal text-foreground",
   "placeholder:text-muted-foreground/70 transition-[border-color,box-shadow] duration-200",
   "focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent-soft",
   "aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger-soft disabled:opacity-60",

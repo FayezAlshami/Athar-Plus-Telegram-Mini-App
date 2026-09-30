@@ -18,7 +18,7 @@ export function FavoritesScreen() {
   const items = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
       <PageHeader title={t("title")} />
       {error ? (
         <ErrorState error={isApiError(error) && error.code === "not_found" ? t("listError") : error} onRetry={() => refetch()} />
@@ -29,7 +29,7 @@ export function FavoritesScreen() {
           icon={<AnimatedHeartEmpty className="size-10" />}
           title={t("emptyTitle")}
           body={t("emptyBody")}
-          action={<Link href="/categories" className="text-button text-accent">{t("browse")}</Link>}
+          action={<Link href="/categories" className="inline-flex h-11 items-center justify-center rounded-md bg-accent-soft px-5 text-button text-accent transition-transform duration-150 active:scale-[0.97]">{t("browse")}</Link>}
         />
       ) : (
         <>

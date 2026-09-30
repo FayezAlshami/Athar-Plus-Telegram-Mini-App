@@ -5,6 +5,7 @@ import { useState, type ReactNode } from "react";
 import { isApiError } from "@/lib/api/errors";
 import { assertOnline } from "@/lib/network/assert-online";
 import { PRIVATE_STALE_MS } from "@/lib/query/policy";
+import { reportNetworkFailure } from "@/lib/telegram/telegram-network-alert";
 
 const MAX_RETRIES = 2;
 
@@ -30,6 +31,9 @@ export function QueryProvider({ children }: { children: ReactNode }) {
         mutationCache: new MutationCache({
           onMutate: () => {
             assertOnline();
+          },
+          onError: (error) => {
+            if (isApiError(error) && error.isNetworkError) reportNetworkFailure(error.message);
           },
         }),
       }),

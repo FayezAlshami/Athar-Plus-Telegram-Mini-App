@@ -2,9 +2,11 @@ import type { HapticImpact, HapticNotice, HomeScreenStatus, TelegramAdapter } fr
 import type { TelegramThemeParams } from "./telegram.types";
 import { combineSafeAreaInsets, ZERO_INSET } from "./telegram-safe-area";
 import { normalizeColorScheme } from "./telegram-theme";
+import { allowsWriteToPmFromInitData } from "./allows-write";
 import { canConfirmAppClose } from "./telegram-closing-confirmation";
+import { deviceGet, deviceSet } from "./telegram-device-store";
 import { notifyTelegramReady } from "./telegram-ready";
-import type { TelegramWebApp } from "./web-app";
+import type { TelegramBottomButton, TelegramWebApp } from "./web-app";
 
 export class RealTelegramAdapter implements TelegramAdapter {
   readonly kind = "telegram" as const;
@@ -29,7 +31,6 @@ export class RealTelegramAdapter implements TelegramAdapter {
 
   ready() {
     this.webApp.expand();
-    if (this.supports("7.7")) this.webApp.disableVerticalSwipes?.();
   }
 
   notifyReady() {
@@ -40,7 +41,6 @@ export class RealTelegramAdapter implements TelegramAdapter {
     if (!this.supports("6.1")) return;
     this.webApp.setHeaderColor(header);
     this.webApp.setBackgroundColor(background);
-    if (this.supports("7.10")) this.webApp.setBottomBarColor?.(background);
   }
 
   themeParams(): TelegramThemeParams {
@@ -119,6 +119,110 @@ export class RealTelegramAdapter implements TelegramAdapter {
     this.webApp.disableClosingConfirmation();
   }
 
+  showAlert(message: string) {
+    if (typeof this.webApp.showAlert !== "function") {
+      window.alert(message);
+      return Promise.resolve();
+    }
+    return new Promise<void>((resolve) => this.webApp.showAlert?.(message, () => resolve()));
+  }
+
+  showConfirm(message: string) {
+    if (typeof this.webApp.showConfirm !== "function") return Promise.resolve(window.confirm(message));
+    return new Promise<boolean>((resolve) => this.webApp.showConfirm?.(message, (ok) => resolve(Boolean(ok))));
+  }
+
+  hasNativeDialogs() {
+    return typeof this.webApp.showConfirm === "function";
+  }
+
+  hasBottomButtons() {
+    return typeof this.webApp.MainButton?.show === "function" && typeof this.webApp.SecondaryButton?.show === "function";
+  }
+
+  setMainButton(button: { text: string; enabled: boolean } | null, onClick: () => void) {
+    return this.bindBottomButton(this.webApp.MainButton, button, onClick);
+  }
+
+  setSecondaryButton(button: { text: string; enabled: boolean } | null, onClick: () => void) {
+    return this.bindBottomButton(this.webApp.SecondaryButton, button, onClick);
+  }
+
+  allowsWriteToPm() {
+    return allowsWriteToPmFromInitData(this.webApp.initData);
+  }
+
+  requestWriteAccess() {
+    if (this.allowsWriteToPm()) return Promise.resolve(true);
+    if (typeof this.webApp.requestWriteAccess !== "function") return Promise.resolve(false);
+    return new Promise<boolean>((resolve) => this.webApp.requestWriteAccess?.((granted) => resolve(Boolean(granted))));
+  }
+
+  canShareMessage() {
+    return typeof this.webApp.shareMessage === "function";
+  }
+
+  shareMessage(messageId: string) {
+    if (typeof this.webApp.shareMessage !== "function") return Promise.resolve(false);
+    return new Promise<boolean>((resolve) => this.webApp.shareMessage?.(messageId, (sent) => resolve(Boolean(sent))));
+  }
+
+  shareToStory(mediaUrl: string, params?: { text?: string; widgetLink?: { url: string; name?: string } }) {
+    if (typeof this.webApp.shareToStory !== "function") {
+      window.open(mediaUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+    this.webApp.shareToStory(mediaUrl, {
+      text: params?.text,
+      widget_link: params?.widgetLink,
+    });
+  }
+
+  hideKeyboard() {
+    if (typeof this.webApp.hideKeyboard === "function") this.webApp.hideKeyboard();
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  }
+
+  isActive() {
+    return this.webApp.isActive !== false;
+  }
+
+  onActiveChange(handler: (active: boolean) => void) {
+    const on = () => handler(true);
+    const off = () => handler(false);
+    this.webApp.onEvent("activated", on);
+    this.webApp.onEvent("deactivated", off);
+    return () => {
+      this.webApp.offEvent("activated", on);
+      this.webApp.offEvent("deactivated", off);
+    };
+  }
+
+  setVerticalSwipes(enabled: boolean) {
+    if (enabled) this.webApp.enableVerticalSwipes?.();
+    else this.webApp.disableVerticalSwipes?.();
+  }
+
+  exitFullscreen() {
+    try {
+      this.webApp.exitFullscreen?.();
+    } catch {
+      // Leaving fullscreen is optional.
+    }
+  }
+
+  deviceGet(key: string) {
+    return deviceGet(this.webApp.DeviceStorage, key);
+  }
+
+  deviceSet(key: string, value: string) {
+    return deviceSet(this.webApp.DeviceStorage, key, value);
+  }
+
+  setBottomBarColor(color: string) {
+    if (typeof this.webApp.setBottomBarColor === "function") this.webApp.setBottomBarColor(color);
+  }
+
   openLink(url: string) {
     this.webApp.openLink(url);
   }
@@ -150,5 +254,26 @@ export class RealTelegramAdapter implements TelegramAdapter {
 
   private supports(version: string) {
     return this.webApp.isVersionAtLeast(version);
+  }
+
+  private bindBottomButton(
+    button: TelegramBottomButton | undefined,
+    spec: { text: string; enabled: boolean } | null,
+    onClick: () => void,
+  ): () => void {
+    if (!button || typeof button.show !== "function") return () => undefined;
+    if (!spec) {
+      button.hide();
+      return () => undefined;
+    }
+    button.setText(spec.text);
+    if (spec.enabled) button.enable();
+    else button.disable();
+    button.onClick(onClick);
+    button.show();
+    return () => {
+      button.offClick(onClick);
+      button.hide();
+    };
   }
 }

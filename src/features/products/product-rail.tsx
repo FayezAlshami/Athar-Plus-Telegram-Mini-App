@@ -14,7 +14,7 @@ export function ProductRail({ products }: { products: Product[] }) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
-      className="-mx-4 flex items-start snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*]:snap-start"
+      className="scrollbar-none -mx-4 flex items-start snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-2 [&>*]:snap-start"
     >
       {products.map((product) => <ProductCard key={product.id} product={product} />)}
     </motion.div>
@@ -23,8 +23,17 @@ export function ProductRail({ products }: { products: Product[] }) {
 
 export function ProductRailSkeleton() {
   return (
-    <div className="-mx-4 flex gap-3 overflow-hidden px-4">
-      {Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-[236px] w-[168px] shrink-0 rounded-lg" />)}
+    <div className="-mx-4 flex gap-3 overflow-hidden px-4 pb-2" role="status" aria-busy="true">
+      {Array.from({ length: 3 }, (_, i) => (
+        <div key={i} className="flex w-[168px] shrink-0 flex-col overflow-hidden rounded-lg border border-border bg-surface">
+          <Skeleton className="aspect-[4/3] w-full rounded-none" />
+          <div className="flex flex-col gap-2 p-3">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="mt-1 h-5 w-16" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

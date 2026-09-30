@@ -20,6 +20,19 @@ function currentDocumentTheme(): Theme {
   return document.documentElement.classList.contains("dark") ? "dark" : "light";
 }
 
+function cssColorToHex(color: string): string | null {
+  if (/^#[0-9a-fA-F]{6}$/.test(color)) return color;
+  const probe = document.createElement("span");
+  probe.style.color = color;
+  document.body.appendChild(probe);
+  const resolved = getComputedStyle(probe).color;
+  probe.remove();
+  const match = resolved.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!match) return null;
+  const channel = (value: string) => Number(value).toString(16).padStart(2, "0");
+  return `#${channel(match[1])}${channel(match[2])}${channel(match[3])}`;
+}
+
 function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle("dark", theme === "dark");
 }
@@ -52,7 +65,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (telegram.status !== "ready") return;
     const styles = getComputedStyle(document.documentElement);
     const background = styles.getPropertyValue("--background").trim();
+    const bottomBar = cssColorToHex(styles.getPropertyValue("--nav-glass").trim()) ?? background;
     telegram.adapter.setChromeColors({ header: background, background });
+    telegram.adapter.setBottomBarColor(bottomBar);
   }, [telegram, theme]);
 
   const setTheme = useCallback((next: Theme) => {

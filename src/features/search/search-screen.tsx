@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ClockCounterClockwise, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { BackButton } from "@/components/layout/back-button";
+import { StickyTopBar } from "@/components/layout/sticky-top-bar";
 import { Chip } from "@/components/ui/chip";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -23,12 +24,14 @@ import { ProductListSkeleton, ProductList } from "@/features/products/product-li
 import { ProductImage } from "@/features/products/product-image";
 import { Highlight } from "./highlight";
 import { MIN_SEARCH_LENGTH, useCatalogSearch } from "./queries";
+import { useHideKeyboard } from "@/lib/telegram/hooks";
 import { recentSearches } from "./recent-searches";
 
 const DEBOUNCE_MS = 220;
 
 export function SearchScreen() {
   const t = useTranslations("search");
+  const hideKeyboard = useHideKeyboard();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [recents, setRecents] = useState<string[]>(() => recentSearches.read());
@@ -51,7 +54,8 @@ export function SearchScreen() {
   const empty = active && results && results.products.length === 0 && results.categories.length === 0;
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
+      <StickyTopBar>
       <div className="flex items-center gap-2">
         <BackButton />
         <motion.form
@@ -59,12 +63,12 @@ export function SearchScreen() {
         onSubmit={(event) => {
           event.preventDefault();
           remember();
-          inputRef.current?.blur();
+          hideKeyboard();
         }}
         initial={{ opacity: 0, scaleX: 0.92 }}
         animate={{ opacity: 1, scaleX: 1 }}
         transition={spring.entrance}
-        className="sticky top-[calc(var(--safe-top)+8px)] z-30 flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full border border-border-strong bg-surface-elevated px-4 shadow-md focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
+        className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full border border-border-strong bg-surface-elevated px-4 shadow-sm transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
       >
         <MagnifyingGlass aria-hidden className="size-5 shrink-0 text-muted-foreground" />
         <input
@@ -77,7 +81,7 @@ export function SearchScreen() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={(event) => event.key === "Escape" && setQuery("")}
-          className="h-full min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+          className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
         />
         <AnimatePresence>
           {query && (
@@ -92,7 +96,7 @@ export function SearchScreen() {
                 setQuery("");
                 inputRef.current?.focus();
               }}
-              className="flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground"
+              className="-me-1.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
             >
               <X className="size-3.5" weight="bold" />
             </motion.button>
@@ -100,6 +104,7 @@ export function SearchScreen() {
         </AnimatePresence>
       </motion.form>
       </div>
+      </StickyTopBar>
 
       {!active ? (
         <>
@@ -107,7 +112,7 @@ export function SearchScreen() {
             <section className="flex flex-col gap-3">
               <div className="flex items-center justify-between px-1">
                 <h2 className="text-section-title">{t("recent")}</h2>
-                <button type="button" className="text-small text-muted-foreground" onClick={() => { recentSearches.clear(); setRecents([]); }}>
+                <button type="button" className="-me-2 h-8 rounded-full px-2 text-small text-muted-foreground active:bg-muted" onClick={() => { recentSearches.clear(); setRecents([]); }}>
                   {t("clearRecent")}
                 </button>
               </div>
@@ -138,9 +143,9 @@ export function SearchScreen() {
             <Section title={t("categories")}>
               <div className="flex flex-wrap gap-2">
                 {results.categories.map((category) => (
-                  <Link key={category.id} href={`/categories/${encodeURIComponent(category.slug)}`} className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3.5 text-small font-medium">
-                    <CategoryIcon name={category.icon} className="size-4 text-accent" />
-                    <Highlight text={category.name} query={debounced} />
+                  <Link key={category.id} href={`/categories/${encodeURIComponent(category.slug)}`} dir="auto" className="inline-flex h-9 max-w-full items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3.5 text-small font-medium transition-transform duration-150 active:scale-95">
+                    <CategoryIcon name={category.icon} className="size-4 shrink-0 text-accent" />
+                    <span className="truncate"><Highlight text={category.name} query={debounced} /></span>
                   </Link>
                 ))}
               </div>
@@ -157,7 +162,9 @@ export function SearchScreen() {
                         <p dir="auto" className="truncate text-card-title"><Highlight text={product.name} query={debounced} /></p>
                         {product.category && <p className="truncate text-caption text-muted-foreground">{product.category.name}</p>}
                       </div>
-                      <Price price={product.price} />
+                      <div className="shrink-0">
+                        <Price price={product.price} />
+                      </div>
                     </Card>
                   </motion.li>
                 ))}

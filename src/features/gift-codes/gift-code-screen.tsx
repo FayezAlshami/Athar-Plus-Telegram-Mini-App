@@ -17,7 +17,7 @@ import { SuccessMoment } from "@/components/shared/success-moment";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { formatMoney } from "@/lib/formatting/money";
 import { track } from "@/lib/analytics/events";
-import { useHaptics, useTelegramClosingConfirmation } from "@/lib/telegram/hooks";
+import { useHaptics, useHideKeyboard, useTelegramClosingConfirmation, useTelegramDialogs } from "@/lib/telegram/hooks";
 import { useRedeemGiftCode } from "@/features/wallet/queries";
 
 const MIN_CODE_LENGTH = 4;
@@ -26,6 +26,8 @@ export function GiftCodeScreen() {
   const t = useTranslations();
   const errorMessage = useErrorMessage();
   const haptics = useHaptics();
+  const dialogs = useTelegramDialogs();
+  const hideKeyboard = useHideKeyboard();
   const redeem = useRedeemGiftCode();
   const [redemption, setRedemption] = useState<GiftCodeRedemption | null>(null);
 
@@ -33,7 +35,10 @@ export function GiftCodeScreen() {
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { code: "" } });
   useTelegramClosingConfirmation(!redemption);
 
-  const submit = form.handleSubmit(({ code }) =>
+  const submit = form.handleSubmit(async ({ code }) => {
+    hideKeyboard();
+    const confirmed = await dialogs.confirm(t("giftCode.confirmRedeem"));
+    if (!confirmed) return;
     redeem.mutate(code, {
       onSuccess: (result) => {
         haptics.notify("success");
@@ -44,25 +49,25 @@ export function GiftCodeScreen() {
         haptics.notify("error");
         form.setError("code", { message: errorMessage(error) });
       },
-    }),
-  );
+    });
+  });
 
   return (
-    <PageContainer withNav={false}>
+    <PageContainer>
       <PageHeader title={t("giftCode.title")} />
       {redemption ? (
         <SuccessMoment
           title={t("giftCode.successTitle", { amount: formatMoney(redemption.amount_minor, redemption.currency) })}
           body={t("giftCode.successBody")}
           actions={
-            <Link href="/wallet" className="flex h-12 items-center justify-center rounded-md bg-primary text-button text-primary-foreground">
+            <Link href="/wallet" replace className="flex h-12 items-center justify-center rounded-md bg-primary text-button text-primary-foreground transition-transform duration-150 active:scale-[0.97]">
               {t("wallet.title")}
             </Link>
           }
         />
       ) : (
         <form onSubmit={submit} noValidate className="flex flex-col gap-5">
-          <div className="flex items-center gap-3 rounded-lg bg-gold-soft p-4 text-gold">
+          <div className="flex items-center gap-3 rounded-lg border border-gold/20 bg-gold-soft p-4 text-gold">
             <Gift className="size-7 shrink-0" weight="duotone" />
             <p className="text-small text-foreground">{t("giftCode.subtitle")}</p>
           </div>

@@ -9,6 +9,8 @@ export interface User {
   photo_url: string | null;
   locale: Locale;
   telegram_id: number;
+  allows_write_to_pm: boolean;
+  telegram_is_premium: boolean;
   spent_minor: number;
   currency: string;
   membership: { level: MembershipLevelCode; expires_at: string | null };

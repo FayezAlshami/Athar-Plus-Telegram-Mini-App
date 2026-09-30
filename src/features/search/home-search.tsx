@@ -16,6 +16,7 @@ import { duration, spring } from "@/lib/animation/tokens";
 import { prefetchImage } from "@/lib/images/prefetch-image";
 import { CategoryIcon } from "@/features/categories/category-icon";
 import { usePrefetchCategory, usePrefetchProduct } from "@/features/catalog/use-prefetch-catalog";
+import { useHideKeyboard } from "@/lib/telegram/hooks";
 import { ProductImage } from "@/features/products/product-image";
 import { ProductListSkeleton } from "@/features/products/product-list";
 import { FavoriteToggle } from "@/features/favorites/favorite-toggle";
@@ -52,7 +53,9 @@ function SearchProductHit({
           </p>
           {product.category && <p className="truncate text-caption text-muted-foreground">{product.category.name}</p>}
         </div>
-        <Price price={product.price} />
+        <div className="shrink-0">
+          <Price price={product.price} />
+        </div>
       </Card>
       <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2.5 top-1/2 z-10 size-8 -translate-y-1/2" />
     </li>
@@ -64,7 +67,7 @@ function SearchCategoryHit({ category, query, active }: { category: Category; qu
   return (
     <li ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
       <Card href={`/categories/${encodeURIComponent(category.slug)}`} className={active ? "flex items-center gap-2 bg-accent-soft p-3 ring-2 ring-accent" : "flex items-center gap-2 p-3"}>
-        <CategoryIcon name={category.icon} className="size-4 text-accent" />
+        <CategoryIcon name={category.icon} className="size-4 shrink-0 text-accent" />
         <span dir="auto" className="truncate text-small font-medium">
           <Highlight text={category.name} query={query} />
         </span>
@@ -77,6 +80,7 @@ function SearchCategoryHit({ category, query, active }: { category: Category; qu
 export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolean) => void }) {
   const t = useTranslations("search");
   const tHome = useTranslations("home");
+  const hideKeyboard = useHideKeyboard();
   const router = useRouter();
   const listId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -132,10 +136,11 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
         role="search"
         onSubmit={(event) => {
           event.preventDefault();
+          hideKeyboard();
           if (hits.length > 0) openHit(activeIndex);
           else remember(query);
         }}
-        className="sticky top-[calc(var(--safe-top)+8px)] z-30 flex h-12 items-center gap-2 rounded-full border border-border bg-surface px-4 shadow-sm focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
+        className="sticky top-[calc(var(--safe-top)+8px)] z-30 flex h-12 items-center gap-2 rounded-full border border-border bg-surface px-4 shadow-sm transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
       >
         <MagnifyingGlass aria-hidden className="size-5 shrink-0 text-muted-foreground" />
         <input
@@ -168,7 +173,7 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
               setActiveIndex((index) => (index - 1 + hits.length) % hits.length);
             }
           }}
-          className="h-full min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+          className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
         />
         <AnimatePresence>
           {query && (
@@ -183,7 +188,7 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
                 setQuery("");
                 inputRef.current?.focus();
               }}
-              className="flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground"
+              className="-me-1.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
             >
               <X className="size-3.5" weight="bold" />
             </motion.button>
@@ -197,7 +202,7 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
             <h2 className="text-section-title">{t("recent")}</h2>
             <button
               type="button"
-              className="text-small text-muted-foreground"
+              className="-me-2 h-8 rounded-full px-2 text-small text-muted-foreground active:bg-muted"
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
                 recentSearches.clear();

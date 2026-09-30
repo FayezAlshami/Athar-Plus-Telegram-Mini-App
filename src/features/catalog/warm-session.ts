@@ -39,6 +39,13 @@ export function warmSession(queryClient: QueryClient): void {
     })
     .then((feed) => {
       for (const product of [...feed.featured_products, ...feed.popular_products]) prefetchImage(product.image_url);
+      for (const product of feed.featured_products.slice(0, 4)) {
+        void queryClient.prefetchQuery({
+          queryKey: queryKeys.product(String(product.id)),
+          queryFn: ({ signal }) => catalogApi.product(String(product.id), { signal }),
+          staleTime: CATALOG_STALE_MS,
+        });
+      }
       for (const banner of feed.banners) prefetchImage(banner.image_url);
     })
     .catch(() => undefined);

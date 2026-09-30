@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, UsersThree, Wallet } from "@phosphor-icons/react";
+import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
@@ -13,10 +13,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LevelBadge } from "@/components/shared/level-badge";
 import { Money } from "@/components/shared/money";
 import { CopyButton } from "@/components/shared/copy-button";
+import { ErrorState } from "@/components/shared/error-state";
 import { Section } from "@/components/shared/section";
 import { fadeUp } from "@/lib/animation/variants";
 import { formatDateTime } from "@/lib/formatting/dates";
+import { sharePreparedCard } from "@/features/share/share-card";
 import { useHomeScreenShortcut } from "@/lib/telegram/hooks";
+import { miniAppDeepLink } from "@/lib/telegram/start-param";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 import { useProfile } from "@/features/memberships/queries";
 import { useNotifications } from "@/features/notifications/queries";
@@ -59,7 +62,7 @@ function StatTile({
 
 function ProfileCardSkeleton() {
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm">
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm" role="status" aria-busy="true">
       <div className="flex items-center gap-4">
         <Skeleton className="size-16 rounded-full" />
         <div className="flex flex-1 flex-col gap-2">
@@ -80,14 +83,31 @@ export function ProfileScreen() {
   const t = useTranslations();
   const locale = useLocale();
   const telegram = useTelegramState();
-  const { data: user } = useProfile();
+  const { data: user, error: profileError, refetch: refetchProfile } = useProfile();
   const wallet = useWallet();
   const notifications = useNotifications();
   const unread = notifications.data?.pages[0]?.meta.unread_count ?? 0;
   const homeScreen = useHomeScreenShortcut();
   const fullName = user ? [user.first_name, user.last_name].filter(Boolean).join(" ") : "";
 
+  const shareReferral = () => {
+    if (!user?.referral.code) return;
+    const fallback = () => {
+      if (!BOT_USERNAME) return;
+      const url = miniAppDeepLink(BOT_USERNAME, `wallet_r_${user.referral.code}`);
+      const share = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(t("profile.shareReferral"))}`;
+      if (telegram.status === "ready") telegram.adapter.openTelegramLink(share);
+      else window.open(share, "_blank", "noopener,noreferrer");
+    };
+    if (telegram.status !== "ready") {
+      fallback();
+      return;
+    }
+    void sharePreparedCard(telegram.adapter, { type: "referral" }, fallback);
+  };
+
   const openSupport = () => {
+    if (!BOT_USERNAME) return;
     const url = `https://t.me/${BOT_USERNAME}`;
     if (telegram.status === "ready") telegram.adapter.openTelegramLink(url);
     else window.open(url, "_blank", "noopener,noreferrer");
@@ -114,10 +134,11 @@ export function ProfileScreen() {
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 <p dir="auto" className="min-w-0 truncate text-section-title">{fullName}</p>
+                {user.telegram_is_premium && <Star className="size-4 shrink-0 text-gold" weight="fill" aria-label={t("profile.telegramPremium")} />}
                 <LevelBadge level={user.membership.level} />
               </div>
               {user.username && (
-                <p dir="ltr" className="truncate text-start text-small font-medium text-accent">@{user.username}</p>
+                <p className="truncate text-small font-medium text-accent"><bdi dir="ltr">@{user.username}</bdi></p>
               )}
               {user.member_since && (
                 <p className="mt-0.5 truncate text-caption text-muted-foreground">
@@ -129,8 +150,8 @@ export function ProfileScreen() {
 
           <div className="relative flex h-11 items-center gap-2 rounded-md border border-border bg-surface-sunken ps-3.5 pe-1">
             <span className="text-caption font-medium text-muted-foreground">{t("profile.telegramId")}</span>
-            <span dir="ltr" className="min-w-0 flex-1 truncate text-end font-display text-small font-semibold tabular-nums">
-              {user.telegram_id}
+            <span className="min-w-0 flex-1 truncate text-end font-display text-small font-semibold tabular-nums">
+              <bdi dir="ltr">{user.telegram_id}</bdi>
             </span>
             <CopyButton value={String(user.telegram_id)} />
           </div>
@@ -162,6 +183,8 @@ export function ProfileScreen() {
             </StatTile>
           </div>
         </motion.section>
+      ) : profileError ? (
+        <ErrorState error={profileError} onRetry={() => refetchProfile()} />
       ) : (
         <ProfileCardSkeleton />
       )}
@@ -175,6 +198,8 @@ export function ProfileScreen() {
               icon={<UsersThree weight="duotone" />}
               title={t("profile.referrals")}
               subtitle={t("profile.referralStats", { signups: user.referral.signups, orders: user.referral.orders })}
+              onClick={shareReferral}
+              showChevron
             />
           )}
           <ListItem href="/membership" iconTone="gold" icon={<Crown weight="fill" />} title={t("membership.title")} />

@@ -50,6 +50,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
             )
           }
         />
+      ) : status === "write_access_required" ? (
+        <EmptyState
+          icon={<TelegramLogo weight="fill" />}
+          title={t("gate.writeAccessTitle")}
+          body={t("gate.writeAccessBody")}
+          action={<Button variant="accent" onClick={retry}>{t("gate.allowBot")}</Button>}
+        />
       ) : (
         <EmptyState
           icon={<WarningCircle />}

@@ -49,6 +49,34 @@ export interface TelegramAdapter {
   enableClosingConfirmation(): void;
   disableClosingConfirmation(): void;
 
+  showAlert(message: string): Promise<void>;
+  showConfirm(message: string): Promise<boolean>;
+  hasNativeDialogs(): boolean;
+
+  /** Native bottom buttons exist on this client. */
+  hasBottomButtons(): boolean;
+  setMainButton(button: { text: string; enabled: boolean } | null, onClick: () => void): () => void;
+  setSecondaryButton(button: { text: string; enabled: boolean } | null, onClick: () => void): () => void;
+
+  allowsWriteToPm(): boolean;
+  requestWriteAccess(): Promise<boolean>;
+
+  canShareMessage(): boolean;
+  shareMessage(messageId: string): Promise<boolean>;
+  shareToStory(mediaUrl: string, params?: { text?: string; widgetLink?: { url: string; name?: string } }): void;
+
+  hideKeyboard(): void;
+  isActive(): boolean;
+  onActiveChange(handler: (active: boolean) => void): () => void;
+
+  setVerticalSwipes(enabled: boolean): void;
+  exitFullscreen(): void;
+
+  deviceGet(key: string): Promise<string | null>;
+  deviceSet(key: string, value: string): Promise<void>;
+
+  setBottomBarColor(color: string): void;
+
   openLink(url: string): void;
   openTelegramLink(url: string): void;
   close(): void;

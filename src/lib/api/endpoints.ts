@@ -20,6 +20,11 @@ export function seg(value: string | number): string {
 
 type Signal = { signal?: AbortSignal };
 
+export const shareApi = {
+  prepare: (input: { type: "product" | "referral"; product_id?: number }) =>
+    apiRequest<{ id: string; expiration_date: number | null }>("/share/prepared", { method: "POST", body: input }),
+};
+
 export const authApi = {
   telegram: (initData: string) =>
     apiRequest<AuthSession>("/auth/telegram", { method: "POST", body: { init_data: initData } }),
@@ -93,4 +98,5 @@ export const accountApi = {
     apiFetch<Paginated<AppNotification> & { meta: { unread_count: number } }>("/notifications", { query: { page }, signal }),
   markNotificationRead: (id: number) => apiRequest<AppNotification>(`/notifications/${seg(id)}/read`, { method: "POST" }),
   markAllNotificationsRead: () => apiFetch<void>("/notifications/read-all", { method: "POST" }),
+  grantWriteAccess: () => apiRequest<User>("/me/write-access", { method: "POST" }),
 };

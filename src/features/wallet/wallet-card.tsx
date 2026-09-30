@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { Clock, Gift, Plus } from "@phosphor-icons/react";
 import type { Wallet } from "@/entities/wallet/types";
 import { Money } from "@/components/shared/money";
@@ -24,7 +24,18 @@ export function WalletCard({ wallet, compact = false }: { wallet: Wallet | undef
       <ButterflyMark className="pointer-events-none absolute -end-4 -top-4 size-32 text-white/[0.06]" />
       <p className="text-small text-white/70">{t("balance")}</p>
       {wallet ? (
-        <Money amountMinor={wallet.balance_minor} currency={wallet.currency} className="mt-1 block text-[2rem] leading-tight" />
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={wallet.balance_minor}
+            className="mt-1 block"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+          >
+            <Money amountMinor={wallet.balance_minor} currency={wallet.currency} className="text-[2rem] leading-tight" />
+          </motion.span>
+        </AnimatePresence>
       ) : (
         <Skeleton className="mt-2 h-9 w-32 bg-white/15" />
       )}

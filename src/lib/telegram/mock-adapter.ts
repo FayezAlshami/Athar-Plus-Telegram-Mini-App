@@ -1,5 +1,6 @@
 import type { TelegramAdapter } from "./adapter";
 import type { TelegramThemeParams } from "./telegram.types";
+import { deviceGet, deviceSet } from "./telegram-device-store";
 import { notifyTelegramReady } from "./telegram-ready";
 import { ZERO_INSET } from "./telegram-safe-area";
 import { fallbackColorScheme } from "./telegram-theme";
@@ -72,6 +73,58 @@ export class MockTelegramAdapter implements TelegramAdapter {
   selection() {}
   enableClosingConfirmation() {}
   disableClosingConfirmation() {}
+  showAlert(message: string) {
+    window.alert(message);
+    return Promise.resolve();
+  }
+  showConfirm(message: string) {
+    return Promise.resolve(window.confirm(message));
+  }
+  hasNativeDialogs() {
+    return false;
+  }
+  hasBottomButtons() {
+    return false;
+  }
+  setMainButton() {
+    return () => undefined;
+  }
+  setSecondaryButton() {
+    return () => undefined;
+  }
+  allowsWriteToPm() {
+    return true;
+  }
+  requestWriteAccess() {
+    return Promise.resolve(true);
+  }
+  canShareMessage() {
+    return false;
+  }
+  shareMessage() {
+    return Promise.resolve(false);
+  }
+  shareToStory(mediaUrl: string) {
+    window.open(mediaUrl, "_blank", "noopener,noreferrer");
+  }
+  hideKeyboard() {
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  }
+  isActive() {
+    return true;
+  }
+  onActiveChange() {
+    return () => undefined;
+  }
+  setVerticalSwipes() {}
+  exitFullscreen() {}
+  deviceGet(key: string) {
+    return deviceGet(undefined, key);
+  }
+  deviceSet(key: string, value: string) {
+    return deviceSet(undefined, key, value);
+  }
+  setBottomBarColor() {}
   openLink(url: string) {
     window.open(url, "_blank", "noopener,noreferrer");
   }

@@ -44,7 +44,10 @@
     "openInTelegramBody": "This app runs inside Telegram to keep your account and wallet secure.",
     "openBot": "Open the bot",
     "failedTitle": "Couldn't sign you in",
-    "failedBody": "We couldn't verify your session. Try again or reopen the app."
+    "failedBody": "We couldn't verify your session. Try again or reopen the app.",
+    "writeAccessTitle": "Allow the bot to message you",
+    "writeAccessBody": "Athar Plus sends order, deposit, and offer updates through the bot. The app stays closed until you allow it.",
+    "allowBot": "Allow the bot"
   },
   "home": {
     "greeting": "Hi {name}",
@@ -90,6 +93,10 @@
     "submit": "Submit deposit request",
     "submittedTitle": "Deposit request sent",
     "submittedBody": "Funds will be added after your transfer is reviewed.",
+    "confirmSubmit": "Send a deposit request for {amount}? Nothing is charged before review.",
+    "stepSent": "Sent",
+    "stepReview": "In review",
+    "stepDone": "Done",
     "invalidAmount": "Enter a valid amount"
   },
   "giftCode": {
@@ -98,6 +105,7 @@
     "label": "Gift code",
     "placeholder": "e.g. ATHAR-2026",
     "redeem": "Redeem",
+    "confirmRedeem": "Redeem this code and add the credit to your wallet?",
     "successTitle": "{amount} added to your wallet",
     "successBody": "Enjoy your services with Athar Plus."
   },
@@ -108,6 +116,8 @@
     "buyFor": "Order for {price}",
     "share": "Share",
     "shareText": "Check this product on Athar Plus",
+    "shareStory": "Share as a story",
+    "closeImage": "Close image",
     "description": "About this service",
     "delivery": "How it's delivered",
     "requiredInfo": "Required information",
@@ -125,6 +135,12 @@
     "confirmBody": "{price} will be deducted from your wallet.",
     "note": "Note for our team",
     "placeOrder": "Confirm purchase",
+    "stepProduct": "Product",
+    "stepDetails": "Details",
+    "stepConfirm": "Confirm",
+    "continueToDetails": "Continue",
+    "backToDetails": "Back to details",
+    "confirmCharge": "{price} will be deducted from your wallet. Continue?",
     "orderCreatedTitle": "Order placed",
     "orderCreatedBody": "Order {number}. We'll keep you posted.",
     "viewOrder": "View order",
@@ -240,6 +256,9 @@
     "spentNote": "From completed orders",
     "favorites": "Saved services",
     "referrals": "Product referrals",
+    "shareReferral": "Share my invite",
+    "telegramPremium": "Telegram Premium",
+    "addToHomePrompt": "Add Athar Plus to your home screen so it opens in one tap.",
     "referralStats": "{signups} signups · {orders} orders",
     "addToHome": "Add to Home Screen",
     "addToHomeHint": "A shortcut to the app on your phone",

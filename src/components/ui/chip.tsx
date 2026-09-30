@@ -26,12 +26,12 @@ export function Chip({ selected = false, onClick, icon, children }: ChipProps) {
         onClick?.();
       }}
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-small font-medium transition-colors duration-200 [&_svg]:size-4",
+        "inline-flex h-9 max-w-full shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-small font-medium transition-colors duration-200 [&_svg]:size-4 [&_svg]:shrink-0",
         selected ? "border-transparent bg-primary text-primary-foreground" : "border-border-strong bg-surface text-foreground",
       )}
     >
       {icon}
-      {children}
+      <span dir="auto" className="truncate">{children}</span>
     </motion.button>
   );
 }

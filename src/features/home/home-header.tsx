@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { BellSimple } from "@phosphor-icons/react";
+import { BellSimple, Star } from "@phosphor-icons/react";
 import { Avatar } from "@/components/ui/avatar";
 import { AnimatedWords } from "@/components/shared/animated-words";
 import { LevelBadge } from "@/components/shared/level-badge";
@@ -22,7 +22,10 @@ export function HomeHeader() {
         <Avatar name={user?.first_name ?? "A"} src={user?.photo_url} />
       </Link>
       <div className="min-w-0 flex-1">
-        <AnimatedWords as="h1" text={greeting} className="truncate text-section-title" />
+        <span className="flex min-w-0 items-center gap-1.5">
+          <AnimatedWords as="h1" text={greeting} className="truncate text-section-title" />
+          {user?.telegram_is_premium && <Star className="size-4 shrink-0 text-gold" weight="fill" aria-label={t("profile.telegramPremium")} />}
+        </span>
         <p className="truncate text-caption text-muted-foreground">{t("home.greetingSubtitle")}</p>
       </div>
       {user && user.membership.level !== "normal" && <LevelBadge level={user.membership.level} />}

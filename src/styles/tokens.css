@@ -23,7 +23,7 @@
   --content-safe-top: 0px;
   --content-safe-bottom: 0px;
   --app-height: 100dvh;
-  --bottom-nav-height: 84px;
+  --bottom-inset: 0px; /* height of the fixed bottom bar on screen, published at runtime */
   --content-max-width: 640px;
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);

@@ -21,7 +21,7 @@ export function ProductRow({ product, showFavorite = false }: { product: Product
 
   return (
     <motion.li variants={fadeUp} className="relative" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
-      <Card href={`/products/${product.id}`} className={cn("flex items-center gap-3 p-2.5", showFavorite && "pe-12")}>
+      <Card href={`/products/${product.id}`} className={cn("flex h-full items-center gap-3 p-2.5", showFavorite && "pe-12")}>
         <ProductImage src={product.image_url} alt={product.name} sizes="72px" className="size-[72px] shrink-0 rounded-md" />
         <div className="min-w-0 flex-1">
           <p dir="auto" className="line-clamp-2 text-card-title">{product.name}</p>
@@ -54,7 +54,7 @@ export function ProductList({ products, showFavorite = false }: { products: Prod
 
 export function ProductListSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="grid gap-2.5" role="status" aria-busy="true">
+    <div className="grid gap-2.5 md:grid-cols-2" role="status" aria-busy="true">
       {Array.from({ length: rows }, (_, i) => (
         <div key={i} className="flex items-center gap-3 rounded-lg border border-border bg-surface p-2.5">
           <Skeleton className="size-[72px] shrink-0 rounded-md" />

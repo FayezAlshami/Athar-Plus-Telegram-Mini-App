@@ -9,6 +9,29 @@ export interface TelegramWebAppUser {
   language_code?: string;
   photo_url?: string;
   is_premium?: boolean;
+  allows_write_to_pm?: boolean;
+}
+
+export interface TelegramPopupButton {
+  id?: string;
+  type?: "default" | "ok" | "close" | "cancel" | "destructive";
+  text?: string;
+}
+
+export interface TelegramBottomButton {
+  show(): TelegramBottomButton;
+  hide(): TelegramBottomButton;
+  enable(): TelegramBottomButton;
+  disable(): TelegramBottomButton;
+  setText(text: string): TelegramBottomButton;
+  onClick(callback: () => void): TelegramBottomButton;
+  offClick(callback: () => void): TelegramBottomButton;
+  setParams?(params: { text?: string; color?: string; text_color?: string; is_active?: boolean; is_visible?: boolean }): TelegramBottomButton;
+}
+
+export interface TelegramDeviceStorage {
+  setItem(key: string, value: string, callback?: (error: string | null) => void): void;
+  getItem(key: string, callback: (error: string | null, value: string | null) => void): void;
 }
 
 export interface TelegramSafeAreaInset {
@@ -30,6 +53,7 @@ export interface TelegramWebApp {
   themeParams: TelegramThemeParams;
   viewportStableHeight: number;
   isFullscreen?: boolean;
+  isActive?: boolean;
   isClosingConfirmationEnabled?: boolean;
   safeAreaInset?: TelegramSafeAreaInset;
   contentSafeAreaInset?: TelegramSafeAreaInset;
@@ -41,6 +65,17 @@ export interface TelegramWebApp {
   exitFullscreen?(): void;
   enableClosingConfirmation?(): void;
   disableClosingConfirmation?(): void;
+  enableVerticalSwipes?(): void;
+  showPopup?(params: { title?: string; message: string; buttons?: TelegramPopupButton[] }, callback?: (id: string) => void): void;
+  showAlert?(message: string, callback?: () => void): void;
+  showConfirm?(message: string, callback?: (ok: boolean) => void): void;
+  requestWriteAccess?(callback?: (granted: boolean) => void): void;
+  shareMessage?(messageId: string, callback?: (sent: boolean) => void): void;
+  shareToStory?(mediaUrl: string, params?: { text?: string; widget_link?: { url: string; name?: string } }): void;
+  hideKeyboard?(): void;
+  MainButton?: TelegramBottomButton;
+  SecondaryButton?: TelegramBottomButton;
+  DeviceStorage?: TelegramDeviceStorage;
   addToHomeScreen?(): void;
   checkHomeScreenStatus?(callback: (status: "unsupported" | "unknown" | "added" | "missed") => void): void;
   setHeaderColor(color: string): void;

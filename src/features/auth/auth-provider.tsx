@@ -18,9 +18,9 @@ import { parseStartParam } from "@/lib/telegram/start-param";
 import { authenticateFromHost } from "@/lib/telegram/telegram-auth";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 
-type AuthStatus = "authenticating" | "authenticated" | "failed" | "unavailable";
+type AuthStatus = "authenticating" | "authenticated" | "failed" | "unavailable" | "write_access_required";
 
-type SignInOutcome = { attempt: number; status: "authenticated" | "failed"; errorCode: string | null };
+type SignInOutcome = { attempt: number; status: "authenticated" | "failed" | "write_access_required"; errorCode: string | null };
 
 interface AuthContextValue {
   status: AuthStatus;
@@ -88,8 +88,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     signIn(adapter)
-      .then((session) => {
+      .then(async (session) => {
         if (cancelled) return;
+        if (adapter.kind === "telegram" && !session.user.allows_write_to_pm) {
+          const granted = await adapter.requestWriteAccess();
+          if (cancelled) return;
+          if (!granted) {
+            setOutcome({ attempt, status: "write_access_required", errorCode: null });
+            return;
+          }
+          const user = await accountApi.grantWriteAccess();
+          if (cancelled) return;
+          queryClient.setQueryData(queryKeys.profile, user);
+        }
         setOutcome({ attempt, status: "authenticated", errorCode: null });
         track("app_opened", { platform: adapter.platform });
         if (!warmed.current) {
