@@ -136,6 +136,24 @@
   button:disabled {
     cursor: not-allowed;
   }
+
+  /* WebKit/Telegram: placeholder alignment follows explicit dir, not the page alone. */
+  input[dir="rtl"],
+  textarea[dir="rtl"] {
+    text-align: right;
+  }
+  input[dir="rtl"]::placeholder,
+  textarea[dir="rtl"]::placeholder {
+    text-align: right;
+  }
+  input[dir="ltr"],
+  textarea[dir="ltr"] {
+    text-align: left;
+  }
+  input[dir="ltr"]::placeholder,
+  textarea[dir="ltr"]::placeholder {
+    text-align: left;
+  }
 }
 
 /* Hides the scrollbar of horizontal rails while keeping native momentum. */

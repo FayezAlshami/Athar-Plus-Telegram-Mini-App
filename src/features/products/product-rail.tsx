@@ -27,10 +27,13 @@ export function ProductRailSkeleton() {
       {Array.from({ length: 3 }, (_, i) => (
         <div key={i} className="flex w-[168px] shrink-0 flex-col overflow-hidden rounded-lg border border-border bg-surface">
           <Skeleton className="aspect-[4/3] w-full rounded-none" />
-          <div className="flex flex-col gap-2 p-3">
+          <div className="flex flex-1 flex-col gap-2 p-3">
             <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="mt-1 h-5 w-16" />
+            <Skeleton className="h-3 w-2/3" />
+            <div className="mt-auto flex items-center justify-between pt-2">
+              <Skeleton className="h-5 w-14" />
+              <Skeleton className="h-7 w-12 rounded-md" />
+            </div>
           </div>
         </div>
       ))}

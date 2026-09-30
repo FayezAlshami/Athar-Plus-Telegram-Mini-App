@@ -34,7 +34,7 @@ export function SegmentedControl<T extends string>({ value, onChange, options, l
               onChange(option.value);
             }}
             className={cn(
-              "relative h-10 flex-1 rounded-sm text-small font-medium transition-colors duration-200",
+              "relative h-11 flex-1 rounded-sm text-small font-medium transition-colors duration-200",
               selected ? "text-foreground" : "text-muted-foreground",
             )}
           >

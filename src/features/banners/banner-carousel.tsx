@@ -71,7 +71,7 @@ function BannerSlide({ banner, index }: { banner: Banner; index: number }) {
         <p dir="auto" className="font-display text-xl font-semibold leading-snug">{banner.title}</p>
         {banner.subtitle && <p dir="auto" className="mt-1 line-clamp-2 text-small opacity-85">{banner.subtitle}</p>}
         {banner.cta_label && destination && (
-          <span className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-full bg-white/15 px-3 text-small font-semibold backdrop-blur-sm">
+          <span className="mt-3 inline-flex h-11 items-center gap-1.5 rounded-full bg-white/15 px-4 text-small font-semibold backdrop-blur-sm">
             {banner.cta_label}
             <ArrowRight className="size-4 rtl:-scale-x-100" weight="bold" />
           </span>

@@ -21,6 +21,7 @@ import { useWallet } from "@/features/wallet/queries";
 import { isApiError } from "@/lib/api/errors";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 import type { Category } from "@/entities/category/types";
+import { AnimatedFireIcon } from "@/components/shared/animated-fire-icon";
 import { HomeSearch } from "@/features/search/home-search";
 import { HomeHeader } from "./home-header";
 
@@ -105,7 +106,7 @@ export function HomeScreen() {
           </Section>
 
           {(!feed.data || feed.data.featured_products.length > 0) && (
-            <Section title={t("home.featured")}>
+            <Section title={t("home.featured")} titleAdornment={<AnimatedFireIcon />}>
               {feed.data ? <ProductRail products={feed.data.featured_products} /> : <ProductRailSkeleton />}
             </Section>
           )}

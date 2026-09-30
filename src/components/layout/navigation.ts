@@ -1,17 +1,25 @@
-import { House, Receipt, SquaresFour, UserCircle, Wallet, type Icon } from "@phosphor-icons/react";
+import type { ComponentType } from "react";
+import { Category, Home, Profile, Receipt21, Wallet3 } from "iconsax-react";
+
+export type NavIconComponent = ComponentType<{
+  size?: string | number;
+  variant?: "Linear" | "Outline" | "Broken" | "Bold" | "Bulk" | "TwoTone";
+  color?: string;
+  className?: string;
+}>;
 
 export interface PrimaryDestination {
   href: string;
   labelKey: "home" | "explore" | "orders" | "wallet" | "profile";
-  icon: Icon;
+  icon: NavIconComponent;
 }
 
 export const PRIMARY_DESTINATIONS: PrimaryDestination[] = [
-  { href: "/", labelKey: "home", icon: House },
-  { href: "/categories", labelKey: "explore", icon: SquaresFour },
-  { href: "/orders", labelKey: "orders", icon: Receipt },
-  { href: "/wallet", labelKey: "wallet", icon: Wallet },
-  { href: "/profile", labelKey: "profile", icon: UserCircle },
+  { href: "/", labelKey: "home", icon: Home },
+  { href: "/categories", labelKey: "explore", icon: Category },
+  { href: "/orders", labelKey: "orders", icon: Receipt21 },
+  { href: "/wallet", labelKey: "wallet", icon: Wallet3 },
+  { href: "/profile", labelKey: "profile", icon: Profile },
 ];
 
 export function isPrimaryDestination(pathname: string): boolean {

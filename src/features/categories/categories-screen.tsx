@@ -37,7 +37,9 @@ export function CategoriesScreen() {
         <EmptyState icon={<SquaresFour />} title={t("categories.emptyTitle")} />
       ) : (
         <motion.div variants={gridContainer} initial="hidden" animate="visible" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {data.map((category) => <CategoryCard key={category.id} category={category} />)}
+          {data.map((category, index) => (
+            <CategoryCard key={category.id} category={category} featured={index === 0 && Boolean(category.image_url)} />
+          ))}
         </motion.div>
       )}
     </PageContainer>

@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "motion/react";
 import { ClockCounterClockwise, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { Chip } from "@/components/ui/chip";
@@ -24,6 +24,8 @@ import type { Category } from "@/entities/category/types";
 import type { Product } from "@/entities/product/types";
 import { Highlight } from "./highlight";
 import { MIN_SEARCH_LENGTH, useCatalogSearch } from "./queries";
+import { localeInputClassName, localeInputDir } from "@/lib/i18n/locale-input";
+import { cn } from "@/lib/cn";
 import { recentSearches } from "./recent-searches";
 
 const DEBOUNCE_MS = 180;
@@ -57,7 +59,7 @@ function SearchProductHit({
           <Price price={product.price} />
         </div>
       </Card>
-      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2.5 top-1/2 z-10 size-8 -translate-y-1/2" />
+      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2.5 top-1/2 z-10 -translate-y-1/2" />
     </li>
   );
 }
@@ -80,6 +82,7 @@ function SearchCategoryHit({ category, query, active }: { category: Category; qu
 export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolean) => void }) {
   const t = useTranslations("search");
   const tHome = useTranslations("home");
+  const locale = useLocale();
   const hideKeyboard = useHideKeyboard();
   const router = useRouter();
   const listId = useId();
@@ -140,14 +143,15 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
           if (hits.length > 0) openHit(activeIndex);
           else remember(query);
         }}
-        className="sticky top-[calc(var(--safe-top)+8px)] z-30 flex h-12 items-center gap-2 rounded-full border border-border bg-surface px-4 shadow-sm transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
+        className="sticky top-[calc(var(--safe-top)+8px)] z-30 relative h-12 rounded-full border border-border bg-surface shadow-sm transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
       >
-        <MagnifyingGlass aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+        <MagnifyingGlass aria-hidden className="pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
         <input
           ref={inputRef}
-          type="search"
+          type="text"
+          inputMode="search"
           enterKeyHint="search"
-          dir="auto"
+          dir={localeInputDir(locale)}
           role="combobox"
           aria-expanded={active}
           aria-controls={listId}
@@ -173,7 +177,11 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
               setActiveIndex((index) => (index - 1 + hits.length) % hits.length);
             }
           }}
-          className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+          className={cn(
+            "h-full w-full rounded-full bg-transparent ps-11 text-base outline-none placeholder:text-muted-foreground",
+            localeInputClassName,
+            query ? "pe-14" : "pe-4",
+          )}
         />
         <AnimatePresence>
           {query && (
@@ -188,7 +196,7 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
                 setQuery("");
                 inputRef.current?.focus();
               }}
-              className="-me-1.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
+              className="-me-1.5 flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
             >
               <X className="size-3.5" weight="bold" />
             </motion.button>
@@ -202,7 +210,7 @@ export function HomeSearch({ onActiveChange }: { onActiveChange: (active: boolea
             <h2 className="text-section-title">{t("recent")}</h2>
             <button
               type="button"
-              className="-me-2 h-8 rounded-full px-2 text-small text-muted-foreground active:bg-muted"
+              className="-me-2 min-h-11 rounded-full px-3 text-small text-muted-foreground active:bg-muted"
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
                 recentSearches.clear();

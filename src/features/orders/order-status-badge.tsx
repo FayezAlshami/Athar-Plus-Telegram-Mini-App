@@ -11,7 +11,7 @@ const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
   confirmed: "accent",
   processing: "accent",
   completed: "success",
-  cancelled: "neutral",
+  cancelled: "danger",
   rejected: "danger",
 };
 

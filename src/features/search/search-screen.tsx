@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "motion/react";
 import { ClockCounterClockwise, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
@@ -25,12 +25,15 @@ import { ProductImage } from "@/features/products/product-image";
 import { Highlight } from "./highlight";
 import { MIN_SEARCH_LENGTH, useCatalogSearch } from "./queries";
 import { useHideKeyboard } from "@/lib/telegram/hooks";
+import { localeInputClassName, localeInputDir } from "@/lib/i18n/locale-input";
+import { cn } from "@/lib/cn";
 import { recentSearches } from "./recent-searches";
 
 const DEBOUNCE_MS = 220;
 
 export function SearchScreen() {
   const t = useTranslations("search");
+  const locale = useLocale();
   const hideKeyboard = useHideKeyboard();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
@@ -68,20 +71,26 @@ export function SearchScreen() {
         initial={{ opacity: 0, scaleX: 0.92 }}
         animate={{ opacity: 1, scaleX: 1 }}
         transition={spring.entrance}
-        className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full border border-border-strong bg-surface-elevated px-4 shadow-sm transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
+        className="relative h-12 min-w-0 flex-1 rounded-full border border-border-strong bg-surface-elevated shadow-sm transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-soft"
       >
-        <MagnifyingGlass aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+        <MagnifyingGlass aria-hidden className="pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
         <input
           ref={inputRef}
-          type="search"
+          type="text"
+          inputMode="search"
+          role="searchbox"
           enterKeyHint="search"
-          dir="auto"
+          dir={localeInputDir(locale)}
           aria-label={t("placeholder")}
           placeholder={t("placeholder")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={(event) => event.key === "Escape" && setQuery("")}
-          className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+          className={cn(
+            "h-full w-full rounded-full bg-transparent ps-11 text-base outline-none placeholder:text-muted-foreground",
+            localeInputClassName,
+            query ? "pe-14" : "pe-4",
+          )}
         />
         <AnimatePresence>
           {query && (
@@ -96,7 +105,7 @@ export function SearchScreen() {
                 setQuery("");
                 inputRef.current?.focus();
               }}
-              className="-me-1.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
+              className="-me-1.5 flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground active:bg-border-strong"
             >
               <X className="size-3.5" weight="bold" />
             </motion.button>
@@ -112,7 +121,7 @@ export function SearchScreen() {
             <section className="flex flex-col gap-3">
               <div className="flex items-center justify-between px-1">
                 <h2 className="text-section-title">{t("recent")}</h2>
-                <button type="button" className="-me-2 h-8 rounded-full px-2 text-small text-muted-foreground active:bg-muted" onClick={() => { recentSearches.clear(); setRecents([]); }}>
+                <button type="button" className="-me-2 min-h-11 rounded-full px-3 text-small text-muted-foreground active:bg-muted" onClick={() => { recentSearches.clear(); setRecents([]); }}>
                   {t("clearRecent")}
                 </button>
               </div>
@@ -143,7 +152,7 @@ export function SearchScreen() {
             <Section title={t("categories")}>
               <div className="flex flex-wrap gap-2">
                 {results.categories.map((category) => (
-                  <Link key={category.id} href={`/categories/${encodeURIComponent(category.slug)}`} dir="auto" className="inline-flex h-9 max-w-full items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3.5 text-small font-medium transition-transform duration-150 active:scale-95">
+                  <Link key={category.id} href={`/categories/${encodeURIComponent(category.slug)}`} dir="auto" className="inline-flex h-11 max-w-full cursor-pointer items-center gap-1.5 rounded-full border border-border-strong bg-surface px-4 text-small font-medium transition-transform duration-150 active:scale-95">
                     <CategoryIcon name={category.icon} className="size-4 shrink-0 text-accent" />
                     <span className="truncate"><Highlight text={category.name} query={debounced} /></span>
                   </Link>

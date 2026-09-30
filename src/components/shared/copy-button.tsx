@@ -27,7 +27,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
         setCopied(true);
         window.setTimeout(() => setCopied(false), RESET_DELAY_MS);
       }}
-      className={cn("inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors active:bg-muted", className)}
+      className={cn("inline-flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors active:bg-muted", className)}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span

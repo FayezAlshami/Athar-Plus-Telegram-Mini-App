@@ -19,6 +19,7 @@ const MotionLink = motion.create(Link);
 export function Card({ children, className, href, elevated = false }: CardProps) {
   const classes = cn(
     "block rounded-lg border border-border",
+    href && "cursor-pointer",
     elevated ? "bg-surface-elevated shadow-md" : "bg-surface shadow-sm",
     className,
   );

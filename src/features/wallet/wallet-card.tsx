@@ -2,67 +2,65 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { Clock, Gift, Plus } from "@phosphor-icons/react";
 import type { Wallet } from "@/entities/wallet/types";
 import { Money } from "@/components/shared/money";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ButterflyMark } from "@/components/shared/butterfly";
 import { spring } from "@/lib/animation/tokens";
+import { cn } from "@/lib/cn";
 
-/** High-trust balance card. `compact` is used on Home as an entry point to the wallet. */
+const actionClass =
+  "flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-md text-button transition-transform active:scale-[0.98]";
+
+/** Balance card: label → amount → deposit (primary) + gift code (secondary). */
 export function WalletCard({ wallet, compact = false }: { wallet: Wallet | undefined; compact?: boolean }) {
   const t = useTranslations("wallet");
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
+    <motion.section
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={spring.entrance}
-      className="relative overflow-hidden rounded-xl bg-[image:var(--hero-gradient)] p-5 text-white shadow-lg"
-    >
-      <ButterflyMark className="pointer-events-none absolute -end-4 -top-4 size-32 text-white/[0.06]" />
-      <p className="text-small text-white/70">{t("balance")}</p>
-      {wallet ? (
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.span
-            key={wallet.balance_minor}
-            className="mt-1 block"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22 }}
-          >
-            <Money amountMinor={wallet.balance_minor} currency={wallet.currency} className="text-[2rem] leading-tight" />
-          </motion.span>
-        </AnimatePresence>
-      ) : (
-        <Skeleton className="mt-2 h-9 w-32 bg-white/15" />
+      aria-label={t("balance")}
+      className={cn(
+        "rounded-xl bg-[image:var(--wallet-card-gradient)] text-white shadow-md",
+        compact ? "p-4" : "p-5",
       )}
+    >
+      <div className="flex flex-col gap-1">
+        <p className="text-caption font-medium text-white/75">{t("balance")}</p>
+        {wallet ? (
+          <Money
+            amountMinor={wallet.balance_minor}
+            currency={wallet.currency}
+            className="font-display text-[2.125rem] leading-none tracking-tight text-white sm:text-[2.375rem]"
+          />
+        ) : (
+          <Skeleton className="mt-1 h-10 w-36 max-w-[70%] rounded-sm bg-white/15" aria-hidden />
+        )}
+      </div>
+
       {wallet && wallet.pending_deposits.count > 0 && (
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-caption">
-          <Clock className="size-3.5" />
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-caption text-white/90">
+          <Clock className="size-3.5 shrink-0" aria-hidden />
           {t("pendingDeposits", { count: wallet.pending_deposits.count })}
         </p>
       )}
-      <div className="mt-5 flex gap-2">
-        <Link
-          href="/wallet/deposit"
-          className="flex h-11 flex-1 items-center justify-center gap-2 rounded-md bg-white text-button text-[#0f2a55] transition-transform active:scale-[0.97]"
-        >
-          <Plus weight="bold" className="size-4" />
+
+      <div className={cn("flex gap-2.5", wallet?.pending_deposits.count ? "mt-4" : "mt-5")}>
+        <Link href="/wallet/deposit" className={cn(actionClass, "bg-white text-[#0f2a55] shadow-sm")}>
+          <Plus weight="bold" className="size-4 shrink-0" aria-hidden />
           {t("deposit")}
         </Link>
-        {!compact && (
-          <Link
-            href="/gift-codes"
-            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-md bg-white/12 text-button text-white transition-transform active:scale-[0.97]"
-          >
-            <Gift className="size-4" />
-            {t("giftCode")}
-          </Link>
-        )}
+        <Link
+          href="/gift-codes"
+          className={cn(actionClass, "border border-white/30 bg-white/10 text-white backdrop-blur-[2px]")}
+        >
+          <Gift className="size-4 shrink-0" aria-hidden />
+          {t("giftCode")}
+        </Link>
       </div>
-    </motion.div>
+    </motion.section>
   );
 }

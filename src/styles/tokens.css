@@ -69,6 +69,8 @@
   --nav-glass-shadow: 0 16px 40px -18px rgb(14 26 51 / 0.34), 0 4px 14px -8px rgb(14 26 51 / 0.14);
   --nav-indicator: #d1e9e8;
   --hero-gradient: linear-gradient(135deg, #0f2a55 0%, #13396b 55%, #17616a 100%);
+  /* Wallet card only — navy → Athar teal, no gold. */
+  --wallet-card-gradient: linear-gradient(152deg, #0f2a55 0%, #135a7a 48%, #178f89 100%);
   --plus-gradient: linear-gradient(135deg, #1a1508 0%, #3a2c10 60%, #6b5320 100%);
 }
 
@@ -81,8 +83,8 @@
   --foreground: #edf0f6;
   --muted: #18243d;
   --muted-foreground: #8d98ae;
-  --border: rgb(237 240 246 / 0.07);
-  --border-strong: rgb(237 240 246 / 0.14);
+  --border: rgb(237 240 246 / 0.11);
+  --border-strong: rgb(237 240 246 / 0.18);
   --primary: #efe7d6;
   --primary-foreground: #0b1427;
   --accent: #3cc3b8;
@@ -108,5 +110,6 @@
   --nav-glass-shadow: 0 18px 44px -16px rgb(0 0 0 / 0.72), 0 2px 10px rgb(0 0 0 / 0.38);
   --nav-indicator: color-mix(in srgb, var(--accent) 36%, rgb(255 255 255 / 0.08));
   --hero-gradient: linear-gradient(135deg, #0e2448 0%, #0f2f57 55%, #0f4f55 100%);
+  --wallet-card-gradient: linear-gradient(152deg, #0e2448 0%, #0f4560 48%, #3cc3b8 100%);
   --plus-gradient: linear-gradient(135deg, #15110a 0%, #2c2212 60%, #4f3d19 100%);
 }

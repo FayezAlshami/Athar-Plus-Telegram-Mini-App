@@ -103,11 +103,11 @@ export function DateRangeField({
       </div>
       <BottomSheet open={open} onOpenChange={setOpen} title={t("period")}>
         <div className="flex items-center justify-between pb-3">
-          <button type="button" aria-label={t("previousMonth")} onClick={() => setCursor(new Date(year, month - 1, 1))} className="flex size-10 items-center justify-center rounded-full border border-border bg-surface transition-transform active:scale-95">
+          <button type="button" aria-label={t("previousMonth")} onClick={() => setCursor(new Date(year, month - 1, 1))} className="flex size-11 items-center justify-center rounded-full border border-border bg-surface transition-transform active:scale-95">
             <ArrowLeft className="size-4 rtl:-scale-x-100" />
           </button>
           <p className="text-card-title">{monthLabel.format(cursor)}</p>
-          <button type="button" aria-label={t("nextMonth")} onClick={() => setCursor(new Date(year, month + 1, 1))} className="flex size-10 items-center justify-center rounded-full border border-border bg-surface transition-transform active:scale-95">
+          <button type="button" aria-label={t("nextMonth")} onClick={() => setCursor(new Date(year, month + 1, 1))} className="flex size-11 items-center justify-center rounded-full border border-border bg-surface transition-transform active:scale-95">
             <ArrowRight className="size-4 rtl:-scale-x-100" />
           </button>
         </div>
@@ -132,7 +132,7 @@ export function DateRangeField({
                 aria-current={iso === today ? "date" : undefined}
                 onClick={() => pick(iso)}
                 className={cn(
-                  "flex h-10 items-center justify-center rounded-full text-small tabular-nums transition-colors enabled:active:bg-muted",
+                  "flex h-11 items-center justify-center rounded-full text-small tabular-nums transition-colors enabled:active:bg-muted",
                   inRange && "bg-accent-soft text-accent",
                   (start || end) && "bg-accent text-accent-foreground",
                   iso === today && !start && !end && "ring-1 ring-accent",

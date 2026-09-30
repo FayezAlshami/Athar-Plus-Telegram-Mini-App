@@ -3,15 +3,15 @@ import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { controlClasses } from "./field";
 import { cn } from "@/lib/cn";
 
-export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input({ className, ...props }, ref) {
-  return <input ref={ref} dir="auto" className={cn(controlClasses, "h-12", className)} {...props} />;
+export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input({ className, dir, ...props }, ref) {
+  return <input ref={ref} {...props} dir={dir ?? "auto"} className={cn(controlClasses, "h-12", className)} />;
 });
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(function Textarea(
-  { className, rows = 4, ...props },
+  { className, dir, rows = 4, ...props },
   ref,
 ) {
-  return <textarea ref={ref} dir="auto" rows={rows} className={cn(controlClasses, "resize-none py-3", className)} {...props} />;
+  return <textarea ref={ref} {...props} dir={dir ?? "auto"} rows={rows} className={cn(controlClasses, "resize-none py-3", className)} />;
 });
 
 export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(function Select({ className, ...props }, ref) {

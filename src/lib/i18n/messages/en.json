@@ -51,7 +51,15 @@
   },
   "home": {
     "greeting": "Hi {name}",
+    "welcome": "Welcome",
+    "available": "Available now",
     "greetingSubtitle": "What do you need today?",
+    "greetings": {
+      "morning": { "a": "A productive morning ahead", "b": "Start the day with a service worth it", "c": "Good morning. What shall we get done?" },
+      "afternoon": { "a": "Your afternoon, handled", "b": "What can we take care of today?", "c": "The day is yours" },
+      "evening": { "a": "A calm, ordered evening", "b": "Unwind. We'll handle the rest", "c": "Good evening. Your service is ready" },
+      "night": { "a": "We're still here for you", "b": "A quiet night for what you need", "c": "Late hours, the same care" }
+    },
     "searchPlaceholder": "Search services, e.g. Canva, PUBG…",
     "categories": "Categories",
     "featured": "Featured",
@@ -113,6 +121,7 @@
     "unavailable": "Currently unavailable",
     "outOfStock": "Out of stock",
     "buy": "Order now",
+    "buyShort": "Buy",
     "buyFor": "Order for {price}",
     "share": "Share",
     "shareText": "Check this product on Athar Plus",
@@ -214,6 +223,7 @@
       "rejected": "Rejected"
     },
     "number": "Order number",
+    "copyNumber": "Copy order number",
     "total": "Total",
     "discount": "Discount",
     "createdAt": "Placed on",
@@ -241,6 +251,10 @@
     "title": "Profile",
     "memberSince": "Member since {date}",
     "preferences": "Preferences",
+    "account": "Account",
+    "rewards": "Rewards",
+    "app": "App",
+    "darkMode": "Dark mode",
     "language": "Language",
     "theme": "Appearance",
     "themeLight": "Light",

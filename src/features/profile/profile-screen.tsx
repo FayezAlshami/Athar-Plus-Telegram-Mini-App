@@ -7,7 +7,8 @@ import { motion } from "motion/react";
 import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Avatar } from "@/components/ui/avatar";
+import { StatusAvatar } from "@/components/shared/status-avatar";
+import { CopyableText } from "@/components/shared/copyable-text";
 import { ListGroup, ListItem } from "@/components/ui/list-item";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LevelBadge } from "@/components/shared/level-badge";
@@ -127,28 +128,30 @@ export function ProfileScreen() {
         >
           <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-accent-soft to-transparent" />
 
-          <div className="relative flex items-center gap-4">
-            <span className="shrink-0 rounded-full bg-surface p-1 shadow-sm ring-1 ring-border">
-              <Avatar name={user.first_name} src={user.photo_url} size={64} className="text-xl" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <p dir="auto" className="min-w-0 truncate text-section-title">{fullName}</p>
-                {user.telegram_is_premium && <Star className="size-4 shrink-0 text-gold" weight="fill" aria-label={t("profile.telegramPremium")} />}
-                <LevelBadge level={user.membership.level} />
-              </div>
-              {user.username && (
-                <p className="truncate text-small font-medium text-accent"><bdi dir="ltr">@{user.username}</bdi></p>
-              )}
-              {user.member_since && (
-                <p className="mt-0.5 truncate text-caption text-muted-foreground">
-                  {t("profile.memberSince", { date: formatDateTime(user.member_since, locale) })}
-                </p>
-              )}
+          <div className="relative flex flex-col items-center gap-2 text-center">
+            <StatusAvatar name={user.first_name} src={user.photo_url} size={72} availableLabel={t("home.available")} />
+            <div className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1">
+              <p dir="auto" className="min-w-0 truncate font-display text-section-title">{fullName}</p>
+              {user.telegram_is_premium && <Star className="size-4 shrink-0 text-gold" weight="fill" aria-label={t("profile.telegramPremium")} />}
+              <LevelBadge level={user.membership.level} />
             </div>
+            {user.username && (
+              <CopyableText
+                value={`@${user.username}`}
+                label={t("common.copy")}
+                className="inline-flex max-w-full items-center rounded-full bg-accent-soft px-3 py-1 text-small font-medium text-accent active:opacity-80"
+              >
+                <bdi dir="ltr" className="truncate">@{user.username}</bdi>
+              </CopyableText>
+            )}
+            {user.member_since && (
+              <p className="truncate text-caption text-muted-foreground">
+                {t("profile.memberSince", { date: formatDateTime(user.member_since, locale) })}
+              </p>
+            )}
           </div>
 
-          <div className="relative flex h-11 items-center gap-2 rounded-md border border-border bg-surface-sunken ps-3.5 pe-1">
+          <div className="relative flex h-12 items-center gap-2 rounded-md bg-surface-sunken ps-3.5 pe-1 shadow-[inset_0_0_0_1px_var(--border)]">
             <span className="text-caption font-medium text-muted-foreground">{t("profile.telegramId")}</span>
             <span className="min-w-0 flex-1 truncate text-end font-display text-small font-semibold tabular-nums">
               <bdi dir="ltr">{user.telegram_id}</bdi>
@@ -189,11 +192,21 @@ export function ProfileScreen() {
         <ProfileCardSkeleton />
       )}
 
-      <Section title={t("profile.shortcuts")}>
-        <ListGroup>
-          <ListItem href="/favorites" iconTone="danger" icon={<Heart weight="fill" />} title={t("profile.favorites")} />
+      <Section title={t("profile.account")} tone="caption">
+        <ListGroup inset>
+          <ListItem variant="settings" href="/orders" iconTone="accent" icon={<Receipt weight="duotone" />} title={t("nav.orders")} />
+          <ListItem variant="settings" href="/wallet" iconTone="accent" icon={<Wallet weight="duotone" />} title={t("nav.wallet")} />
+          <ListItem variant="settings" href="/gift-codes" iconTone="gold" icon={<Gift weight="duotone" />} title={t("giftCode.title")} />
+          <ListItem variant="settings" href="/favorites" iconTone="danger" icon={<Heart weight="fill" />} title={t("profile.favorites")} />
+        </ListGroup>
+      </Section>
+
+      <Section title={t("profile.rewards")} tone="caption">
+        <ListGroup inset>
+          <ListItem variant="settings" href="/membership" iconTone="gold" icon={<Crown weight="fill" />} title={t("membership.title")} />
           {user?.referral.code && (
             <ListItem
+              variant="settings"
               iconTone="accent"
               icon={<UsersThree weight="duotone" />}
               title={t("profile.referrals")}
@@ -202,28 +215,20 @@ export function ProfileScreen() {
               showChevron
             />
           )}
-          <ListItem href="/membership" iconTone="gold" icon={<Crown weight="fill" />} title={t("membership.title")} />
-          <ListItem href="/orders" iconTone="accent" icon={<Receipt weight="duotone" />} title={t("nav.orders")} />
-          <ListItem href="/wallet" iconTone="accent" icon={<Wallet weight="duotone" />} title={t("nav.wallet")} />
-          <ListItem href="/gift-codes" iconTone="gold" icon={<Gift weight="duotone" />} title={t("giftCode.title")} />
-          {(homeScreen.status === "missed" || homeScreen.status === "unknown") && (
-            <ListItem
-              iconTone="accent"
-              icon={<DeviceMobile weight="duotone" />}
-              title={t("profile.addToHome")}
-              subtitle={t("profile.addToHomeHint")}
-              onClick={homeScreen.add}
-              showChevron
-            />
-          )}
-          {homeScreen.status === "added" && (
-            <ListItem
-              iconTone="success"
-              icon={<Check weight="bold" />}
-              title={t("profile.addedToHome")}
-            />
-          )}
+        </ListGroup>
+      </Section>
+
+      <Section title={t("profile.preferences")} tone="caption">
+        <ListGroup inset>
+          <LanguageSwitch />
+          <ThemeSwitch />
+        </ListGroup>
+      </Section>
+
+      <Section title={t("profile.app")} tone="caption">
+        <ListGroup inset>
           <ListItem
+            variant="settings"
             href="/notifications"
             iconTone="neutral"
             icon={<BellSimple weight="duotone" />}
@@ -236,21 +241,26 @@ export function ProfileScreen() {
               ) : undefined
             }
           />
+          {(homeScreen.status === "missed" || homeScreen.status === "unknown") && (
+            <ListItem
+              variant="settings"
+              iconTone="accent"
+              icon={<DeviceMobile weight="duotone" />}
+              title={t("profile.addToHome")}
+              subtitle={t("profile.addToHomeHint")}
+              onClick={homeScreen.add}
+              showChevron
+            />
+          )}
+          {homeScreen.status === "added" && (
+            <ListItem variant="settings" iconTone="success" icon={<Check weight="bold" />} title={t("profile.addedToHome")} />
+          )}
         </ListGroup>
       </Section>
 
-      <Section title={t("profile.preferences")}>
-        <div className="overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
-          <p className="px-4 pt-3 text-small font-medium text-muted-foreground">{t("profile.language")}</p>
-          <LanguageSwitch />
-          <p className="border-t border-border px-4 pt-3 text-small font-medium text-muted-foreground">{t("profile.theme")}</p>
-          <ThemeSwitch />
-        </div>
-      </Section>
-
       {BOT_USERNAME && (
-        <ListGroup>
-          <ListItem iconTone="success" icon={<Headset weight="duotone" />} title={t("profile.support")} subtitle={<bdi dir="ltr">@{BOT_USERNAME}</bdi>} onClick={openSupport} showChevron />
+        <ListGroup inset>
+          <ListItem variant="settings" iconTone="success" icon={<Headset weight="duotone" />} title={t("profile.support")} subtitle={<bdi dir="ltr">@{BOT_USERNAME}</bdi>} onClick={openSupport} showChevron />
         </ListGroup>
       )}
 

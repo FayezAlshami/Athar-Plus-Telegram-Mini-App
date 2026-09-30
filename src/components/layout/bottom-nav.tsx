@@ -12,6 +12,7 @@ import { useHaptics } from "@/lib/telegram/hooks";
 import { useKeyboardOpen } from "@/hooks/use-keyboard-open";
 import { cn } from "@/lib/cn";
 import { useFixedBottomInset } from "./bottom-inset";
+import { NavIcon } from "./nav-icon";
 import { PRIMARY_DESTINATIONS } from "./navigation";
 
 const INSET = 5;
@@ -100,7 +101,7 @@ export function BottomNav() {
             }
           />
         )}
-        {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon: Icon }) => {
+        {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon }) => {
           const active = pathname === href;
           return (
             <li key={href} data-nav-active={active ? "" : undefined} className="relative z-10 flex-1">
@@ -115,7 +116,7 @@ export function BottomNav() {
                   active ? "text-foreground" : "text-muted-foreground",
                 )}
               >
-                <Icon className={cn("size-[22px] transition-colors", active ? "text-accent" : "text-muted-foreground")} weight={active ? "fill" : "regular"} />
+                <NavIcon icon={icon} active={active} />
                 <span className={cn("max-w-full truncate px-1 leading-none", active && "font-semibold")}>{t(labelKey)}</span>
               </Link>
             </li>
