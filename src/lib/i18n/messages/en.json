@@ -66,7 +66,13 @@
     "popular": "Most ordered",
     "plusTitle": "Plus membership",
     "plusBody": "Preferential pricing, priority processing and early access to offers.",
-    "plusCta": "See benefits"
+    "plusCta": "See benefits",
+    "plusEyebrow": "Premium membership",
+    "plusPerks": {
+      "a": "Lower prices",
+      "b": "Faster delivery",
+      "c": "Exclusive offers"
+    }
   },
   "wallet": {
     "title": "Wallet",
@@ -244,6 +250,7 @@
     "expiresAt": "Valid until {date}",
     "benefits": "Benefits",
     "yourLevel": "Your level",
+    "verified": "Verified account · {level} level",
     "howToUpgrade": "How to get Plus?",
     "howToUpgradeBody": "Ways to join Plus will be announced soon. Keep an eye on your notifications."
   },
@@ -276,7 +283,10 @@
     "referralStats": "{signups} signups · {orders} orders",
     "addToHome": "Add to Home Screen",
     "addToHomeHint": "A shortcut to the app on your phone",
-    "addedToHome": "Added to Home Screen"
+    "addedToHome": "Added to Home Screen",
+    "levelNormalHint": "Upgrade for better prices and perks",
+    "levelEssentialHint": "One step away from Plus",
+    "levelPlusHint": "All Plus benefits are active"
   },
   "notifications": {
     "title": "Notifications",

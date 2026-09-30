@@ -61,14 +61,18 @@ function BannerSlide({ banner, index }: { banner: Banner; index: number }) {
             sizes="(max-width: 640px) 100vw, 640px"
             priority={index === 0}
             unoptimized={!canOptimizeImage(banner.image_url)}
-            className="object-cover"
+            className="object-contain"
+            style={(banner.image_zoom ?? 1) !== 1 || banner.image_x || banner.image_y
+              ? { transform: `translate(${banner.image_x ?? 0}%, ${banner.image_y ?? 0}%) scale(${banner.image_zoom ?? 1})` }
+              : undefined}
           />
-          {/* Keeps the copy legible over any artwork. */}
-          <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
+          {(banner.title || banner.subtitle || banner.cta_label) && (
+            <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
+          )}
         </>
       )}
-      <div className={cn("relative", banner.image_url && "text-white")}>
-        <p dir="auto" className="font-display text-xl font-semibold leading-snug">{banner.title}</p>
+      <div className={cn("relative", banner.image_url && (banner.title || banner.subtitle || banner.cta_label) && "text-white")}>
+        {banner.title && <p dir="auto" className="font-display text-xl font-semibold leading-snug">{banner.title}</p>}
         {banner.subtitle && <p dir="auto" className="mt-1 line-clamp-2 text-small opacity-85">{banner.subtitle}</p>}
         {banner.cta_label && destination && (
           <span className="mt-3 inline-flex h-11 items-center gap-1.5 rounded-full bg-white/15 px-4 text-small font-semibold backdrop-blur-sm">

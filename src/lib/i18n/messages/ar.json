@@ -66,7 +66,13 @@
     "popular": "الأكثر طلبًا",
     "plusTitle": "عضوية بلس",
     "plusBody": "أسعار تفضيلية وأولوية في التنفيذ ووصول مبكر للعروض.",
-    "plusCta": "اكتشف المزايا"
+    "plusCta": "اكتشف المزايا",
+    "plusEyebrow": "العضوية المميّزة",
+    "plusPerks": {
+      "a": "أسعار أقل",
+      "b": "تنفيذ أسرع",
+      "c": "عروض حصرية"
+    }
   },
   "wallet": {
     "title": "المحفظة",
@@ -243,6 +249,7 @@
     "expiresAt": "صالحة حتى {date}",
     "benefits": "المزايا",
     "yourLevel": "مستواك",
+    "verified": "حساب موثّق · مستوى {level}",
     "howToUpgrade": "كيف تحصل على بلس؟",
     "howToUpgradeBody": "سيتم الإعلان قريبًا عن طرق الانضمام إلى بلس. تابع إشعاراتك."
   },
@@ -275,7 +282,10 @@
     "referralStats": "{signups} تسجيل · {orders} طلب",
     "addToHome": "إضافة إلى الشاشة الرئيسية",
     "addToHomeHint": "اختصار للتطبيق على موبايلك",
-    "addedToHome": "مضاف إلى الشاشة الرئيسية"
+    "addedToHome": "مضاف إلى الشاشة الرئيسية",
+    "levelNormalHint": "ترقَّ لتحصل على أسعار ومزايا أفضل",
+    "levelEssentialHint": "خطوة واحدة تفصلك عن بلس",
+    "levelPlusHint": "كل مزايا بلس مفعّلة لحسابك"
   },
   "notifications": {
     "title": "الإشعارات",

@@ -1,11 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { ArrowRight } from "@phosphor-icons/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/shared/error-state";
@@ -14,7 +12,7 @@ import { listContainer } from "@/lib/animation/variants";
 import { BannerCarousel } from "@/features/banners/banner-carousel";
 import { CategoryCard } from "@/features/categories/category-card";
 import { useHomeFeed } from "@/features/categories/queries";
-import { PlusCard } from "@/features/memberships/plus-card";
+import { PlusPromo } from "@/features/memberships/plus-promo";
 import { ProductRail, ProductRailSkeleton } from "@/features/products/product-rail";
 import { WalletCard } from "@/features/wallet/wallet-card";
 import { useWallet } from "@/features/wallet/queries";
@@ -111,15 +109,7 @@ export function HomeScreen() {
             </Section>
           )}
 
-          <Link href="/membership" className="block rounded-xl transition-transform duration-150 active:scale-[0.99]">
-            <PlusCard title={t("home.plusTitle")}>
-              <p className="text-small text-on-plus-muted">{t("home.plusBody")}</p>
-              <span className="mt-3 inline-flex items-center gap-1.5 text-small font-semibold text-gold">
-                {t("home.plusCta")}
-                <ArrowRight className="size-4 rtl:-scale-x-100" weight="bold" />
-              </span>
-            </PlusCard>
-          </Link>
+          <PlusPromo />
 
           {feed.data && feed.data.popular_products.length > 0 && (
             <Section title={t("home.popular")}>

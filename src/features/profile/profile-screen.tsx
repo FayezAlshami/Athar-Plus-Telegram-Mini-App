@@ -4,14 +4,15 @@ import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, BellSimple, Check, Crown, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
+import { ArrowUpRight, BellSimple, CaretLeft, Check, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
+import type { MembershipLevelCode } from "@/entities/membership/types";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatusAvatar } from "@/components/shared/status-avatar";
 import { CopyableText } from "@/components/shared/copyable-text";
 import { ListGroup, ListItem } from "@/components/ui/list-item";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LevelBadge } from "@/components/shared/level-badge";
+import { LevelSeal } from "@/components/shared/level-seal";
 import { Money } from "@/components/shared/money";
 import { CopyButton } from "@/components/shared/copy-button";
 import { ErrorState } from "@/components/shared/error-state";
@@ -57,6 +58,44 @@ function StatTile({
         {hint}
       </span>
       {children}
+    </Link>
+  );
+}
+
+const LEVEL_STRIP: Record<MembershipLevelCode, string> = {
+  normal: "bg-surface-sunken text-foreground shadow-[inset_0_0_0_1px_var(--border)]",
+  essential: "bg-accent-soft text-foreground shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_22%,transparent)]",
+  plus: "bg-[image:var(--plus-gradient)] text-on-plus",
+};
+
+function LevelStrip({ level, expiresAt }: { level: MembershipLevelCode; expiresAt: string | null }) {
+  const t = useTranslations();
+  const locale = useLocale();
+  const hint =
+    level === "plus"
+      ? expiresAt
+        ? t("membership.expiresAt", { date: formatDateTime(expiresAt, locale) })
+        : t("profile.levelPlusHint")
+      : level === "essential"
+        ? t("profile.levelEssentialHint")
+        : t("profile.levelNormalHint");
+
+  return (
+    <Link
+      href="/membership"
+      className={cn("relative flex items-center gap-3 overflow-hidden rounded-lg p-3 transition-transform duration-150 active:scale-[0.98]", LEVEL_STRIP[level])}
+    >
+      <span className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-white/60 shadow-sm dark:bg-white/10">
+        <LevelSeal level={level} size={30} decorative />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className={cn("block text-caption", level === "plus" ? "text-on-plus-muted" : "text-muted-foreground")}>{t("membership.yourLevel")}</span>
+        <span className={cn("block truncate font-display text-card-title font-semibold", level === "plus" && "text-gold")}>
+          {t(`membership.level.${level}`)}
+        </span>
+        <span className={cn("block truncate text-caption", level === "plus" ? "text-on-plus-muted" : "text-muted-foreground")}>{hint}</span>
+      </span>
+      <CaretLeft className={cn("size-4 shrink-0 ltr:rotate-180", level === "plus" ? "text-gold" : "text-muted-foreground")} weight="bold" />
     </Link>
   );
 }
@@ -130,10 +169,10 @@ export function ProfileScreen() {
 
           <div className="relative flex flex-col items-center gap-2 text-center">
             <StatusAvatar name={user.first_name} src={user.photo_url} size={72} availableLabel={t("home.available")} />
-            <div className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            <div className="flex max-w-full items-center justify-center gap-1.5">
               <p dir="auto" className="min-w-0 truncate font-display text-section-title">{fullName}</p>
+              <LevelSeal level={user.membership.level} size={22} />
               {user.telegram_is_premium && <Star className="size-4 shrink-0 text-gold" weight="fill" aria-label={t("profile.telegramPremium")} />}
-              <LevelBadge level={user.membership.level} />
             </div>
             {user.username && (
               <CopyableText
@@ -150,6 +189,8 @@ export function ProfileScreen() {
               </p>
             )}
           </div>
+
+          <LevelStrip level={user.membership.level} expiresAt={user.membership.expires_at} />
 
           <div className="relative flex h-12 items-center gap-2 rounded-md bg-surface-sunken ps-3.5 pe-1 shadow-[inset_0_0_0_1px_var(--border)]">
             <span className="text-caption font-medium text-muted-foreground">{t("profile.telegramId")}</span>
@@ -201,10 +242,9 @@ export function ProfileScreen() {
         </ListGroup>
       </Section>
 
-      <Section title={t("profile.rewards")} tone="caption">
-        <ListGroup inset>
-          <ListItem variant="settings" href="/membership" iconTone="gold" icon={<Crown weight="fill" />} title={t("membership.title")} />
-          {user?.referral.code && (
+      {user?.referral.code && (
+        <Section title={t("profile.rewards")} tone="caption">
+          <ListGroup inset>
             <ListItem
               variant="settings"
               iconTone="accent"
@@ -214,9 +254,9 @@ export function ProfileScreen() {
               onClick={shareReferral}
               showChevron
             />
-          )}
-        </ListGroup>
-      </Section>
+          </ListGroup>
+        </Section>
+      )}
 
       <Section title={t("profile.preferences")} tone="caption">
         <ListGroup inset>

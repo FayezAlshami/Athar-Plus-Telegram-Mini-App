@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { BellSimple, Star } from "@phosphor-icons/react";
 import { StatusAvatar } from "@/components/shared/status-avatar";
-import { LevelBadge } from "@/components/shared/level-badge";
+import { LevelSeal } from "@/components/shared/level-seal";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useNotifications } from "@/features/notifications/queries";
 import { duration } from "@/lib/animation/tokens";
@@ -76,11 +76,15 @@ export function HomeHeader() {
           <h1 dir="auto" className="truncate font-display text-[1.35rem] font-semibold leading-tight text-foreground">
             {name}
           </h1>
+          {user && (
+            <Link href="/membership" className="shrink-0 rounded-full active:scale-90">
+              <LevelSeal level={user.membership.level} size={20} />
+            </Link>
+          )}
           {user?.telegram_is_premium && <Star className="size-4 shrink-0 text-gold" weight="fill" aria-label={t("profile.telegramPremium")} />}
         </span>
         <RotatingPhrase period={period} />
       </div>
-      {user && user.membership.level !== "normal" && <LevelBadge level={user.membership.level} />}
       <Link
         href="/notifications"
         aria-label={unread > 0 ? `${t("nav.notifications")} (${unread})` : t("nav.notifications")}

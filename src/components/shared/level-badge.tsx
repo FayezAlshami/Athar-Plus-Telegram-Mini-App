@@ -1,18 +1,17 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Crown, Leaf, UserCircle } from "@phosphor-icons/react";
 import type { MembershipLevelCode } from "@/entities/membership/types";
 import { Badge } from "@/components/ui/badge";
+import { LevelSeal } from "./level-seal";
 
 const LEVEL_TONE = { normal: "neutral", essential: "accent", plus: "gold" } as const;
-const LEVEL_ICON = { normal: UserCircle, essential: Leaf, plus: Crown } as const;
 
+/** Seal plus level name, for places that compare levels side by side. */
 export function LevelBadge({ level }: { level: MembershipLevelCode }) {
   const t = useTranslations("membership.level");
-  const Icon = LEVEL_ICON[level];
   return (
-    <Badge tone={LEVEL_TONE[level]} icon={<Icon weight="fill" />}>
+    <Badge tone={LEVEL_TONE[level]} icon={<LevelSeal level={level} size={16} decorative />} className="ps-1.5 font-semibold [&_svg]:size-4">
       {t(level)}
     </Badge>
   );
