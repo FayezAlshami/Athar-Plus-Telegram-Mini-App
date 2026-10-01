@@ -84,6 +84,16 @@
     "emptyTitle": "No activity yet",
     "emptyBody": "Deposits, purchases and refunds will appear here.",
     "localEquivalent": "≈ {amount}",
+    "mood": {
+      "melted": "The wallet is empty",
+      "pleading": "A tiny start",
+      "teary": "A little cash, barely",
+      "smile": "A nice little balance",
+      "cool": "The wallet is comfortable",
+      "rich": "Money that gets things done",
+      "star": "A balance that shines",
+      "party": "The wallet is thriving"
+    },
     "transactionType": {
       "deposit": "Deposit",
       "purchase": "Purchase",

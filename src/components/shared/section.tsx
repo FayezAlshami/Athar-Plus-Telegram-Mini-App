@@ -20,7 +20,7 @@ export function Section({
   return (
     <section className={cn("flex flex-col", tone === "caption" ? "gap-2" : "gap-3")}>
       <div className="flex items-center justify-between gap-3 px-1">
-        <h2 className={cn("flex min-w-0 items-center gap-2", tone === "caption" ? "text-caption font-medium text-muted-foreground" : "text-section-title")}>
+        <h2 className={cn("flex min-w-0 items-center gap-1.5", tone === "caption" ? "text-caption font-medium text-muted-foreground" : "text-section-title")}>
           {titleAdornment}
           <span className="truncate">{title}</span>
         </h2>
