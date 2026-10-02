@@ -70,7 +70,7 @@ export function OrderScreen({ id }: { id: string }) {
         <div className="flex items-center gap-3">
           <ProductImage src={order.product.image_url} alt={order.product.name ?? ""} sizes="56px" className="size-14 shrink-0 rounded-md" />
           <div className="min-w-0 flex-1">
-            <p dir="auto" className="line-clamp-2 text-card-title">{order.product.name ?? t("title")}</p>
+            <p dir="auto" className="line-clamp-2 text-card-title">{order.product.variant_name ? `${order.product.name ?? t("title")} · ${order.product.variant_name}` : (order.product.name ?? t("title"))}</p>
             <p className="text-caption text-muted-foreground">{formatDateTime(order.created_at, locale)}</p>
           </div>
           <span className="shrink-0 self-start">

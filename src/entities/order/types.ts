@@ -7,7 +7,7 @@ export interface Order {
   number: string;
   status: OrderStatus;
   is_cancellable: boolean;
-  product: { id: number; slug: string | null; name: string | null; image_url: string | null };
+  product: { id: number; slug: string | null; name: string | null; variant_name?: string | null; image_url: string | null };
   currency: string;
   base_price_minor: number;
   discount_minor: number;
@@ -26,6 +26,7 @@ export interface OrderDetail extends Order {
 
 export interface CreateOrderInput {
   product_id: number;
+  variant_id?: number;
   inputs: Record<string, string>;
   customer_note?: string;
 }

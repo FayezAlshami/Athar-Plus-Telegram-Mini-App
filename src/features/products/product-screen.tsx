@@ -26,6 +26,7 @@ import { miniAppDeepLink, productStartParam } from "@/lib/telegram/start-param";
 import { sharePreparedCard } from "@/features/share/share-card";
 import { ProductImage } from "./product-image";
 import { PurchaseSheet } from "./purchase-sheet";
+import { VariantPicker } from "./variant-picker";
 import { useProduct } from "./queries";
 
 function ProductSkeleton() {
@@ -71,6 +72,10 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
   const profile = useProfile();
   const telegram = useTelegramState();
   const [purchaseOpen, setPurchaseOpen] = useState(false);
+  const [variantId, setVariantId] = useState<number | null>(null);
+  const variants = product?.variants ?? [];
+  const selectedVariant = variants.find((item) => item.id === variantId) ?? variants[0] ?? null;
+  const activePrice = selectedVariant?.price ?? product?.price;
 
   const shareFallback = () => {
     if (!product) return;
@@ -96,8 +101,8 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
     active: Boolean(product) && !purchaseOpen,
     main: product
       ? {
-          text: product.is_purchasable
-            ? t("product.buyFor", { price: formatMoney(product.price.final_minor, product.price.currency) })
+          text: product.is_purchasable && activePrice
+            ? t("product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
             : t("product.unavailable"),
           enabled: product.is_purchasable,
           onClick: () => setPurchaseOpen(true),
@@ -144,11 +149,14 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
           <motion.div variants={fadeUp} className="flex flex-col gap-3">
             <h1 dir="auto" className="text-display text-balance">{product.name}</h1>
             {product.summary && <p dir="auto" className="text-body text-muted-foreground">{product.summary}</p>}
+            {variants.length > 0 && (
+              <VariantPicker variants={variants} value={selectedVariant?.id ?? null} onChange={setVariantId} />
+            )}
             <div className="flex flex-wrap items-end justify-between gap-3">
-              <Price price={product.price} size="lg" showLocal />
-              {product.price.discount_minor > 0 && (
-                <Badge tone={product.price.membership_discount_minor > 0 ? "gold" : "success"}>
-                  {t("product.youSave", { amount: formatMoney(product.price.discount_minor, product.price.currency) })}
+              <Price price={activePrice ?? product.price} size="lg" showLocal />
+              {(activePrice ?? product.price).discount_minor > 0 && (
+                <Badge tone={(activePrice ?? product.price).membership_discount_minor > 0 ? "gold" : "success"}>
+                  {t("product.youSave", { amount: formatMoney((activePrice ?? product.price).discount_minor, (activePrice ?? product.price).currency) })}
                 </Badge>
               )}
             </div>
@@ -178,8 +186,8 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
         <BuyBar>
           <div className="flex items-center gap-2">
             <Button size="lg" fullWidth disabled={!product.is_purchasable} onClick={() => setPurchaseOpen(true)} haptic="medium">
-              {product.is_purchasable
-                ? t("product.buyFor", { price: formatMoney(product.price.final_minor, product.price.currency) })
+              {product.is_purchasable && activePrice
+                ? t("product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
                 : t("product.unavailable")}
             </Button>
             <Button size="lg" variant="secondary" aria-label={t("product.share")} onClick={shareProduct} haptic="light" className="shrink-0 px-4">
@@ -193,7 +201,15 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
         </BuyBar>
       )}
 
-      {product.is_purchasable && <PurchaseSheet product={product} open={purchaseOpen} onOpenChange={setPurchaseOpen} />}
+      {product.is_purchasable && (
+        <PurchaseSheet
+          product={product}
+          open={purchaseOpen}
+          onOpenChange={setPurchaseOpen}
+          variantId={selectedVariant?.id ?? null}
+          onVariantChange={setVariantId}
+        />
+      )}
     </>
   );
 }

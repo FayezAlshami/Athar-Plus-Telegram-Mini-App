@@ -23,10 +23,19 @@ export interface Product {
   is_featured: boolean;
   is_favorite?: boolean;
   category?: { id: number; slug: string; name: string };
+  has_variants?: boolean;
   price: ProductPrice;
 }
 
-export type ProductInputFieldType = "text" | "number" | "email" | "phone" | "select" | "textarea";
+export interface ProductVariant {
+  id: number;
+  name: string;
+  image_url: string | null;
+  price: ProductPrice;
+  input_fields: ProductInputField[];
+}
+
+export type ProductInputFieldType = "text" | "number" | "email" | "phone" | "password" | "select" | "textarea";
 
 export interface ProductInputField {
   key: string;
@@ -44,4 +53,5 @@ export interface ProductDetail extends Product {
   delivery_note: StructuredTextBlock[];
   fulfillment_type: "manual" | "inventory";
   input_fields: ProductInputField[];
+  variants?: ProductVariant[];
 }

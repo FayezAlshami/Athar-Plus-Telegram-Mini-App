@@ -1,8 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { CaretRight, Package } from "@phosphor-icons/react";
+import { Package } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -11,8 +10,8 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { LoadMore } from "@/components/shared/load-more";
 import { ProductList, ProductListSkeleton } from "@/features/products/product-list";
-import { fadeUp, listContainer } from "@/lib/animation/variants";
-import { CategoryIcon } from "./category-icon";
+import { gridContainer } from "@/lib/animation/variants";
+import { CategoryCard } from "./category-card";
 import { useCategory, useCategoryProducts } from "./queries";
 
 export function CategoryScreen({ slug }: { slug: string }) {
@@ -37,25 +36,9 @@ export function CategoryScreen({ slug }: { slug: string }) {
       {category.data?.description && <p dir="auto" className="-mt-3 text-small text-muted-foreground">{category.data.description}</p>}
 
       {children.length > 0 && (
-        <motion.div variants={listContainer} initial="hidden" animate="visible" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {children.map((child) => (
-            <motion.div key={child.id} variants={fadeUp}>
-              <Link
-                href={`/categories/${encodeURIComponent(child.slug)}`}
-                className="flex h-full items-center gap-3 rounded-lg border border-border bg-surface p-3 shadow-sm transition-[scale,background-color] duration-150 active:scale-[0.98] active:bg-muted/40"
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent [&_svg]:size-5">
-                  <CategoryIcon name={child.icon} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span dir="auto" className="block truncate text-card-title">{child.name}</span>
-                  {child.products_count !== undefined && (
-                    <span className="block truncate text-caption text-muted-foreground">{t("categories.servicesCount", { count: child.products_count })}</span>
-                  )}
-                </span>
-                <CaretRight aria-hidden className="size-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
-              </Link>
-            </motion.div>
+        <motion.div variants={gridContainer} initial="hidden" animate="visible" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {children.map((child, index) => (
+            <CategoryCard key={child.id} category={child} featured={index === 0 && Boolean(child.image_url)} />
           ))}
         </motion.div>
       )}

@@ -11,6 +11,23 @@ import { cn } from "@/lib/cn";
 
 const RESET_DELAY_MS = 1600;
 
+export function CopyStatusIcon({ copied, className }: { copied: boolean; className?: string }) {
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.span
+        key={copied ? "copied" : "copy"}
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.5, opacity: 0 }}
+        transition={{ duration: duration.fast }}
+        className="inline-flex shrink-0"
+      >
+        {copied ? <Check className={cn("size-5 text-success", className)} weight="bold" /> : <Copy className={cn("size-5", className)} />}
+      </motion.span>
+    </AnimatePresence>
+  );
+}
+
 export function CopyButton({ value, className }: { value: string; className?: string }) {
   const t = useTranslations("common");
   const haptics = useHaptics();
@@ -29,17 +46,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
       }}
       className={cn("inline-flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors active:bg-muted", className)}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={copied ? "copied" : "copy"}
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.5, opacity: 0 }}
-          transition={{ duration: duration.fast }}
-        >
-          {copied ? <Check className="size-5 text-success" weight="bold" /> : <Copy className="size-5" />}
-        </motion.span>
-      </AnimatePresence>
+      <CopyStatusIcon copied={copied} />
     </button>
   );
 }

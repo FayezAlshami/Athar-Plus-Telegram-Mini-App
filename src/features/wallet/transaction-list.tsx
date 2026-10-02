@@ -38,7 +38,7 @@ export function TransactionList({ transactions }: { transactions: WalletTransact
               title={t(transaction.type)}
               subtitle={formatDateTime(transaction.created_at, locale)}
               trailing={
-                <span className={cn("shrink-0 text-card-title tabular-nums", credit ? "text-success" : purchase ? "text-danger" : "text-foreground")} dir="ltr">
+                <span className={cn("shrink-0 text-card-title tabular-nums", credit ? "text-success" : "text-danger")} dir="ltr">
                   {credit ? "+" : "−"}
                   <Money amountMinor={transaction.amount_minor} currency={transaction.currency} />
                 </span>

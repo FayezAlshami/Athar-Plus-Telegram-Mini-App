@@ -1,7 +1,7 @@
 "use client";
 
 import { formatMoney } from "@/lib/formatting/money";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "motion/react";
@@ -28,6 +28,7 @@ import { useWallet } from "@/features/wallet/queries";
 import { buildOrderFormSchema, type OrderFormValues } from "./order-form-schema";
 import { DynamicField } from "./dynamic-field";
 import { ProductImage } from "./product-image";
+import { VariantPicker } from "./variant-picker";
 import { useCreateOrder } from "./queries";
 
 type Step = "summary" | "details" | "confirm";
@@ -63,9 +64,11 @@ interface PurchaseSheetProps {
   product: ProductDetail;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  variantId?: number | null;
+  onVariantChange?: (id: number) => void;
 }
 
-export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProps) {
+export function PurchaseSheet({ product, open, onOpenChange, variantId = null, onVariantChange }: PurchaseSheetProps) {
   const t = useTranslations();
   const errorMessage = useErrorMessage();
   const haptics = useHaptics();
@@ -79,23 +82,39 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
   // One key per purchase intent: double taps and retries can never charge twice.
   const [idempotencyKey, setIdempotencyKey] = useState(createIdempotencyKey);
 
-  const schema = useMemo(
-    () => buildOrderFormSchema(product.input_fields, (key) => t(`validation.${key}`)),
-    [product.input_fields, t],
+  const variants = product.variants ?? [];
+  const selectedVariant = variants.find((item) => item.id === variantId) ?? variants[0] ?? null;
+  const fields = useMemo(
+    () => [...product.input_fields, ...(selectedVariant?.input_fields ?? [])],
+    [product.input_fields, selectedVariant],
   );
+  const schema = useMemo(
+    () => buildOrderFormSchema(fields, (key) => t(`validation.${key}`)),
+    [fields, t],
+  );
+  const schemaRef = useRef(schema);
+  schemaRef.current = schema;
   const form = useForm<OrderFormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: { inputs: Object.fromEntries(product.input_fields.map((f) => [f.key, ""])), customer_note: "" },
+    resolver: (values, context, options) => zodResolver(schemaRef.current)(values, context, options),
+    defaultValues: { inputs: Object.fromEntries(fields.map((f) => [f.key, ""])), customer_note: "" },
   });
 
-  const price = product.price;
+  useEffect(() => {
+    const current = form.getValues();
+    form.reset({
+      customer_note: current.customer_note ?? "",
+      inputs: Object.fromEntries(fields.map((field) => [field.key, current.inputs?.[field.key] ?? ""])),
+    });
+  }, [selectedVariant?.id]); // eslint-disable-line react-hooks/exhaustive-deps -- reset only when the tier changes
+
+  const price = selectedVariant?.price ?? product.price;
   const balance = wallet.data?.balance_minor;
   const shortfall = balance !== undefined ? price.final_minor - balance : 0;
   const isDirty = open && !placedOrder;
 
   useTelegramClosingConfirmation(isDirty);
 
-  const needsDetails = product.input_fields.length > 0;
+  const needsDetails = fields.length > 0;
   const steps: Step[] = needsDetails ? ["summary", "details", "confirm"] : ["summary", "confirm"];
 
   const submit = form.handleSubmit(async (values) => {
@@ -106,7 +125,12 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
     track("order_started", { product_id: product.id });
     createOrder.mutate(
       {
-        input: { product_id: product.id, inputs: values.inputs, customer_note: values.customer_note || undefined },
+        input: {
+          product_id: product.id,
+          variant_id: selectedVariant?.id,
+          inputs: values.inputs,
+          customer_note: values.customer_note || undefined,
+        },
         idempotencyKey,
       },
       {
@@ -206,6 +230,13 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
             >
               {step === "summary" && (
                 <>
+                  {variants.length > 0 && (
+                    <VariantPicker
+                      variants={variants}
+                      value={selectedVariant?.id ?? null}
+                      onChange={(id) => onVariantChange?.(id)}
+                    />
+                  )}
                   <div className="flex items-center gap-3 rounded-md border border-border bg-surface p-3">
                     <ProductImage src={product.image_url} alt={product.name} sizes="64px" className="size-16 shrink-0 rounded-md" />
                     <div className="min-w-0 flex-1">
@@ -223,7 +254,7 @@ export function PurchaseSheet({ product, open, onOpenChange }: PurchaseSheetProp
 
               {step === "details" && (
                 <>
-                  {product.input_fields.map((field) => (
+                  {fields.map((field) => (
                     <DynamicField
                       key={field.key}
                       field={field}

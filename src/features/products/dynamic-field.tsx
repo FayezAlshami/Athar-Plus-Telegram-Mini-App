@@ -8,6 +8,7 @@ import { Input, Select, Textarea } from "@/components/ui/input";
 const INPUT_ATTRIBUTES: Record<ProductInputField["type"], { type: string; inputMode?: "email" | "tel" | "decimal" | "text"; autoComplete?: string }> = {
   text: { type: "text" },
   email: { type: "email", inputMode: "email", autoComplete: "email" },
+  password: { type: "password", inputMode: "text", autoComplete: "off" },
   phone: { type: "tel", inputMode: "tel", autoComplete: "tel" },
   number: { type: "text", inputMode: "decimal" },
   select: { type: "text" },

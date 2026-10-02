@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { CheckCircle, Copy, MagnifyingGlass, Receipt, Stack, WarningCircle, X } from "@phosphor-icons/react";
+import { CheckCircle, MagnifyingGlass, Receipt, Stack, WarningCircle, X } from "@phosphor-icons/react";
 import type { Order } from "@/entities/order/types";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -53,16 +53,17 @@ function OrderCard({ order }: { order: Order }) {
           <ProductImage src={order.product.image_url} alt="" sizes="56px" className="size-14 shrink-0 rounded-md" />
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
-              <p dir="auto" className="truncate text-card-title">{order.product.name}</p>
+              <p dir="auto" className="truncate text-card-title">{order.product.variant_name ? `${order.product.name} · ${order.product.variant_name}` : order.product.name}</p>
               <OrderStatusBadge status={order.status} />
             </div>
             <CopyableText
               value={order.number}
               label={t("copyNumber")}
+              showCopyIcon
+              copyIconClassName="size-3.5"
               className="pointer-events-auto mt-1 inline-flex max-w-full items-center gap-1.5 rounded-full bg-surface-sunken px-2 py-1 text-caption text-muted-foreground active:bg-muted"
             >
               <bdi dir="ltr" className="truncate">#{order.number}</bdi>
-              <Copy className="size-3.5 shrink-0" />
             </CopyableText>
             <div className="mt-2 flex items-center justify-between gap-3 text-small">
               <span className="text-muted-foreground">{formatRelative(order.created_at, locale)}</span>

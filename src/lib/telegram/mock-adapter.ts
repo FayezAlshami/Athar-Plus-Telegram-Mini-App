@@ -133,7 +133,7 @@ export class MockTelegramAdapter implements TelegramAdapter {
   }
   close() {}
   checkHomeScreenStatus() {
-    return Promise.resolve("unsupported" as const);
+    return Promise.resolve("missed" as const);
   }
   addToHomeScreen() {}
   onHomeScreenAdded() {

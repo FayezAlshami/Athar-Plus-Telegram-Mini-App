@@ -7,6 +7,7 @@ import { queryKeys } from "@/lib/api/query-keys";
 import { useNotifyTelegramReady, useTelegramBackButton } from "@/lib/telegram/hooks";
 import { useTelegramActive } from "@/lib/telegram/telegram-provider";
 import { useScrollRestoration } from "@/hooks/use-scroll-restoration";
+import { AddToHomeDialog } from "@/features/profile/add-to-home-dialog";
 import { AuthGate } from "./auth-gate";
 import { useGoBack } from "./back-button";
 import { BackToTop } from "./back-to-top";
@@ -45,6 +46,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <AuthGate>
       <OfflineBanner />
+      <AddToHomeDialog />
       {children}
       <BackToTop />
       {isPrimary && <BottomNav />}

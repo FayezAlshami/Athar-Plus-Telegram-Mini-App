@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "@/components/ui/toast";
 import { useHaptics } from "@/lib/telegram/hooks";
+import { CopyStatusIcon } from "@/components/shared/copy-button";
 import { copyText } from "@/lib/clipboard";
 import { cn } from "@/lib/cn";
 
@@ -15,11 +16,16 @@ export function CopyableText({
   label,
   children,
   className,
+  showCopyIcon = false,
+  copyIconClassName,
 }: {
   value: string;
   label: string;
   children: ReactNode;
   className?: string;
+  /** Animated copy → check icon (same as `CopyButton`). */
+  showCopyIcon?: boolean;
+  copyIconClassName?: string;
 }) {
   const t = useTranslations("common");
   const haptics = useHaptics();
@@ -42,6 +48,7 @@ export function CopyableText({
       className={cn(className)}
     >
       {children}
+      {showCopyIcon ? <CopyStatusIcon copied={copied} className={copyIconClassName} /> : null}
     </button>
   );
 }

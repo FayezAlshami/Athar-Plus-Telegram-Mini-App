@@ -27,6 +27,7 @@ export function ProductRow({ product, showFavorite = false }: { product: Product
           <p dir="auto" className="line-clamp-2 text-card-title">{product.name}</p>
           {product.summary && <p dir="auto" className="truncate text-small text-muted-foreground">{product.summary}</p>}
           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+            {product.has_variants && <span className="text-caption text-muted-foreground">{t("priceFrom")}</span>}
             <Price price={product.price} />
             {!product.is_purchasable ? (
               <Badge tone="warning">{t("unavailable")}</Badge>
