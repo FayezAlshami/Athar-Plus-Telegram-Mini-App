@@ -20,6 +20,7 @@ import { isApiError } from "@/lib/api/errors";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 import type { Category } from "@/entities/category/types";
 import { AnimatedFireIcon } from "@/components/shared/animated-fire-icon";
+import { AnimatedTrophyIcon } from "@/components/shared/animated-trophy-icon";
 import { HomeSearch } from "@/features/search/home-search";
 import { HomeHeader } from "./home-header";
 
@@ -112,7 +113,7 @@ export function HomeScreen() {
           <PlusPromo />
 
           {feed.data && feed.data.popular_products.length > 0 && (
-            <Section title={t("home.popular")}>
+            <Section title={t("home.popular")} titleAdornment={<AnimatedTrophyIcon />}>
               <ProductRail products={feed.data.popular_products} />
             </Section>
           )}
