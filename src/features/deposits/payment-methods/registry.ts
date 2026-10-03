@@ -4,8 +4,10 @@ import { cashCashModule } from "./cash-cash";
 import { usdtModule } from "./usdt";
 import { GenericDepositForm } from "./generic-deposit-form";
 
+const pending = (code: string): PaymentMethodModule => ({ code, icon: Bank, DepositForm: GenericDepositForm });
+
 const MODULES: Record<string, PaymentMethodModule> = Object.fromEntries(
-  [cashCashModule, usdtModule].map((module) => [module.code, module]),
+  [cashCashModule, usdtModule, pending("syriatel_cash"), pending("mtn_cash"), pending("binance")].map((module) => [module.code, module]),
 );
 
 const FALLBACK_MODULE: Omit<PaymentMethodModule, "code"> = { icon: Bank, DepositForm: GenericDepositForm };

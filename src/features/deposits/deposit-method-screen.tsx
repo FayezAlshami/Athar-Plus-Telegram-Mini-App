@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ErrorState } from "@/components/shared/error-state";
+import { PaymentMethodMark } from "./payment-method-mark";
 import { paymentMethodModule } from "./payment-methods/registry";
 import { usePaymentMethods } from "./queries";
 
@@ -20,15 +21,13 @@ export function DepositMethodScreen({ code }: { code: string }) {
   if (isPending) return <PageContainer><PageHeader title={t("title")} /><Skeleton className="h-20 rounded-lg" /><Skeleton className="h-48 rounded-lg" /></PageContainer>;
   if (!method) return <PageContainer><PageHeader title={t("title")} /><EmptyState icon={<MagnifyingGlass />} title={tErrors("notFoundTitle")} body={tErrors("notFoundBody")} /></PageContainer>;
 
-  const { icon: Icon, DepositForm } = paymentMethodModule(method.code);
+  const { DepositForm } = paymentMethodModule(method.code);
 
   return (
     <PageContainer>
       <PageHeader title={method.name} />
       <div className="flex items-center gap-3 rounded-lg border border-border bg-surface p-4">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
-          <Icon className="size-6" weight="duotone" />
-        </span>
+        <PaymentMethodMark code={method.code} />
         <p dir="auto" className="text-small text-muted-foreground">{method.description}</p>
       </div>
 

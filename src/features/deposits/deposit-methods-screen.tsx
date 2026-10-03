@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/shared/error-state";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
 import { track } from "@/lib/analytics/events";
-import { paymentMethodModule } from "./payment-methods/registry";
+import { PaymentMethodMark } from "./payment-method-mark";
 import { usePaymentMethods } from "./queries";
 
 export function DepositMethodsScreen() {
@@ -38,13 +38,10 @@ export function DepositMethodsScreen() {
       ) : (
         <motion.ul variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-3">
           {data.map((method) => {
-            const { icon: Icon } = paymentMethodModule(method.code);
             return (
               <motion.li key={method.code} variants={fadeUp}>
                 <Card href={`/wallet/deposit/${method.code}`} className="flex items-center gap-4 p-4">
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
-                    <Icon className="size-6" weight="duotone" />
-                  </span>
+                  <PaymentMethodMark code={method.code} />
                   <span className="min-w-0 flex-1">
                     <span className="block text-card-title">{method.name}</span>
                     {method.description && <span className="block truncate text-small text-muted-foreground">{method.description}</span>}

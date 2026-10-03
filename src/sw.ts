@@ -29,8 +29,12 @@ const catalogMatcher = ({ url, request }: { url: URL; request: Request }) => {
   return /^\/api\/v1\/(home|categories|products|search|banners|campaigns)/.test(url.pathname);
 };
 
+const PAYMENT_ICONS = ["/payments/binance.jpg", "/payments/mtn.jpg", "/payments/sham-cash.jpg", "/payments/syriatel.png"].map(
+  (url) => ({ url, revision: "1" }),
+);
+
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
+  precacheEntries: [...(self.__SW_MANIFEST ?? []), ...PAYMENT_ICONS],
   skipWaiting: false,
   clientsClaim: true,
   navigationPreload: true,
