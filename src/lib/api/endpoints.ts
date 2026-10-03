@@ -90,10 +90,20 @@ export const favoritesApi = {
   remove: (productId: number) => apiFetch<void>(`/favorites/${seg(productId)}`, { method: "DELETE" }),
 };
 
+export interface LiveSnapshot {
+  notifications: { latest_id: number; unread: number };
+  wallet: { balance_minor: number; updated_at: string | null };
+  orders: { id: string; status: string; updated_at: string | null }[];
+  catalog_updated_at: string | null;
+  product: { id: number | null; status: string; price_minor: number | null; updated_at: string | null } | null;
+}
+
 export const accountApi = {
   profile: ({ signal }: Signal = {}) => apiRequest<User>("/profile", { signal }),
   updateProfile: (input: { locale?: Locale }) => apiRequest<User>("/profile", { method: "PATCH", body: input }),
   membership: ({ signal }: Signal = {}) => apiRequest<MembershipOverview>("/membership", { signal }),
+  live: (watch: { product?: string; order?: string } = {}, { signal }: Signal = {}) =>
+    apiRequest<LiveSnapshot>("/live", { query: { product: watch.product, order: watch.order }, signal }),
   notifications: (page: number, { signal }: Signal = {}) =>
     apiFetch<Paginated<AppNotification> & { meta: { unread_count: number } }>("/notifications", { query: { page }, signal }),
   markNotificationRead: (id: number) => apiRequest<AppNotification>(`/notifications/${seg(id)}/read`, { method: "POST" }),

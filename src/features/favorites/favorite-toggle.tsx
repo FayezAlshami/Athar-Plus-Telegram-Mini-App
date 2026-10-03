@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "motion/react";
 import { Heart } from "@phosphor-icons/react";
 import { toast } from "@/components/ui/toast";
-import { armDelayedCommit, UNDO_WINDOW_MS, type DelayedCommit } from "@/lib/feedback/delayed-commit";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { useHaptics } from "@/lib/telegram/hooks";
@@ -34,7 +33,7 @@ export function FavoriteToggle({
   // Each save bumps the key, remounting the burst so it replays.
   const [burst, setBurst] = useState(0);
   const reduce = useReducedMotion();
-  const pending = useRef<DelayedCommit | null>(null);
+  const pending = useRef(0);
 
   // Follow server truth when it changes (render-time sync, no extra effect pass).
   const [syncedFavorite, setSyncedFavorite] = useState(isFavorite);
@@ -55,7 +54,8 @@ export function FavoriteToggle({
         event.stopPropagation();
         if (!online) return;
         const next = !saved;
-        pending.current?.undo();
+        const generation = pending.current + 1;
+        pending.current = generation;
         setSaved(next);
         if (next) {
           setPulse(true);
@@ -63,31 +63,25 @@ export function FavoriteToggle({
           if (!reduce) setBurst((value) => value + 1);
           haptics.impact("light");
         }
-        const armed = armDelayedCommit({
-          delayMs: UNDO_WINDOW_MS,
-          setTimer: (callback, delayMs) => window.setTimeout(callback, delayMs),
-          clearTimer: (id) => window.clearTimeout(id),
-          commit: () => {
-            toggle.mutate(
-              { productId, save: next },
-              { onError: (error) => {
-                setSaved(!next);
-                toast.error(errorMessage(error));
-              } },
-            );
-          },
-        });
-        pending.current = armed;
+        toggle.mutate(
+          { productId, save: next },
+          { onError: (error) => {
+            if (pending.current !== generation) return;
+            setSaved(!next);
+            toast.error(errorMessage(error));
+          } },
+        );
         toast.success(next ? t("saved") : t("removed"), {
           action: {
             label: tCommon("undo"),
             onClick: () => {
-              const cancelled = armed.undo();
+              const undoGeneration = pending.current + 1;
+              pending.current = undoGeneration;
               setSaved(!next);
-              if (cancelled) return;
               toggle.mutate(
                 { productId, save: !next },
                 { onError: (error) => {
+                  if (pending.current !== undoGeneration) return;
                   setSaved(next);
                   toast.error(errorMessage(error));
                 } },
