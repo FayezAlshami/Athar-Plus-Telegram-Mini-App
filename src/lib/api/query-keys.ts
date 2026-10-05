@@ -25,4 +25,5 @@ export const queryKeys = {
   profile: ["profile"] as const,
   membership: ["membership"] as const,
   notifications: ["notifications"] as const,
+  faqs: ["faqs"] as const,
 };

@@ -6,6 +6,7 @@ import type { Product, ProductDetail } from "@/entities/product/types";
 import type { CreateOrderInput, Order, OrderDetail } from "@/entities/order/types";
 import type { Deposit, GiftCodeRedemption, PaymentMethod, Wallet, WalletTransaction } from "@/entities/wallet/types";
 import type { MembershipOverview } from "@/entities/membership/types";
+import type { Faq } from "@/entities/faq/types";
 import type { AppNotification } from "@/entities/notification/types";
 import type { StructuredTextBlock } from "@/entities/shared";
 import type { Locale } from "@/lib/i18n/config";
@@ -97,6 +98,10 @@ export interface LiveSnapshot {
   catalog_updated_at: string | null;
   product: { id: number | null; status: string; price_minor: number | null; updated_at: string | null } | null;
 }
+
+export const faqsApi = {
+  list: ({ signal }: Signal = {}) => apiRequest<Faq[]>("/faqs", { signal }),
+};
 
 export const accountApi = {
   profile: ({ signal }: Signal = {}) => apiRequest<User>("/profile", { signal }),

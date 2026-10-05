@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, BellSimple, CaretLeft, Check, DeviceMobile, Gift, Headset, Heart, Plus, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
+import { ArrowUpRight, BellSimple, CaretLeft, Check, DeviceMobile, Gift, Headset, Heart, Plus, Question, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
 import type { MembershipLevelCode } from "@/entities/membership/types";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -239,6 +239,7 @@ export function ProfileScreen() {
           <ListItem variant="settings" href="/wallet" iconTone="accent" icon={<Wallet weight="duotone" />} title={t("nav.wallet")} />
           <ListItem variant="settings" href="/gift-codes" iconTone="gold" icon={<Gift weight="duotone" />} title={t("giftCode.title")} />
           <ListItem variant="settings" href="/favorites" iconTone="danger" icon={<Heart weight="fill" />} title={t("profile.favorites")} />
+          <ListItem variant="settings" href="/faq" iconTone="neutral" icon={<Question weight="duotone" />} title={t("profile.faq")} />
         </ListGroup>
       </Section>
 
