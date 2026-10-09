@@ -20,24 +20,25 @@ export function notificationTone(notification: Pick<AppNotification, "type" | "d
   return "info";
 }
 
+/** Opaque tone tints — swipe rows sit on a solid danger layer; transparent *-soft would bleed red through every card. */
 export const NOTIFICATION_TONE_CLASS = {
   danger: {
-    card: "border-danger/25 bg-danger-soft",
+    card: "border-danger/25 bg-[color-mix(in_srgb,var(--danger)_10%,var(--surface))]",
     icon: "bg-danger text-white dark:bg-danger/25 dark:text-danger",
     dot: "bg-danger",
   },
   success: {
-    card: "border-success/25 bg-success-soft",
+    card: "border-success/25 bg-[color-mix(in_srgb,var(--success)_12%,var(--surface))]",
     icon: "bg-success text-white dark:bg-success/25 dark:text-success",
     dot: "bg-success",
   },
   warning: {
-    card: "border-warning/30 bg-warning-soft",
+    card: "border-warning/30 bg-[color-mix(in_srgb,var(--warning)_12%,var(--surface))]",
     icon: "bg-warning text-white dark:bg-warning/25 dark:text-warning",
     dot: "bg-warning",
   },
   info: {
-    card: "border-info/25 bg-info-soft",
+    card: "border-info/25 bg-[color-mix(in_srgb,var(--info)_12%,var(--surface))]",
     icon: "bg-info text-white dark:bg-info/25 dark:text-info",
     dot: "bg-info",
   },
