@@ -27,7 +27,7 @@ function FaqItem({
   onPlay: (id: number) => void;
 }) {
   const t = useTranslations("faq");
-  const showAudio = faq.has_audio || Boolean(faq.audio_url);
+  const showAudio = Boolean(faq.has_audio || faq.audio_url);
 
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
@@ -52,16 +52,18 @@ function FaqItem({
       {open && (
         <div className="flex flex-col gap-4 border-t border-border px-4 py-4">
           {faq.answer.length > 0 && <StructuredText blocks={faq.answer} />}
-          {showAudio && faq.audio_url ? (
-            <FaqAudioPlayer
-              src={faq.audio_url}
-              durationSeconds={faq.audio_duration_seconds}
-              active={playingId === faq.id}
-              onPlayRequest={() => onPlay(faq.id)}
-            />
-          ) : showAudio ? (
-            <p className="rounded-lg bg-surface-sunken px-3 py-2 text-caption text-muted-foreground">{t("audioUnavailable")}</p>
-          ) : null}
+          {showAudio && (
+            faq.audio_url ? (
+              <FaqAudioPlayer
+                src={faq.audio_url}
+                durationSeconds={faq.audio_duration_seconds}
+                active={playingId === faq.id}
+                onPlayRequest={() => onPlay(faq.id)}
+              />
+            ) : (
+              <p className="rounded-lg bg-surface-sunken px-3 py-2 text-caption text-muted-foreground">{t("audioUnavailable")}</p>
+            )
+          )}
         </div>
       )}
     </div>
