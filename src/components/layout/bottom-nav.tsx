@@ -13,7 +13,7 @@ import { useKeyboardOpen } from "@/hooks/use-keyboard-open";
 import { cn } from "@/lib/cn";
 import { useFixedBottomInset } from "./bottom-inset";
 import { NavIcon } from "./nav-icon";
-import { PRIMARY_DESTINATIONS } from "./navigation";
+import { PRIMARY_DESTINATIONS, activeNavIndex, isNavDestinationActive } from "./navigation";
 
 const INSET = 5;
 
@@ -27,6 +27,7 @@ export function BottomNav() {
   const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const keyboardOpen = useKeyboardOpen();
+  const activeIndex = activeNavIndex(pathname);
   const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
 
   useFixedBottomInset(navRef);
@@ -38,19 +39,21 @@ export function BottomNav() {
 
   useLayoutEffect(() => {
     const list = listRef.current;
-    if (!list) return;
+    if (!list || activeIndex < 0) {
+      setIndicator(null);
+      return;
+    }
 
     const measure = () => {
-      const item = list.querySelector<HTMLLIElement>("li[data-nav-active]");
+      const item = list.children.item(activeIndex) as HTMLElement | null;
       if (!item) {
         setIndicator(null);
         return;
       }
-      const listBox = list.getBoundingClientRect();
-      const itemBox = item.getBoundingClientRect();
+
       setIndicator({
-        left: itemBox.left - listBox.left - list.clientLeft + INSET,
-        width: Math.max(itemBox.width - INSET * 2, 0),
+        left: item.offsetLeft + INSET,
+        width: Math.max(item.offsetWidth - INSET * 2, 0),
       });
     };
 
@@ -58,22 +61,21 @@ export function BottomNav() {
     const raf = requestAnimationFrame(measure);
     const observer = new ResizeObserver(measure);
     observer.observe(list);
-    const activeItem = list.querySelector("li[data-nav-active]");
-    if (activeItem) observer.observe(activeItem);
+    const item = list.children.item(activeIndex);
+    if (item) observer.observe(item);
     window.addEventListener("resize", measure);
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [pathname]);
+  }, [pathname, activeIndex]);
 
   return (
     <nav
       ref={navRef}
       aria-label={t("primary")}
       inert={keyboardOpen}
-      // Slides away while the on-screen keyboard is up instead of riding on top of it.
       className={cn(
         "pointer-events-none fixed inset-x-0 bottom-0 z-40 ps-[max(0.75rem,var(--safe-left))] pe-[max(0.75rem,var(--safe-right))] pb-[max(0.75rem,var(--safe-bottom))]",
         "transition-[translate,opacity] duration-300 ease-[var(--ease-standard)]",
@@ -84,8 +86,9 @@ export function BottomNav() {
         ref={listRef}
         className="pointer-events-auto relative mx-auto flex h-16 w-full max-w-[var(--content-max-width)] items-stretch overflow-clip rounded-full border border-[var(--nav-glass-border)] border-t-transparent bg-[var(--nav-glass)] p-1.5 shadow-[var(--nav-glass-shadow)] [scrollbar-width:none] backdrop-blur-2xl backdrop-saturate-150 [&::-webkit-scrollbar]:hidden"
       >
-        {indicator && (
+        {indicator && activeIndex >= 0 && (
           <motion.span
+            key={activeIndex}
             aria-hidden
             className="pointer-events-none absolute bottom-1.5 top-1.5 rounded-full bg-[var(--nav-indicator)] shadow-[0_8px_16px_-10px_color-mix(in_srgb,var(--accent)_65%,transparent)]"
             initial={false}
@@ -102,9 +105,9 @@ export function BottomNav() {
           />
         )}
         {PRIMARY_DESTINATIONS.map(({ href, labelKey, icon }) => {
-          const active = pathname === href;
+          const active = isNavDestinationActive(pathname, href);
           return (
-            <li key={href} data-nav-active={active ? "" : undefined} className="relative z-10 flex-1">
+            <li key={href} className="relative z-10 min-w-0 flex-1">
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
@@ -112,7 +115,7 @@ export function BottomNav() {
                 onTouchStart={() => !active && warm(href)}
                 onClick={() => !active && haptics.selection()}
                 className={cn(
-                  "flex h-full select-none flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-medium transition-[color,scale] duration-150 active:scale-95",
+                  "flex h-full select-none flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-medium outline-none transition-[color,scale] duration-150 active:scale-95 focus-visible:outline-none",
                   active ? "text-foreground" : "text-muted-foreground",
                 )}
               >

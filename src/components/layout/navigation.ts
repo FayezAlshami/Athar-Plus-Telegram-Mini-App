@@ -22,6 +22,18 @@ export const PRIMARY_DESTINATIONS: PrimaryDestination[] = [
   { href: "/profile", labelKey: "profile", icon: Profile },
 ];
 
+export function isNavDestinationActive(pathname: string, href: string): boolean {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export function activeNavIndex(pathname: string): number {
+  return PRIMARY_DESTINATIONS.findIndex((destination) => isNavDestinationActive(pathname, destination.href));
+}
+
 export function isPrimaryDestination(pathname: string): boolean {
-  return PRIMARY_DESTINATIONS.some((destination) => destination.href === pathname);
+  return activeNavIndex(pathname) >= 0;
 }
