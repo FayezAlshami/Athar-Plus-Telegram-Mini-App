@@ -32,6 +32,8 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
   --color-ring: var(--ring);
   --color-overlay: var(--overlay);
 

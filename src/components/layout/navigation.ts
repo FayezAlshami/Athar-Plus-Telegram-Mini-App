@@ -34,6 +34,13 @@ export function activeNavIndex(pathname: string): number {
   return PRIMARY_DESTINATIONS.findIndex((destination) => isNavDestinationActive(pathname, destination.href));
 }
 
+/** The sliding pill is also a child of the list, so tab index must ignore it. */
+export function navTabElement(list: HTMLElement, activeIndex: number): HTMLElement | null {
+  if (activeIndex < 0) return null;
+  const item = list.querySelectorAll(":scope > li").item(activeIndex);
+  return item instanceof HTMLElement ? item : null;
+}
+
 export function isPrimaryDestination(pathname: string): boolean {
   return activeNavIndex(pathname) >= 0;
 }

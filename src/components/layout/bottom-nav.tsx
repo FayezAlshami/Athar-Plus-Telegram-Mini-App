@@ -13,7 +13,7 @@ import { useKeyboardOpen } from "@/hooks/use-keyboard-open";
 import { cn } from "@/lib/cn";
 import { useFixedBottomInset } from "./bottom-inset";
 import { NavIcon } from "./nav-icon";
-import { PRIMARY_DESTINATIONS, activeNavIndex, isNavDestinationActive } from "./navigation";
+import { PRIMARY_DESTINATIONS, activeNavIndex, isNavDestinationActive, navTabElement } from "./navigation";
 
 const INSET = 5;
 
@@ -45,7 +45,7 @@ export function BottomNav() {
     }
 
     const measure = () => {
-      const item = list.children.item(activeIndex) as HTMLElement | null;
+      const item = navTabElement(list, activeIndex);
       if (!item) {
         setIndicator(null);
         return;
@@ -61,7 +61,7 @@ export function BottomNav() {
     const raf = requestAnimationFrame(measure);
     const observer = new ResizeObserver(measure);
     observer.observe(list);
-    const item = list.children.item(activeIndex);
+    const item = navTabElement(list, activeIndex);
     if (item) observer.observe(item);
     window.addEventListener("resize", measure);
     return () => {

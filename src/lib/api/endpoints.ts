@@ -113,5 +113,6 @@ export const accountApi = {
     apiFetch<Paginated<AppNotification> & { meta: { unread_count: number } }>("/notifications", { query: { page }, signal }),
   markNotificationRead: (id: number) => apiRequest<AppNotification>(`/notifications/${seg(id)}/read`, { method: "POST" }),
   markAllNotificationsRead: () => apiFetch<void>("/notifications/read-all", { method: "POST" }),
+  deleteNotification: (id: number) => apiFetch<void>(`/notifications/${seg(id)}`, { method: "DELETE" }),
   grantWriteAccess: () => apiRequest<User>("/me/write-access", { method: "POST" }),
 };

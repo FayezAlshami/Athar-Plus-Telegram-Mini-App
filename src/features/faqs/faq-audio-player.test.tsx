@@ -23,7 +23,7 @@ describe("FaqAudioPlayer", () => {
       </NextIntlClientProvider>,
     );
 
-    expect(screen.getByText("إجابة صوتية")).toBeTruthy();
-    expect(screen.getByText("جارٍ تحميل التسجيل…")).toBeTruthy();
+    expect(screen.getByText("إجابة صوتية")).toBeInTheDocument();
+    expect(screen.getByText("جارٍ تحميل التسجيل…")).toBeInTheDocument();
   });
 });
