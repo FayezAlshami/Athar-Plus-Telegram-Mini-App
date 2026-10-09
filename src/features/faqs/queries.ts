@@ -3,5 +3,10 @@ import { faqsApi } from "@/lib/api/endpoints";
 import { queryKeys } from "@/lib/api/query-keys";
 
 export function useFaqs() {
-  return useQuery({ queryKey: queryKeys.faqs, queryFn: ({ signal }) => faqsApi.list({ signal }) });
+  return useQuery({
+    queryKey: queryKeys.faqs,
+    queryFn: ({ signal }) => faqsApi.list({ signal }),
+    staleTime: 30_000,
+    refetchOnMount: "always",
+  });
 }
