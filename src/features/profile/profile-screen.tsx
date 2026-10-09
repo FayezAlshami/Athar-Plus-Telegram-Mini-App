@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, BellSimple, CaretLeft, Check, DeviceMobile, Gift, Headset, Heart, Plus, Question, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
+import { ArrowUpRight, BellSimple, CalendarBlank, CaretLeft, Check, DeviceMobile, Gift, Headset, Heart, IdentificationCard, Plus, Question, Receipt, Star, UsersThree, Wallet } from "@phosphor-icons/react";
 import type { MembershipLevelCode } from "@/entities/membership/types";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -18,7 +18,7 @@ import { CopyButton } from "@/components/shared/copy-button";
 import { ErrorState } from "@/components/shared/error-state";
 import { Section } from "@/components/shared/section";
 import { fadeUp } from "@/lib/animation/variants";
-import { formatDateTime } from "@/lib/formatting/dates";
+import { formatDate, formatDateTime, formatTime } from "@/lib/formatting/dates";
 import { sharePreparedCard } from "@/features/share/share-card";
 import { useHomeScreenShortcut } from "@/lib/telegram/hooks";
 import { miniAppDeepLink } from "@/lib/telegram/start-param";
@@ -183,16 +183,31 @@ export function ProfileScreen() {
                 <bdi dir="ltr" className="truncate">@{user.username}</bdi>
               </CopyableText>
             )}
-            {user.member_since && (
-              <p className="truncate text-caption text-muted-foreground">
-                {t("profile.memberSince", { date: formatDateTime(user.member_since, locale) })}
-              </p>
-            )}
           </div>
+
+          {user.member_since && (
+            <div className="flex min-h-12 items-center gap-2.5 rounded-md bg-surface-sunken px-3 py-2.5 shadow-[inset_0_0_0_1px_var(--border)]">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <CalendarBlank className="size-[18px]" weight="duotone" aria-hidden />
+              </span>
+              <span className="shrink-0 text-caption font-medium text-muted-foreground">{t("profile.memberSinceLabel")}</span>
+              <span className="min-w-0 flex-1 text-end leading-tight">
+                <bdi dir="ltr" className="block truncate text-small font-semibold tabular-nums text-foreground">
+                  {formatDate(user.member_since, locale)}
+                </bdi>
+                <bdi dir="ltr" className="block truncate text-caption tabular-nums text-muted-foreground">
+                  {formatTime(user.member_since, locale)}
+                </bdi>
+              </span>
+            </div>
+          )}
 
           <LevelStrip level={user.membership.level} expiresAt={user.membership.expires_at} />
 
-          <div className="relative flex h-12 items-center gap-2 rounded-md bg-surface-sunken ps-3.5 pe-1 shadow-[inset_0_0_0_1px_var(--border)]">
+          <div className="relative flex h-12 items-center gap-2.5 rounded-md bg-surface-sunken ps-3 pe-1 shadow-[inset_0_0_0_1px_var(--border)]">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground shadow-[inset_0_0_0_1px_var(--border)]">
+              <IdentificationCard className="size-4" weight="duotone" aria-hidden />
+            </span>
             <span className="text-caption font-medium text-muted-foreground">{t("profile.telegramId")}</span>
             <span className="min-w-0 flex-1 truncate text-end font-display text-small font-semibold tabular-nums">
               <bdi dir="ltr">{user.telegram_id}</bdi>

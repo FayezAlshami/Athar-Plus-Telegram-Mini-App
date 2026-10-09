@@ -285,6 +285,7 @@
   "profile": {
     "title": "Profile",
     "memberSince": "Member since {date}",
+    "memberSinceLabel": "Member since",
     "preferences": "Preferences",
     "account": "Account",
     "rewards": "Rewards",

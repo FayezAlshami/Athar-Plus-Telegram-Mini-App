@@ -1,10 +1,20 @@
 import type { Locale } from "@/lib/i18n/config";
 
+const LOCALE_TAG = (locale: Locale) => (locale === "ar" ? "ar-u-nu-latn" : "en-GB");
+
 export function formatDateTime(iso: string, locale: Locale): string {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-u-nu-latn" : "en-GB", {
+  return new Intl.DateTimeFormat(LOCALE_TAG(locale), {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(iso));
+}
+
+export function formatDate(iso: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(LOCALE_TAG(locale), { dateStyle: "medium" }).format(new Date(iso));
+}
+
+export function formatTime(iso: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(LOCALE_TAG(locale), { timeStyle: "short" }).format(new Date(iso));
 }
 
 export function formatRelative(iso: string, locale: Locale): string {

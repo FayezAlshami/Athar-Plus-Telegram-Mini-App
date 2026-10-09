@@ -284,6 +284,7 @@
   "profile": {
     "title": "حسابي",
     "memberSince": "عضو منذ {date}",
+    "memberSinceLabel": "عضو منذ",
     "preferences": "التفضيلات",
     "account": "الحساب",
     "rewards": "المزايا",

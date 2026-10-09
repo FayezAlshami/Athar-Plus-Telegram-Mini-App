@@ -5,8 +5,9 @@
  * semantic tokens, never raw colors.
  */
 :root {
-  --font-body: "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --font-display: "Readex Pro Variable", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  /* Inter for Latin; Tajawal for Arabic glyphs (first match per character). */
+  --font-body: "Inter", "Tajawal", system-ui, sans-serif;
+  --font-display: "Inter", "Tajawal", system-ui, sans-serif;
 
   --radius-xs: 8px;
   --radius-sm: 12px;
