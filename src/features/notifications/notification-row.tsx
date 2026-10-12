@@ -27,11 +27,13 @@ export function NotificationRow({
   locale,
   dismissLabel,
   onDismiss,
+  onRead,
 }: {
   notification: AppNotification;
   locale: Locale;
   dismissLabel: string;
   onDismiss: (notification: AppNotification) => void;
+  onRead: (notification: AppNotification) => void;
 }) {
   const Icon = TYPE_ICON[notification.type] ?? BellSimple;
   const tone = NOTIFICATION_TONE_CLASS[notificationTone(notification)];
@@ -52,7 +54,23 @@ export function NotificationRow({
         onDragEnd={(_, info) => {
           if (shouldDismissNotification(info.offset.x, direction)) onDismiss(notification);
         }}
-        className={cn("relative z-10 flex gap-3 border p-4 shadow-sm", tone.card)}
+        onTap={() => {
+          if (!notification.read_at) onRead(notification);
+        }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if ((event.key === "Enter" || event.key === " ") && !notification.read_at) {
+            event.preventDefault();
+            onRead(notification);
+          }
+        }}
+        className={cn(
+          "relative z-10 flex gap-3 border p-4 shadow-sm transition-opacity",
+          !unread && "opacity-85",
+          unread && "cursor-pointer active:scale-[0.995]",
+          tone.card,
+        )}
       >
         <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-md", tone.icon)}>
           <Icon className="size-5" weight="duotone" />

@@ -16,7 +16,7 @@ import { isLocale } from "@/lib/i18n/config";
 import { useHaptics } from "@/lib/telegram/hooks";
 import { LoadMore } from "@/components/shared/load-more";
 import { NotificationRow } from "./notification-row";
-import { useMarkAllNotificationsRead, useNotifications } from "./queries";
+import { useMarkAllNotificationsRead, useMarkNotificationRead, useNotifications } from "./queries";
 import { useDismissNotification } from "./use-dismiss-notification";
 
 export function NotificationsScreen() {
@@ -27,6 +27,7 @@ export function NotificationsScreen() {
   const haptics = useHaptics();
   const { data, isPending, error, refetch, hasNextPage, isFetchingNextPage, fetchNextPage } = useNotifications();
   const markAllRead = useMarkAllNotificationsRead();
+  const markRead = useMarkNotificationRead();
   const dismiss = useDismissNotification((failure) => toast.error(errorMessage(failure)));
   const items = data?.pages.flatMap((page) => page.data) ?? [];
   const unread = data?.pages[0]?.meta.unread_count ?? 0;
@@ -69,6 +70,11 @@ export function NotificationsScreen() {
                     duration: 5_000,
                     action: { label: tCommon("undo"), onClick: () => dismiss.undo(item.id) },
                   });
+                }}
+                onRead={(item) => {
+                  if (item.read_at) return;
+                  haptics.selection();
+                  markRead.mutate(item.id);
                 }}
               />
             ))}
