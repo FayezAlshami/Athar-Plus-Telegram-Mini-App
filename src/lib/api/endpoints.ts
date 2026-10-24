@@ -57,7 +57,7 @@ export const walletApi = {
   paymentMethods: ({ signal }: Signal = {}) => apiRequest<PaymentMethod[]>("/payment-methods", { signal }),
   deposits: (page: number, { signal }: Signal = {}) => apiFetch<Paginated<Deposit>>("/deposits", { query: { page }, signal }),
   createDeposit: (
-    input: { payment_method: string; amount_minor: number; details?: Record<string, unknown> },
+    input: { payment_method: string; amount_minor?: number; details?: Record<string, unknown> },
     idempotencyKey: string,
   ) => apiRequest<Deposit>("/deposits", { method: "POST", body: input, idempotencyKey }),
   redeemGiftCode: (code: string) =>

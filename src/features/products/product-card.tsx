@@ -48,9 +48,11 @@ export function ProductCard({ product }: { product: Product }) {
               {product.has_variants && <span className="text-caption text-muted-foreground">{t("product.priceFrom")}</span>}
               <Money amountMinor={product.price.final_minor} currency={product.price.currency} className="text-base leading-none" />
             </span>
-            <span className="shrink-0 rounded-md bg-accent-soft px-2.5 py-1.5 text-caption font-semibold text-accent">
-              {t("product.buyShort")}
-            </span>
+            {product.is_purchasable ? (
+              <span className="shrink-0 rounded-md bg-accent-soft px-2.5 py-1.5 text-caption font-semibold text-accent">
+                {t("product.buyShort")}
+              </span>
+            ) : null}
           </div>
         </div>
       </Card>

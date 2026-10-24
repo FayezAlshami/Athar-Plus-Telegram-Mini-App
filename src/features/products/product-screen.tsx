@@ -148,6 +148,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
 
           <motion.div variants={fadeUp} className="flex flex-col gap-3">
             <h1 dir="auto" className="text-display text-balance">{product.name}</h1>
+            {!product.is_purchasable && <Badge tone="warning" className="self-start">{t("product.unavailable")}</Badge>}
             {product.summary && <p dir="auto" className="text-body text-muted-foreground">{product.summary}</p>}
             {variants.length > 0 && (
               <VariantPicker variants={variants} value={selectedVariant?.id ?? null} onChange={setVariantId} />

@@ -11,9 +11,12 @@ export function usePaymentMethods() {
 export function useCreateDeposit() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (args: { payment_method: string; amount_minor: number; details: Record<string, unknown>; idempotencyKey: string }) => {
+    mutationFn: (args: { payment_method: string; amount_minor?: number; details: Record<string, unknown>; idempotencyKey: string }) => {
       assertOnline();
-      return walletApi.createDeposit({ payment_method: args.payment_method, amount_minor: args.amount_minor, details: args.details }, args.idempotencyKey);
+      return walletApi.createDeposit(
+        { payment_method: args.payment_method, ...(args.amount_minor === undefined ? {} : { amount_minor: args.amount_minor }), details: args.details },
+        args.idempotencyKey,
+      );
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.wallet });

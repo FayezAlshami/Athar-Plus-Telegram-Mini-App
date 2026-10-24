@@ -1,10 +1,10 @@
 import { Money } from "@phosphor-icons/react";
 import type { PaymentMethodModule } from "./types";
-import { GenericDepositForm } from "./generic-deposit-form";
+import { ShamCashDepositForm } from "./sham-cash-deposit-form";
 
-/** Cash Cash (كاش كاش). PENDING SPECIFICATION: transfer details and required fields. */
+/** Sham Cash (شام كاش). The customer enters an operation number; the server verifies it. */
 export const cashCashModule: PaymentMethodModule = {
   code: "cash_cash",
   icon: Money,
-  DepositForm: GenericDepositForm,
+  DepositForm: ShamCashDepositForm,
 };

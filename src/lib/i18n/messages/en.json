@@ -121,7 +121,16 @@
     "stepSent": "Sent",
     "stepReview": "In review",
     "stepDone": "Done",
-    "invalidAmount": "Enter a valid amount"
+    "invalidAmount": "Enter a valid amount",
+    "shamCash": {
+      "help": "Put the code {code} in the Sham Cash transfer note, then enter the operation number. If that incoming transfer has arrived, the balance is added immediately in USD at the current rate.",
+      "number": "Operation number",
+      "invalidNumber": "Enter the operation number as it appears in Sham Cash",
+      "submit": "Verify and add balance",
+      "confirm": "Check this operation number and add the transfer amount to your wallet?",
+      "creditedTitle": "{amount} was added to your wallet",
+      "creditedBody": "The Sham Cash transfer was verified and converted to USD."
+    }
   },
   "giftCode": {
     "title": "Gift code",
@@ -134,7 +143,7 @@
     "successBody": "Enjoy your services with Athar Plus."
   },
   "product": {
-    "unavailable": "Currently unavailable",
+    "unavailable": "Unavailable",
     "outOfStock": "Out of stock",
     "buy": "Order now",
     "buyShort": "Buy",
