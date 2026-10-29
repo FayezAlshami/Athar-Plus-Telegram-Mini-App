@@ -238,7 +238,7 @@ export function PurchaseSheet({ product, open, onOpenChange, variantId = null, o
                     />
                   )}
                   <div className="flex items-center gap-3 rounded-md border border-border bg-surface p-3">
-                    <ProductImage src={product.image_url} alt={product.name} sizes="64px" className="size-16 shrink-0 rounded-md" />
+                    <ProductImage src={product.image_url} alt={product.name} sizes="64px" className="size-16 shrink-0 rounded-md" frame={product} />
                     <div className="min-w-0 flex-1">
                       <p dir="auto" className="line-clamp-2 text-card-title">{product.name}</p>
                       <div className="mt-1">

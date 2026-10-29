@@ -12,7 +12,13 @@ export interface ProductPrice {
 
 export type ProductStatus = "active" | "out_of_stock" | "hidden";
 
-export interface Product {
+export interface ImageFrame {
+  image_zoom?: number;
+  image_x?: number;
+  image_y?: number;
+}
+
+export interface Product extends ImageFrame {
   id: number;
   slug: string;
   name: string;
@@ -27,7 +33,7 @@ export interface Product {
   price: ProductPrice;
 }
 
-export interface ProductVariant {
+export interface ProductVariant extends ImageFrame {
   id: number;
   name: string;
   image_url: string | null;

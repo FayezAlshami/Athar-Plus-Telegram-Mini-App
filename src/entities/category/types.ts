@@ -5,6 +5,9 @@ export interface Category {
   description: string | null;
   icon: string | null;
   image_url: string | null;
+  image_zoom?: number;
+  image_x?: number;
+  image_y?: number;
   accent_color: string | null;
   products_count?: number;
   children?: Category[];

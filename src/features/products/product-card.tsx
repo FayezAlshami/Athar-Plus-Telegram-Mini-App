@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
       <Card href={`/products/${product.id}`} className="flex min-h-[248px] flex-col overflow-hidden">
         <div className="relative">
           <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} variant="overlay" className="absolute start-2 top-2 z-20" />
-          <ProductImage src={product.image_url} alt={product.name} sizes="168px" className="aspect-[4/3] rounded-none" />
+          <ProductImage src={product.image_url} alt={product.name} sizes="168px" className="aspect-[4/3] rounded-none" frame={product} />
         </div>
         <div className="flex flex-1 flex-col gap-1 p-3">
           <p dir="auto" className="line-clamp-2 min-h-[2.9em] text-card-title">

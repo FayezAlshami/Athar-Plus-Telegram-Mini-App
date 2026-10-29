@@ -9,6 +9,7 @@ import { ArrowsOut, X } from "@phosphor-icons/react";
 import { duration, spring } from "@/lib/animation/tokens";
 import { CategoryIcon } from "@/features/categories/category-icon";
 import { canOptimizeImage } from "@/lib/images/optimizable";
+import { imageFrameStyle, type ImageFrameInput } from "@/lib/images/image-frame";
 import { useSuppressVerticalSwipes } from "@/lib/telegram/hooks";
 import { useTelegramState } from "@/lib/telegram/telegram-provider";
 import { cn } from "@/lib/cn";
@@ -21,6 +22,7 @@ export function ProductImage({
   sizes,
   priority,
   expandable = false,
+  frame,
 }: {
   src: string | null;
   alt: string;
@@ -28,6 +30,7 @@ export function ProductImage({
   sizes: string;
   priority?: boolean;
   expandable?: boolean;
+  frame?: ImageFrameInput;
 }) {
   const t = useTranslations("product");
   const telegram = useTelegramState();
@@ -74,6 +77,7 @@ export function ProductImage({
           loading={priority ? undefined : "lazy"}
           decoding="async"
           className={cn("object-cover transition-opacity duration-300", loadedSrc === src ? "opacity-100" : "opacity-0")}
+          style={imageFrameStyle(frame)}
           onLoad={() => setLoadedSrc(src)}
           onError={() => setFailedSrc(src)}
         />

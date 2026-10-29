@@ -21,7 +21,7 @@ export function ProductRow({ product, showFavorite = false }: { product: Product
   return (
     <motion.li variants={fadeUp} className="flex items-stretch gap-2" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
       <Card href={`/products/${product.id}`} className="flex min-w-0 flex-1 items-center gap-3 p-2.5">
-        <ProductImage src={product.image_url} alt={product.name} sizes="72px" className="size-[72px] shrink-0 rounded-md" />
+        <ProductImage src={product.image_url} alt={product.name} sizes="72px" className="size-[72px] shrink-0 rounded-md" frame={product} />
         <div className="min-w-0 flex-1">
           <p dir="auto" className="line-clamp-2 text-card-title">{product.name}</p>
           {product.summary && <p dir="auto" className="truncate text-small text-muted-foreground">{product.summary}</p>}

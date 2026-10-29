@@ -36,7 +36,7 @@ export function VariantPicker({
               )}
             >
               {variant.image_url && (
-                <ProductImage src={variant.image_url} alt="" sizes="40px" className="size-10 shrink-0 rounded-md" />
+                <ProductImage src={variant.image_url} alt="" sizes="40px" className="size-10 shrink-0 rounded-md" frame={variant} />
               )}
               <span className="min-w-0 flex-1">
                 <span dir="auto" className="block truncate text-card-title">{variant.name}</span>

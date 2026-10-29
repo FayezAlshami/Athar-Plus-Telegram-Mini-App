@@ -166,7 +166,7 @@ export function SearchScreen() {
                 {results.products.map((product) => (
                   <motion.li key={product.id} variants={fadeUp}>
                     <Card href={`/products/${product.id}`} className="flex items-center gap-3 p-2.5">
-                      <ProductImage src={product.image_url} alt={product.name} sizes="56px" className="size-14 shrink-0 rounded-md" />
+                      <ProductImage src={product.image_url} alt={product.name} sizes="56px" className="size-14 shrink-0 rounded-md" frame={product} />
                       <div className="min-w-0 flex-1">
                         <p dir="auto" className="truncate text-card-title"><Highlight text={product.name} query={debounced} /></p>
                         {product.category && <p className="truncate text-caption text-muted-foreground">{product.category.name}</p>}

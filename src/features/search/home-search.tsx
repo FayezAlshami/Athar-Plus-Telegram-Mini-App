@@ -48,7 +48,7 @@ function SearchProductHit({
         href={`/products/${product.id}`}
         className={active ? "flex min-w-0 flex-1 items-center gap-3 bg-accent-soft p-2.5 ring-2 ring-accent" : "flex min-w-0 flex-1 items-center gap-3 p-2.5"}
       >
-        <ProductImage src={product.image_url} alt={product.name} sizes="56px" className="size-14 shrink-0 rounded-md" />
+        <ProductImage src={product.image_url} alt={product.name} sizes="56px" className="size-14 shrink-0 rounded-md" frame={product} />
         <div className="min-w-0 flex-1">
           <p dir="auto" className="truncate text-card-title">
             <Highlight text={product.name} query={query} />

@@ -8,11 +8,12 @@ import type { Category } from "@/entities/category/types";
 import { Card } from "@/components/ui/card";
 import { fadeUp } from "@/lib/animation/variants";
 import { canOptimizeImage } from "@/lib/images/optimizable";
+import { imageFrameStyle, type ImageFrameInput } from "@/lib/images/image-frame";
 import { usePrefetchCategory } from "@/features/catalog/use-prefetch-catalog";
 import { cn } from "@/lib/cn";
 import { CategoryIcon } from "./category-icon";
 
-function CategoryPhoto({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
+function CategoryPhoto({ src, alt, sizes, frame }: { src: string; alt: string; sizes: string; frame?: ImageFrameInput }) {
   const [failed, setFailed] = useState(false);
   if (failed) return null;
   return (
@@ -23,6 +24,7 @@ function CategoryPhoto({ src, alt, sizes }: { src: string; alt: string; sizes: s
       sizes={sizes}
       unoptimized={!canOptimizeImage(src)}
       className="object-cover"
+      style={imageFrameStyle(frame)}
       onError={() => setFailed(true)}
     />
   );
@@ -56,7 +58,7 @@ export function CategoryCard({
         <Card href={href} className="flex flex-col items-center gap-2 border-none bg-transparent !shadow-none">
           <span className="relative flex size-16 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface text-accent shadow-sm [&_svg]:size-7" style={category.image_url ? undefined : tint(category.accent_color)}>
             {category.image_url ? (
-              <CategoryPhoto src={category.image_url} alt="" sizes="64px" />
+              <CategoryPhoto src={category.image_url} alt="" sizes="64px" frame={category} />
             ) : (
               <CategoryIcon name={category.icon} />
             )}
@@ -72,7 +74,7 @@ export function CategoryCard({
       <motion.div variants={fadeUp} className={cn(featured && "col-span-2")} ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
         <Card href={href} className="relative block overflow-hidden">
           <span className={cn("relative block w-full bg-[image:var(--hero-gradient)]", featured ? "aspect-[2/1]" : "aspect-[4/5]")}>
-            <CategoryPhoto src={category.image_url} alt={category.name} sizes={featured ? "(max-width: 640px) 100vw, 420px" : "180px"} />
+            <CategoryPhoto src={category.image_url} alt={category.name} sizes={featured ? "(max-width: 640px) 100vw, 420px" : "180px"} frame={category} />
             <span aria-hidden className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
             <span className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 p-3 text-white">
               <span dir="auto" className="line-clamp-2 text-card-title">{category.name}</span>
