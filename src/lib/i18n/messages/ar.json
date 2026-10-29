@@ -184,7 +184,7 @@
   },
   "categories": {
     "title": "الأقسام",
-    "servicesCount": "{count, plural, zero {لا خدمات} one {خدمة واحدة} two {خدمتان} few {# خدمات} many {# خدمة} other {# خدمة}}",
+    "servicesCount": "{count, plural, one {خدمة واحدة} two {خدمتان} few {# خدمات} many {# خدمة} other {# خدمة}}",
     "emptyTitle": "لا توجد خدمات في هذا القسم بعد"
   },
   "search": {

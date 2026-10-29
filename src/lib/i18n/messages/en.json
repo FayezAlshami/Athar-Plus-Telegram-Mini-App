@@ -184,7 +184,7 @@
   },
   "categories": {
     "title": "Categories",
-    "servicesCount": "{count, plural, =0 {No services} one {# service} other {# services}}",
+    "servicesCount": "{count, plural, one {# service} other {# services}}",
     "emptyTitle": "No services in this category yet"
   },
   "search": {

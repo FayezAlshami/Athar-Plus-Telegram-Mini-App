@@ -45,7 +45,10 @@ export function CategoryCard({
   const t = useTranslations("categories");
   const { ref: prefetchRef, onMouseEnter: prefetchOnHover, onTouchStart: prefetchOnTouch } = usePrefetchCategory(category.slug);
   const href = `/categories/${encodeURIComponent(category.slug)}`;
-  const count = category.products_count !== undefined ? t("servicesCount", { count: category.products_count }) : null;
+  // Never show the "no services" empty state on category cards — only a positive count.
+  const count = category.products_count !== undefined && category.products_count > 0
+    ? t("servicesCount", { count: category.products_count })
+    : null;
 
   if (compact) {
     return (
