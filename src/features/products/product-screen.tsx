@@ -143,7 +143,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
           <motion.div variants={fadeUp} className="relative">
             <ProductImage src={product.image_url} alt={product.name} sizes="(max-width: 640px) 100vw, 640px" priority expandable className="aspect-[16/10] rounded-xl shadow-md" />
             {/* z-20 keeps the heart above the image's tap-to-expand layer. */}
-            <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-3 top-3 z-20" />
+            <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} variant="overlay" className="absolute end-3 top-3 z-20" />
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-col gap-3">

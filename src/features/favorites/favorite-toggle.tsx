@@ -13,13 +13,21 @@ import { useToggleFavorite } from "./queries";
 
 const BURST = 8;
 
+type FavoriteVariant = "overlay" | "plain";
+
+/**
+ * overlay — sits on product imagery (rail / detail).
+ * plain — sits in list rows beside the content so it never covers the title.
+ */
 export function FavoriteToggle({
   productId,
   isFavorite,
+  variant = "overlay",
   className,
 }: {
   productId: number;
   isFavorite: boolean;
+  variant?: FavoriteVariant;
   className?: string;
 }) {
   const t = useTranslations("favorites");
@@ -30,12 +38,10 @@ export function FavoriteToggle({
   const toggle = useToggleFavorite();
   const [saved, setSaved] = useState(isFavorite);
   const [pulse, setPulse] = useState(false);
-  // Each save bumps the key, remounting the burst so it replays.
   const [burst, setBurst] = useState(0);
   const reduce = useReducedMotion();
   const pending = useRef(0);
 
-  // Follow server truth when it changes (render-time sync, no extra effect pass).
   const [syncedFavorite, setSyncedFavorite] = useState(isFavorite);
   if (syncedFavorite !== isFavorite) {
     setSyncedFavorite(isFavorite);
@@ -65,11 +71,13 @@ export function FavoriteToggle({
         }
         toggle.mutate(
           { productId, save: next },
-          { onError: (error) => {
-            if (pending.current !== generation) return;
-            setSaved(!next);
-            toast.error(errorMessage(error));
-          } },
+          {
+            onError: (error) => {
+              if (pending.current !== generation) return;
+              setSaved(!next);
+              toast.error(errorMessage(error));
+            },
+          },
         );
         toast.success(next ? t("saved") : t("removed"), {
           action: {
@@ -80,40 +88,51 @@ export function FavoriteToggle({
               setSaved(!next);
               toggle.mutate(
                 { productId, save: !next },
-                { onError: (error) => {
-                  if (pending.current !== undoGeneration) return;
-                  setSaved(next);
-                  toast.error(errorMessage(error));
-                } },
+                {
+                  onError: (error) => {
+                    if (pending.current !== undoGeneration) return;
+                    setSaved(next);
+                    toast.error(errorMessage(error));
+                  },
+                },
               );
             },
           },
         });
       }}
       className={cn(
-        "inline-flex size-11 items-center justify-center rounded-full border border-white/25 bg-neutral-600/85 text-white shadow-md backdrop-blur-sm transition-transform",
+        "relative inline-flex shrink-0 items-center justify-center rounded-full transition-transform",
         pulse && "scale-110",
+        variant === "overlay" && "size-11 border border-white/25 bg-neutral-900/55 text-white shadow-md backdrop-blur-sm",
+        variant === "plain" && "size-10 border border-border bg-surface-elevated text-muted-foreground shadow-sm hover:bg-surface-sunken hover:text-foreground",
+        saved && variant === "plain" && "border-danger/25 bg-danger/10 text-danger",
         className,
       )}
     >
       {burst > 0 && (
-          <span key={burst} aria-hidden className="pointer-events-none absolute inset-0">
-            {Array.from({ length: BURST }, (_, index) => {
-              const angle = (index / BURST) * Math.PI * 2;
-              return (
-                <motion.span
-                  key={index}
-                  className="absolute left-1/2 top-1/2 -ml-[3px] -mt-[3px] size-1.5 rounded-full bg-white"
-                  initial={{ x: 0, y: 0, scale: 0.3, opacity: 1 }}
-                  animate={{ x: Math.cos(angle) * 18, y: Math.sin(angle) * 18, scale: 1, opacity: 0 }}
-                  transition={{ duration: 0.48, ease: [0.2, 0, 0, 1] }}
-                />
-              );
-            })}
-          </span>
+        <span key={burst} aria-hidden className="pointer-events-none absolute inset-0">
+          {Array.from({ length: BURST }, (_, index) => {
+            const angle = (index / BURST) * Math.PI * 2;
+            return (
+              <motion.span
+                key={index}
+                className={cn(
+                  "absolute left-1/2 top-1/2 -ml-[3px] -mt-[3px] size-1.5 rounded-full",
+                  variant === "plain" ? "bg-danger" : "bg-white",
+                )}
+                initial={{ x: 0, y: 0, scale: 0.3, opacity: 1 }}
+                animate={{ x: Math.cos(angle) * 16, y: Math.sin(angle) * 16, scale: 1, opacity: 0 }}
+                transition={{ duration: 0.48, ease: [0.2, 0, 0, 1] }}
+              />
+            );
+          })}
+        </span>
       )}
       <Heart
-        className={cn("size-[18px] drop-shadow-sm", saved ? "text-danger" : "text-white")}
+        className={cn(
+          "size-[18px]",
+          saved ? "text-danger" : variant === "overlay" ? "text-white drop-shadow-sm" : "text-current",
+        )}
         weight="fill"
       />
     </button>

@@ -11,7 +11,6 @@ import { Price } from "@/components/shared/money";
 import { fadeUp, listContainer } from "@/lib/animation/variants";
 import { usePrefetchProduct } from "@/features/catalog/use-prefetch-catalog";
 import { FavoriteToggle } from "@/features/favorites/favorite-toggle";
-import { cn } from "@/lib/cn";
 import { ProductImage } from "./product-image";
 
 export function ProductRow({ product, showFavorite = false }: { product: Product; showFavorite?: boolean }) {
@@ -20,8 +19,8 @@ export function ProductRow({ product, showFavorite = false }: { product: Product
   const memberPrice = product.price.membership_discount_minor > 0;
 
   return (
-    <motion.li variants={fadeUp} className="relative" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
-      <Card href={`/products/${product.id}`} className={cn("flex h-full items-center gap-3 p-2.5", showFavorite && "pe-12")}>
+    <motion.li variants={fadeUp} className="flex items-stretch gap-2" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch}>
+      <Card href={`/products/${product.id}`} className="flex min-w-0 flex-1 items-center gap-3 p-2.5">
         <ProductImage src={product.image_url} alt={product.name} sizes="72px" className="size-[72px] shrink-0 rounded-md" />
         <div className="min-w-0 flex-1">
           <p dir="auto" className="line-clamp-2 text-card-title">{product.name}</p>
@@ -37,8 +36,12 @@ export function ProductRow({ product, showFavorite = false }: { product: Product
           </div>
         </div>
       </Card>
-      {/* A sibling of the link, not a child: interactive content can't nest inside <a>. */}
-      {showFavorite && <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2.5 top-2.5 z-10 size-8" />}
+      {/* Sibling of the link — interactive controls cannot nest inside <a>. */}
+      {showFavorite && (
+        <div className="flex shrink-0 items-center">
+          <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} variant="plain" />
+        </div>
+      )}
     </motion.li>
   );
 }
@@ -57,13 +60,16 @@ export function ProductListSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="grid gap-2.5 md:grid-cols-2" role="status" aria-busy="true">
       {Array.from({ length: rows }, (_, i) => (
-        <div key={i} className="flex items-center gap-3 rounded-lg border border-border bg-surface p-2.5">
-          <Skeleton className="size-[72px] shrink-0 rounded-md" />
-          <div className="flex flex-1 flex-col gap-2">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-3 w-1/2" />
-            <Skeleton className="h-4 w-16" />
+        <div key={i} className="flex items-center gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-lg border border-border bg-surface p-2.5">
+            <Skeleton className="size-[72px] shrink-0 rounded-md" />
+            <div className="flex flex-1 flex-col gap-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+              <Skeleton className="h-4 w-16" />
+            </div>
           </div>
+          <Skeleton className="size-10 shrink-0 rounded-full" />
         </div>
       ))}
     </div>

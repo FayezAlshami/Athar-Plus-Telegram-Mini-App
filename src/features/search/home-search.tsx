@@ -43,10 +43,10 @@ function SearchProductHit({
 }) {
   const { ref: prefetchRef, onMouseEnter: prefetchOnHover, onTouchStart: prefetchOnTouch } = usePrefetchProduct<HTMLLIElement>(product.id, product.image_url);
   return (
-    <li className="relative" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch} onClick={onSelect}>
+    <li className="flex items-stretch gap-2" ref={prefetchRef} onMouseEnter={prefetchOnHover} onTouchStart={prefetchOnTouch} onClick={onSelect}>
       <Card
         href={`/products/${product.id}`}
-        className={active ? "flex items-center gap-3 bg-accent-soft p-2.5 pe-12 ring-2 ring-accent" : "flex items-center gap-3 p-2.5 pe-12"}
+        className={active ? "flex min-w-0 flex-1 items-center gap-3 bg-accent-soft p-2.5 ring-2 ring-accent" : "flex min-w-0 flex-1 items-center gap-3 p-2.5"}
       >
         <ProductImage src={product.image_url} alt={product.name} sizes="56px" className="size-14 shrink-0 rounded-md" />
         <div className="min-w-0 flex-1">
@@ -59,7 +59,9 @@ function SearchProductHit({
           <Price price={product.price} />
         </div>
       </Card>
-      <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} className="absolute end-2.5 top-1/2 z-10 -translate-y-1/2" />
+      <div className="flex shrink-0 items-center">
+        <FavoriteToggle productId={product.id} isFavorite={Boolean(product.is_favorite)} variant="plain" />
+      </div>
     </li>
   );
 }
