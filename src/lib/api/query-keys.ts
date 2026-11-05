@@ -26,4 +26,5 @@ export const queryKeys = {
   membership: ["membership"] as const,
   notifications: ["notifications"] as const,
   faqs: ["faqs"] as const,
+  branding: ["branding"] as const,
 };

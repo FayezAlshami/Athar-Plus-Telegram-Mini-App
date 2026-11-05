@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { brandingApi } from "@/lib/api/endpoints";
+import { queryKeys } from "@/lib/api/query-keys";
 import { duration, easing } from "@/lib/animation/tokens";
 import { useHomeScreenShortcut, useSuppressVerticalSwipes } from "@/lib/telegram/hooks";
 
@@ -13,6 +16,12 @@ const SESSION_KEY = "athar.home-prompt-session";
 export function AddToHomeDialog() {
   const t = useTranslations();
   const reduce = useReducedMotion();
+  const branding = useQuery({
+    queryKey: queryKeys.branding,
+    queryFn: ({ signal }) => brandingApi.get({ signal }),
+    staleTime: 5 * 60_000,
+  });
+  const botLogo = branding.data?.bot_logo_url || "/bot-logo.jpg";
   const titleId = useId();
   const home = useHomeScreenShortcut();
   const [open, setOpen] = useState(false);
@@ -81,7 +90,7 @@ export function AddToHomeDialog() {
             className="relative w-full max-w-[20.5rem] rounded-xl border border-border bg-surface-elevated px-5 pt-6 pb-5 text-center shadow-lg"
           >
             <span className="mx-auto flex size-28 items-center justify-center overflow-hidden rounded-[1.75rem] bg-white shadow-md ring-1 ring-border">
-              <img src="/bot-logo.jpg" alt="" className="size-[88%] object-contain" />
+              <img src={botLogo} alt="" className="size-[88%] object-contain" />
             </span>
             <h2 id={titleId} className="mt-4 text-section-title text-balance">
               {t("profile.addToHomeTitle")}

@@ -21,6 +21,26 @@ export function seg(value: string | number): string {
 
 type Signal = { signal?: AbortSignal };
 
+export interface Branding {
+  dashboard_logo_url: string | null;
+  bot_logo_url: string | null;
+}
+
+export const brandingApi = {
+  get: async ({ signal }: Signal = {}): Promise<Branding> => {
+    try {
+      const data = await apiRequest<Branding>("/branding", { signal });
+      return {
+        dashboard_logo_url: data?.dashboard_logo_url ?? null,
+        bot_logo_url: data?.bot_logo_url ?? null,
+      };
+    } catch (cause) {
+      if (cause instanceof DOMException && cause.name === "AbortError") throw cause;
+      return { dashboard_logo_url: null, bot_logo_url: null };
+    }
+  },
+};
+
 export const shareApi = {
   prepare: (input: { type: "product" | "referral"; product_id?: number }) =>
     apiRequest<{ id: string; expiration_date: number | null }>("/share/prepared", { method: "POST", body: input }),
