@@ -20,10 +20,12 @@ export function VariantPicker({
   const locale = useLocale();
   if (variants.length === 0) return null;
 
+  const showImages = variants.some((variant) => variant.image_url);
+
   return (
-    <fieldset className="flex flex-col gap-2">
+    <fieldset className="flex min-w-0 flex-col gap-2.5">
       <legend className="text-section-title">{t("tiers")}</legend>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="flex flex-col gap-2.5">
         {variants.map((variant) => {
           const selected = variant.id === value;
           return (
@@ -33,19 +35,27 @@ export function VariantPicker({
               aria-pressed={selected}
               onClick={() => onChange(variant.id)}
               className={cn(
-                "flex min-w-0 items-center gap-2 rounded-lg border bg-surface p-2 text-start transition-colors",
-                selected ? "border-accent bg-accent-soft" : "border-border active:bg-muted/40",
+                "flex w-full min-w-0 items-start gap-3 rounded-lg border p-2.5 text-start transition-colors",
+                selected ? "border-accent bg-accent-soft" : "border-border bg-surface active:bg-muted/40",
               )}
             >
-              {variant.image_url && (
-                <ProductImage src={variant.image_url} alt="" sizes="40px" className="size-10 shrink-0 rounded-md" frame={variant} />
+              {showImages && (
+                <ProductImage
+                  src={variant.image_url}
+                  alt=""
+                  sizes="96px"
+                  className="size-24 shrink-0 rounded-md"
+                  frame={variant}
+                />
               )}
-              <span className="min-w-0 flex-1">
-                <span dir="auto" className="block truncate text-card-title">{variant.name}</span>
+              <span className="flex min-w-0 flex-1 flex-col gap-1 py-0.5">
+                <span dir="auto" className="text-card-title text-foreground">{variant.name}</span>
                 {variant.subscription_period && (
-                  <span className="block truncate text-caption text-muted-foreground">{formatPeriod(variant.subscription_period.count, variant.subscription_period.unit, locale)}</span>
+                  <span className="text-caption text-muted-foreground">
+                    {formatPeriod(variant.subscription_period.count, variant.subscription_period.unit, locale)}
+                  </span>
                 )}
-                <Money amountMinor={variant.price.final_minor} currency={variant.price.currency} className="text-caption" />
+                <Money amountMinor={variant.price.final_minor} currency={variant.price.currency} className="text-base" />
               </span>
             </button>
           );

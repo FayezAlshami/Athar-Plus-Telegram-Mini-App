@@ -16,7 +16,7 @@ export function StickyTopBar({ children, className }: { children: ReactNode; cla
     <div
       className={cn(
         "sticky top-0 z-30 -mt-[calc(var(--safe-top)+12px)] -mb-3 pt-[calc(var(--safe-top)+12px)] pb-3",
-        "before:pointer-events-none before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2",
+        "before:pointer-events-none before:absolute before:inset-y-0 before:-z-10 before:-start-[max(1rem,var(--safe-left))] before:-end-[max(1rem,var(--safe-right))]",
         "before:border-b before:bg-background/85 before:backdrop-blur-xl before:backdrop-saturate-150 before:transition-colors before:duration-200",
         scrolled ? "before:border-border" : "before:border-transparent",
         className,

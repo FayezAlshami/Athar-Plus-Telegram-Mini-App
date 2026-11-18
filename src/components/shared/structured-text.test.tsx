@@ -16,5 +16,6 @@ describe("StructuredText", () => {
     expect(container.querySelectorAll("p > span")).toHaveLength(2);
     expect(container.querySelectorAll("ul > li")).toHaveLength(2);
     expect(container.querySelector("p")?.getAttribute("dir")).toBe("auto");
+    expect(container.firstElementChild).toHaveClass("break-words", "max-w-full");
   });
 });

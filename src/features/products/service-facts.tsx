@@ -37,7 +37,7 @@ export function ServiceFacts({
   if (facts.length === 0 && activation.length === 0 && terms.length === 0) return null;
 
   return (
-    <motion.section variants={fadeUp} className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+    <motion.section variants={fadeUp} className="flex w-full min-w-0 max-w-full flex-col gap-3 overflow-hidden rounded-lg border border-border bg-surface p-4">
       <h2 className="text-section-title">{t("serviceTitle")}</h2>
       {facts.length > 0 && (
         <ul className="grid gap-2 sm:grid-cols-2">

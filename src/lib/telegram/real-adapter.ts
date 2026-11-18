@@ -266,14 +266,17 @@ export class RealTelegramAdapter implements TelegramAdapter {
       button.hide();
       return () => undefined;
     }
-    button.setText(spec.text);
-    if (spec.enabled) button.enable();
-    else button.disable();
+    if (typeof button.setParams === "function") {
+      button.setParams({ text: spec.text, is_active: spec.enabled, is_visible: true });
+    } else {
+      button.setText(spec.text);
+      if (spec.enabled) button.enable();
+      else button.disable();
+      button.show();
+    }
     button.onClick(onClick);
-    button.show();
     return () => {
       button.offClick(onClick);
-      button.hide();
     };
   }
 }

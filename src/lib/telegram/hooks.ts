@@ -192,20 +192,23 @@ export function useTelegramBottomButtons(options: {
   useEffect(() => {
     if (state.status !== "ready" || !usingNative) return;
     const adapter = state.adapter;
-    if (!options.active) {
-      const hideMain = adapter.setMainButton(null, () => undefined);
-      const hideSecondary = adapter.setSecondaryButton(null, () => undefined);
-      return () => {
-        hideMain();
-        hideSecondary();
-      };
-    }
+    return () => {
+      adapter.setMainButton(null, () => undefined);
+      adapter.setSecondaryButton(null, () => undefined);
+    };
+  }, [state, usingNative]);
+
+  useEffect(() => {
+    if (state.status !== "ready" || !usingNative) return;
+    const adapter = state.adapter;
+    // Text changes must update the visible button in place. Hiding it here lets
+    // Telegram restore the previous label, so the order button can show another tier's price.
     const releaseMain = adapter.setMainButton(
-      options.main ? { text: options.main.text, enabled: options.main.enabled !== false } : null,
+      options.active && options.main ? { text: options.main.text, enabled: options.main.enabled !== false } : null,
       () => mainClick.current?.(),
     );
     const releaseSecondary = adapter.setSecondaryButton(
-      options.secondary ? { text: options.secondary.text, enabled: options.secondary.enabled !== false } : null,
+      options.active && options.secondary ? { text: options.secondary.text, enabled: options.secondary.enabled !== false } : null,
       () => secondaryClick.current?.(),
     );
     return () => {

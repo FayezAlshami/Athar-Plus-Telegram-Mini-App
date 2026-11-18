@@ -9,7 +9,7 @@ export function PageContainer({ children, className }: { children: ReactNode; cl
   return (
     <main
       className={cn(
-        "mx-auto flex w-full max-w-[var(--content-max-width)] flex-col gap-6 pt-[calc(var(--safe-top)+12px)] ps-[max(1rem,var(--safe-left))] pe-[max(1rem,var(--safe-right))]",
+        "mx-auto flex w-full min-w-0 max-w-[min(100%,var(--content-max-width))] flex-col gap-6 pt-[calc(var(--safe-top)+12px)] ps-[max(1rem,var(--safe-left))] pe-[max(1rem,var(--safe-right))]",
         "pb-[calc(max(var(--bottom-inset,0px),var(--safe-bottom))+28px)]",
         className,
       )}

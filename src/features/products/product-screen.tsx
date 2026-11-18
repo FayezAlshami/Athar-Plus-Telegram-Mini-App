@@ -141,7 +141,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
     <>
       <PageContainer>
         <PageHeader title={product.category?.name ?? ""} />
-        <motion.div variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-6">
+        <motion.div variants={listContainer} initial="hidden" animate="visible" className="flex w-full min-w-0 flex-col gap-6">
           <motion.div variants={fadeUp} className="relative">
             <ProductImage src={product.image_url} alt={product.name} sizes="(max-width: 640px) 100vw, 640px" priority expandable className="aspect-[16/10] rounded-xl shadow-md" frame={product} />
             {/* z-20 keeps the heart above the image's tap-to-expand layer. */}
@@ -169,7 +169,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
           </motion.div>
 
           {product.description.length > 0 && (
-            <motion.section variants={fadeUp} className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+            <motion.section variants={fadeUp} className="flex w-full min-w-0 max-w-full flex-col gap-3 overflow-hidden rounded-lg border border-border bg-surface p-4">
               <h2 className="text-section-title">{t("product.description")}</h2>
               <StructuredText blocks={product.description} />
             </motion.section>
@@ -190,7 +190,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
             </motion.section>
           )}
 
-          <motion.section variants={fadeUp} className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+          <motion.section variants={fadeUp} className="flex w-full min-w-0 max-w-full flex-col gap-3 overflow-hidden rounded-lg border border-border bg-surface p-4">
             <h2 className="text-section-title">{t("product.delivery")}</h2>
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-sm bg-accent-soft text-accent">

@@ -107,9 +107,13 @@
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     background: var(--background);
+    max-width: 100%;
+    overflow-x: clip;
   }
   body {
     min-height: var(--app-height);
+    width: 100%;
+    max-width: 100%;
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-body);
@@ -119,7 +123,19 @@
     overscroll-behavior-y: none;
     /* Full-bleed sticky backdrops extend past the content column; never let them scroll sideways. */
     overflow-x: clip;
+    /* Long descriptions wrap to the screen instead of widening the page. */
+    overflow-wrap: anywhere;
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /*
+   * Column and grid items default to min-width:auto, so a long product
+   * description widens the page instead of wrapping. Shrink them to the
+   * screen. Horizontal rails keep their own overflow.
+   */
+  .flex-col > *,
+  .grid > * {
+    min-width: 0;
   }
   img {
     -webkit-user-drag: none;
