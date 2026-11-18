@@ -13,6 +13,7 @@ export interface Order {
   discount_minor: number;
   total_minor: number;
   fulfillment_type: "manual" | "inventory";
+  is_preorder: boolean;
   created_at: string;
   completed_at: string | null;
 }

@@ -317,10 +317,10 @@ export function PurchaseSheet({ product, open, onOpenChange, variantId = null, o
                         </p>
                       )}
                       <Button type="submit" size="lg" fullWidth loading={createOrder.isPending} haptic="medium">
-                        {t("product.placeOrder")}
+                        {t(product.accepts_preorder ? "product.placePreorder" : "product.placeOrder")}
                       </Button>
                       <p className="text-center text-caption text-muted-foreground">
-                        {t("product.confirmBody", { price: formatMoney(price.final_minor, price.currency) })}
+                        {t(product.accepts_preorder ? "product.preorderConfirm" : "product.confirmBody", { price: formatMoney(price.final_minor, price.currency) })}
                       </p>
                     </>
                   )}

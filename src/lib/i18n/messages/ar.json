@@ -148,6 +148,8 @@
     "buy": "اطلب الآن",
     "buyShort": "شراء",
     "buyFor": "اطلب بـ {price}",
+    "reserveFor": "احجز بـ {price}",
+    "reserveShort": "احجز",
     "priceFrom": "يبدأ من",
     "tiers": "الفئات",
     "share": "مشاركة",
@@ -162,15 +164,19 @@
       "inventory": "تسليم فوري"
     },
     "youSave": "توفّر {amount}",
-    "membershipPrice": "سعر الأعضاء",
+    "membershipPrice": "سعرك",
     "yourBalance": "رصيدك الحالي",
     "insufficientTitle": "رصيدك غير كافٍ",
     "insufficientBody": "تحتاج {amount} إضافية لإتمام الطلب.",
     "topUp": "شحن المحفظة",
     "confirmTitle": "تأكيد الطلب",
     "confirmBody": "سيتم خصم {price} من رصيد محفظتك.",
+    "preorder": "حجز مسبق",
+    "preorderBody": "يُخصم السعر الآن، ويصلك التنفيذ عند توفر الخدمة. إذا تعذّر التنفيذ يُعاد المبلغ كاملاً إلى محفظتك.",
+    "preorderConfirm": "سيُخصم {price} الآن مقابل حجز مسبق. التنفيذ لاحقاً، والإلغاء يعيد المبلغ كاملاً.",
     "note": "ملاحظة للفريق",
     "placeOrder": "تأكيد الشراء",
+    "placePreorder": "تأكيد الحجز",
     "stepProduct": "المنتج",
     "stepDetails": "البيانات",
     "stepConfirm": "التأكيد",
@@ -274,6 +280,7 @@
     "delivery": "تفاصيل التسليم",
     "cancel": "إلغاء الطلب",
     "cancelConfirm": "سيتم إلغاء الطلب وإعادة المبلغ إلى محفظتك.",
+    "preorderNote": "حجز مسبق. المبلغ مدفوع، والتنفيذ عندما تتوفر الخدمة.",
     "cancelled": "تم إلغاء الطلب واسترداد المبلغ"
   },
   "membership": {
@@ -281,12 +288,16 @@
     "level": {
       "normal": "عادي",
       "essential": "أساسي",
-      "plus": "بلس"
+      "plus": "بلس",
+      "merchant": "تجار"
     },
     "expiresAt": "صالحة حتى {date}",
     "benefits": "المزايا",
     "yourLevel": "مستواك",
     "verified": "حساب موثّق · مستوى {level}",
+    "generalDiscount": "خصم {percent}٪ على كل الخدمات",
+    "noGeneralDiscount": "بدون خصم عام على كل الخدمات",
+    "onEverything": "على كل الخدمات",
     "howToUpgrade": "كيف تحصل على بلس؟",
     "howToUpgradeBody": "سيتم الإعلان قريبًا عن طرق الانضمام إلى بلس. تابع إشعاراتك."
   },
@@ -327,7 +338,8 @@
     "addedToHome": "مضاف إلى الشاشة الرئيسية",
     "levelNormalHint": "ترقَّ لتحصل على أسعار ومزايا أفضل",
     "levelEssentialHint": "خطوة واحدة تفصلك عن بلس",
-    "levelPlusHint": "كل مزايا بلس مفعّلة لحسابك"
+    "levelPlusHint": "كل مزايا بلس مفعّلة لحسابك",
+    "levelMerchantHint": "أسعار التجار مفعّلة لحسابك"
   },
   "notifications": {
     "title": "الإشعارات",

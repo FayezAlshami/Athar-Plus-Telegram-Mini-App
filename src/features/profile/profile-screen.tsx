@@ -66,19 +66,22 @@ const LEVEL_STRIP: Record<MembershipLevelCode, string> = {
   normal: "bg-surface-sunken text-foreground shadow-[inset_0_0_0_1px_var(--border)]",
   essential: "bg-accent-soft text-foreground shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_22%,transparent)]",
   plus: "bg-[image:var(--plus-gradient)] text-on-plus",
+  merchant: "bg-info-soft text-foreground shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--info)_35%,transparent)]",
 };
 
 function LevelStrip({ level, expiresAt }: { level: MembershipLevelCode; expiresAt: string | null }) {
   const t = useTranslations();
   const locale = useLocale();
   const hint =
-    level === "plus"
-      ? expiresAt
-        ? t("membership.expiresAt", { date: formatDateTime(expiresAt, locale) })
-        : t("profile.levelPlusHint")
-      : level === "essential"
-        ? t("profile.levelEssentialHint")
-        : t("profile.levelNormalHint");
+    level === "plus" && expiresAt
+      ? t("membership.expiresAt", { date: formatDateTime(expiresAt, locale) })
+      : level === "plus"
+        ? t("profile.levelPlusHint")
+        : level === "essential"
+          ? t("profile.levelEssentialHint")
+          : level === "merchant"
+            ? t("profile.levelMerchantHint")
+            : t("profile.levelNormalHint");
 
   return (
     <Link
@@ -90,7 +93,7 @@ function LevelStrip({ level, expiresAt }: { level: MembershipLevelCode; expiresA
       </span>
       <span className="min-w-0 flex-1">
         <span className={cn("block text-caption", level === "plus" ? "text-on-plus-muted" : "text-muted-foreground")}>{t("membership.yourLevel")}</span>
-        <span className={cn("block truncate font-display text-card-title font-semibold", level === "plus" && "text-gold")}>
+        <span className={cn("block truncate font-display text-card-title font-semibold", level === "plus" && "text-gold", level === "merchant" && "text-info")}>
           {t(`membership.level.${level}`)}
         </span>
         <span className={cn("block truncate text-caption", level === "plus" ? "text-on-plus-muted" : "text-muted-foreground")}>{hint}</span>

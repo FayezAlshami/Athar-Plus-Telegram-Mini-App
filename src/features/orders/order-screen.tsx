@@ -72,6 +72,7 @@ export function OrderScreen({ id }: { id: string }) {
           <div className="min-w-0 flex-1">
             <p dir="auto" className="line-clamp-2 text-card-title">{order.product.variant_name ? `${order.product.name ?? t("title")} · ${order.product.variant_name}` : (order.product.name ?? t("title"))}</p>
             <p className="text-caption text-muted-foreground">{formatDateTime(order.created_at, locale)}</p>
+            {order.is_preorder && !failed && order.status !== "completed" && <p className="text-caption text-info">{t("preorderNote")}</p>}
           </div>
           <span className="shrink-0 self-start">
             <OrderStatusBadge status={order.status} />

@@ -102,7 +102,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
     main: product
       ? {
           text: product.is_purchasable && activePrice
-            ? t("product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
+            ? t(product.accepts_preorder ? "product.reserveFor" : "product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
             : t("product.unavailable"),
           enabled: product.is_purchasable,
           onClick: () => setPurchaseOpen(true),
@@ -149,6 +149,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
           <motion.div variants={fadeUp} className="flex flex-col gap-3">
             <h1 dir="auto" className="text-display text-balance">{product.name}</h1>
             {!product.is_purchasable && <Badge tone="warning" className="self-start">{t("product.unavailable")}</Badge>}
+            {product.is_purchasable && product.accepts_preorder && <Badge tone="info" className="self-start">{t("product.preorder")}</Badge>}
             {product.summary && <p dir="auto" className="text-body text-muted-foreground">{product.summary}</p>}
             {variants.length > 0 && (
               <VariantPicker variants={variants} value={selectedVariant?.id ?? null} onChange={setVariantId} />
@@ -176,8 +177,9 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
               <span className="flex size-10 items-center justify-center rounded-sm bg-accent-soft text-accent">
                 <FulfillmentIcon className="size-5" />
               </span>
-              <span className="text-card-title">{t(`product.fulfillment.${product.fulfillment_type}`)}</span>
+              <span className="text-card-title">{product.accepts_preorder ? t("product.preorder") : t(`product.fulfillment.${product.fulfillment_type}`)}</span>
             </div>
+            {product.accepts_preorder && <p className="text-small text-muted-foreground">{t("product.preorderBody")}</p>}
             {product.delivery_note.length > 0 && <StructuredText blocks={product.delivery_note} />}
           </motion.section>
         </motion.div>
@@ -188,7 +190,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
           <div className="flex items-center gap-2">
             <Button size="lg" fullWidth disabled={!product.is_purchasable} onClick={() => setPurchaseOpen(true)} haptic="medium">
               {product.is_purchasable && activePrice
-                ? t("product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
+                ? t(product.accepts_preorder ? "product.reserveFor" : "product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
                 : t("product.unavailable")}
             </Button>
             <Button size="lg" variant="secondary" aria-label={t("product.share")} onClick={shareProduct} haptic="light" className="shrink-0 px-4">

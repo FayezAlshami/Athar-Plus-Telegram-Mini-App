@@ -148,6 +148,8 @@
     "buy": "Order now",
     "buyShort": "Buy",
     "buyFor": "Order for {price}",
+    "reserveFor": "Reserve for {price}",
+    "reserveShort": "Reserve",
     "priceFrom": "From",
     "tiers": "Options",
     "share": "Share",
@@ -162,15 +164,19 @@
       "inventory": "Instant delivery"
     },
     "youSave": "You save {amount}",
-    "membershipPrice": "Member price",
+    "membershipPrice": "Your price",
     "yourBalance": "Your balance",
     "insufficientTitle": "Insufficient balance",
     "insufficientBody": "You need {amount} more to place this order.",
     "topUp": "Top up wallet",
     "confirmTitle": "Confirm order",
     "confirmBody": "{price} will be deducted from your wallet.",
+    "preorder": "Pre-order",
+    "preorderBody": "The price is charged now and delivered when the service is available. If it cannot be fulfilled, the full amount returns to your wallet.",
+    "preorderConfirm": "{price} is charged now for a pre-order. Delivery comes later, and cancelling returns the full amount.",
     "note": "Note for our team",
     "placeOrder": "Confirm purchase",
+    "placePreorder": "Confirm reservation",
     "stepProduct": "Product",
     "stepDetails": "Details",
     "stepConfirm": "Confirm",
@@ -275,6 +281,7 @@
     "delivery": "Delivery details",
     "cancel": "Cancel order",
     "cancelConfirm": "The order will be cancelled and the amount returned to your wallet.",
+    "preorderNote": "Pre-order. The amount is paid, and delivery follows when the service is available.",
     "cancelled": "Order cancelled and refunded"
   },
   "membership": {
@@ -282,12 +289,16 @@
     "level": {
       "normal": "Normal",
       "essential": "Essential",
-      "plus": "Plus"
+      "plus": "Plus",
+      "merchant": "Merchants"
     },
     "expiresAt": "Valid until {date}",
     "benefits": "Benefits",
     "yourLevel": "Your level",
     "verified": "Verified account · {level} level",
+    "generalDiscount": "{percent}% off every service",
+    "noGeneralDiscount": "No storewide discount",
+    "onEverything": "On every service",
     "howToUpgrade": "How to get Plus?",
     "howToUpgradeBody": "Ways to join Plus will be announced soon. Keep an eye on your notifications."
   },
@@ -328,7 +339,8 @@
     "addedToHome": "Added to Home Screen",
     "levelNormalHint": "Upgrade for better prices and perks",
     "levelEssentialHint": "One step away from Plus",
-    "levelPlusHint": "All Plus benefits are active"
+    "levelPlusHint": "All Plus benefits are active",
+    "levelMerchantHint": "Merchant prices are active on your account"
   },
   "notifications": {
     "title": "Notifications",

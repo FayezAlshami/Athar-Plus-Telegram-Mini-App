@@ -50,7 +50,7 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
             {product.is_purchasable ? (
               <span className="shrink-0 rounded-md bg-accent-soft px-2.5 py-1.5 text-caption font-semibold text-accent">
-                {t("product.buyShort")}
+                {t(product.accepts_preorder ? "product.reserveShort" : "product.buyShort")}
               </span>
             ) : null}
           </div>

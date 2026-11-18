@@ -5,7 +5,7 @@ import type { MembershipLevelCode } from "@/entities/membership/types";
 import { Badge } from "@/components/ui/badge";
 import { LevelSeal } from "./level-seal";
 
-const LEVEL_TONE = { normal: "neutral", essential: "accent", plus: "gold" } as const;
+const LEVEL_TONE = { normal: "neutral", essential: "accent", plus: "gold", merchant: "info" } as const;
 
 /** Seal plus level name, for places that compare levels side by side. */
 export function LevelBadge({ level }: { level: MembershipLevelCode }) {

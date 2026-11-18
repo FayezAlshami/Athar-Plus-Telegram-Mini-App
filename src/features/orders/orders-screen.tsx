@@ -56,6 +56,7 @@ function OrderCard({ order }: { order: Order }) {
               <p dir="auto" className="truncate text-card-title">{order.product.variant_name ? `${order.product.name} · ${order.product.variant_name}` : order.product.name}</p>
               <OrderStatusBadge status={order.status} />
             </div>
+            {order.is_preorder && <p className="text-caption text-info">{t("preorderNote")}</p>}
             <CopyableText
               value={order.number}
               label={t("copyNumber")}

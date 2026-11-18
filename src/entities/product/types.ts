@@ -26,6 +26,7 @@ export interface Product extends ImageFrame {
   image_url: string | null;
   status: ProductStatus;
   is_purchasable: boolean;
+  accepts_preorder: boolean;
   is_featured: boolean;
   is_favorite?: boolean;
   category?: { id: number; slug: string; name: string };

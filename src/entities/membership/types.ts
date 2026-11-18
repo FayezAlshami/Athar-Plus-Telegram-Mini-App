@@ -1,4 +1,4 @@
-export type MembershipLevelCode = "normal" | "essential" | "plus";
+export type MembershipLevelCode = "normal" | "essential" | "plus" | "merchant";
 
 export interface MembershipLevel {
   code: MembershipLevelCode;

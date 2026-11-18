@@ -17,29 +17,63 @@ import { cn } from "@/lib/cn";
 import { PlusCard } from "./plus-card";
 import { useMembership } from "./queries";
 
+function DiscountSentence({ basis }: { basis: number }) {
+  const t = useTranslations("membership");
+  const locale = useLocale();
+  if (basis <= 0) return t("noGeneralDiscount");
+  const percent = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(basis / 100);
+  return t("generalDiscount", { percent });
+}
+
 function LevelCard({ level, current }: { level: MembershipLevel; current: boolean }) {
   const t = useTranslations();
+  const merchant = level.code === "merchant";
   return (
     <motion.li
       variants={fadeUp}
-      className={cn("rounded-lg border bg-surface p-4", current ? "border-accent shadow-md" : "border-border")}
+      className={cn(
+        "rounded-lg border bg-surface p-4",
+        current && merchant && "border-info shadow-md",
+        current && !merchant && "border-accent shadow-md",
+        !current && "border-border",
+      )}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <LevelBadge level={level.code} />
-        {current && <span className="text-caption text-accent">{t("common.currentPlan")}</span>}
+        {current && <span className={cn("text-caption", merchant ? "text-info" : "text-accent")}>{t("common.currentPlan")}</span>}
       </div>
+      <p className="mt-3 text-base"><DiscountSentence basis={level.discount_basis_points} /></p>
       {level.description && <p className="mt-2 text-small text-muted-foreground">{level.description}</p>}
       {level.benefits.length > 0 && (
         <ul className="mt-3 flex flex-col gap-1.5">
           {level.benefits.map((benefit) => (
             <li key={benefit} className="flex items-center gap-2 text-small">
-              <CheckCircle className="size-4 shrink-0 text-accent" weight="fill" />
+              <CheckCircle className={cn("size-4 shrink-0", merchant ? "text-info" : "text-accent")} weight="fill" />
               {benefit}
             </li>
           ))}
         </ul>
       )}
     </motion.li>
+  );
+}
+
+function MerchantHero({ basis }: { basis: number }) {
+  const t = useTranslations("membership");
+  const locale = useLocale();
+  const percent = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(basis / 100);
+  return (
+    <section className="rounded-xl bg-info-soft p-5">
+      <LevelBadge level="merchant" />
+      {basis > 0 ? (
+        <>
+          <p className="mt-3 font-display text-3xl font-semibold tabular text-info">{percent}%</p>
+          <p className="text-small text-muted-foreground">{t("onEverything")}</p>
+        </>
+      ) : (
+        <p className="mt-3 text-small text-muted-foreground">{t("noGeneralDiscount")}</p>
+      )}
+    </section>
   );
 }
 
@@ -59,13 +93,17 @@ export function MembershipScreen() {
         <><Skeleton className="h-36 rounded-xl" /><Skeleton className="h-28 rounded-lg" /></>
       ) : (
         <>
-          <PlusCard title={t("level.plus")}>
-            <p className="text-small text-on-plus-muted">
-              {data.current_level === "plus" && data.expires_at
-                ? t("expiresAt", { date: formatDateTime(data.expires_at, locale) })
-                : data.levels.find((level) => level.code === "plus")?.description}
-            </p>
-          </PlusCard>
+          {data.current_level === "merchant" ? (
+            <MerchantHero basis={data.levels.find((level) => level.code === "merchant")?.discount_basis_points ?? 0} />
+          ) : (
+            <PlusCard title={t("level.plus")}>
+              <p className="text-small text-on-plus-muted">
+                {data.current_level === "plus" && data.expires_at
+                  ? t("expiresAt", { date: formatDateTime(data.expires_at, locale) })
+                  : data.levels.find((level) => level.code === "plus")?.description}
+              </p>
+            </PlusCard>
+          )}
 
           <motion.ul variants={listContainer} initial="hidden" animate="visible" className="flex flex-col gap-3">
             {data.levels.map((level) => (
@@ -73,7 +111,7 @@ export function MembershipScreen() {
             ))}
           </motion.ul>
 
-          {data.current_level !== "plus" && (
+          {data.current_level !== "plus" && data.current_level !== "merchant" && (
             <div className="flex gap-3 rounded-lg bg-gold-soft p-4">
               <Sparkle className="size-6 shrink-0 text-gold" weight="fill" />
               <div>

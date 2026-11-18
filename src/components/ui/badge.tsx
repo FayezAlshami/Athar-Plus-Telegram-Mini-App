@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-export type BadgeTone = "neutral" | "accent" | "gold" | "success" | "warning" | "danger";
+export type BadgeTone = "neutral" | "accent" | "info" | "gold" | "success" | "warning" | "danger";
 
 const TONES: Record<BadgeTone, string> = {
   neutral: "bg-muted text-muted-foreground",
   accent: "bg-accent-soft text-accent",
+  info: "bg-info-soft text-info",
   gold: "bg-gold-soft text-gold",
   success: "bg-success-soft text-success",
   warning: "bg-warning-soft text-warning",

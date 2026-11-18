@@ -36,13 +36,19 @@ const SEAL = {
     edge: "#7a5213",
     mark: "#3b2706",
   },
+  merchant: {
+    shape: rosette(6, 10.8, 8.2, Math.PI / 6),
+    stops: ["#9fd0fb", "#1a6bb5", "#0d3a66"],
+    edge: "#0c335c",
+    mark: "#ffffff",
+  },
 } as const;
 
 const CHECK = "M7.9 12.3l2.7 2.7 5.5-5.6";
 
 /**
  * Verification-style seal for a membership level. Each level has its own silhouette:
- * a soft 8-point slate stamp, a 12-point teal rosette, and a 16-point gold medal with a live shine.
+ * a soft 8-point slate stamp, a 12-point teal rosette, a 16-point gold medal, and a 6-point blue shop seal.
  */
 export function LevelSeal({
   level,
@@ -73,7 +79,7 @@ export function LevelSeal({
       role={decorative ? undefined : "img"}
       aria-hidden={decorative || undefined}
       aria-label={decorative ? undefined : label}
-      className={cn("shrink-0 overflow-visible", level === "plus" && "drop-shadow-[0_1px_2px_rgba(138,95,23,0.45)]", className)}
+      className={cn("shrink-0 overflow-visible", level === "plus" && "drop-shadow-[0_1px_2px_rgba(138,95,23,0.45)]", level === "merchant" && "drop-shadow-[0_1px_2px_rgba(13,58,102,0.35)]", className)}
     >
       {!decorative && <title>{label}</title>}
       <defs>
