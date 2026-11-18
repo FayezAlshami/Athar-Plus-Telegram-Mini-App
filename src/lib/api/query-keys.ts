@@ -11,6 +11,7 @@ export const queryKeys = {
   campaign: (slug: string) => ["campaign", slug] as const,
   wallet: ["wallet"] as const,
   walletTransactions: ["wallet", "transactions"] as const,
+  withdrawals: ["withdrawals"] as const,
   paymentMethods: ["payment-methods"] as const,
   deposits: ["deposits"] as const,
   orders: (filters?: { status?: string; from?: string; to?: string; q?: string }) =>

@@ -1,4 +1,5 @@
 import type { StructuredTextBlock } from "@/entities/shared";
+import type { Faq } from "@/entities/faq/types";
 
 export interface ProductPrice {
   currency: string;
@@ -27,6 +28,8 @@ export interface Product extends ImageFrame {
   status: ProductStatus;
   is_purchasable: boolean;
   accepts_preorder: boolean;
+  refundable: boolean;
+  is_subscription: boolean;
   is_featured: boolean;
   is_favorite?: boolean;
   category?: { id: number; slug: string; name: string };
@@ -34,11 +37,17 @@ export interface Product extends ImageFrame {
   price: ProductPrice;
 }
 
+export interface ServicePeriod {
+  count: number;
+  unit: "day" | "month" | "year";
+}
+
 export interface ProductVariant extends ImageFrame {
   id: number;
   name: string;
   image_url: string | null;
   price: ProductPrice;
+  subscription_period: ServicePeriod | null;
   input_fields: ProductInputField[];
 }
 
@@ -58,6 +67,11 @@ export interface ProductInputField {
 export interface ProductDetail extends Product {
   description: StructuredTextBlock[];
   delivery_note: StructuredTextBlock[];
+  subscription_period: ServicePeriod | null;
+  activation_method: StructuredTextBlock[];
+  terms: StructuredTextBlock[];
+  warranty_period: ServicePeriod | null;
+  faqs: Faq[];
   fulfillment_type: "manual" | "inventory";
   input_fields: ProductInputField[];
   variants?: ProductVariant[];

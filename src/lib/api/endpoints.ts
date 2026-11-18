@@ -4,7 +4,7 @@ import type { HomeFeed } from "@/entities/banner/types";
 import type { Category } from "@/entities/category/types";
 import type { Product, ProductDetail } from "@/entities/product/types";
 import type { CreateOrderInput, Order, OrderDetail } from "@/entities/order/types";
-import type { Deposit, GiftCodeRedemption, PaymentMethod, Wallet, WalletTransaction } from "@/entities/wallet/types";
+import type { Deposit, GiftCodeRedemption, PaymentMethod, Wallet, WalletTransaction, Withdrawal } from "@/entities/wallet/types";
 import type { MembershipOverview } from "@/entities/membership/types";
 import type { Faq } from "@/entities/faq/types";
 import type { AppNotification } from "@/entities/notification/types";
@@ -82,6 +82,13 @@ export const walletApi = {
   ) => apiRequest<Deposit>("/deposits", { method: "POST", body: input, idempotencyKey }),
   redeemGiftCode: (code: string) =>
     apiRequest<GiftCodeRedemption>("/gift-codes/redeem", { method: "POST", body: { code } }),
+  withdrawals: (page: number, { signal }: Signal = {}) =>
+    apiFetch<Paginated<Withdrawal>>("/withdrawals", { query: { page }, signal }),
+  createWithdrawal: (
+    input: { amount_minor: number; reason: string; destination: string },
+    idempotencyKey: string,
+  ) => apiRequest<Withdrawal>("/withdrawals", { method: "POST", body: input, idempotencyKey }),
+  cancelWithdrawal: (id: string) => apiRequest<Withdrawal>(`/withdrawals/${id}/cancel`, { method: "POST" }),
 };
 
 export type OrderStatusGroup = "active" | "completed" | "closed";
@@ -103,6 +110,9 @@ export const ordersApi = {
   create: (input: CreateOrderInput, idempotencyKey: string) =>
     apiRequest<OrderDetail>("/orders", { method: "POST", body: input, idempotencyKey }),
   cancel: (id: string) => apiRequest<OrderDetail>(`/orders/${seg(id)}/cancel`, { method: "POST" }),
+  requestRefund: (id: string, reason: string, idempotencyKey: string) =>
+    apiRequest<OrderDetail>(`/orders/${seg(id)}/refund`, { method: "POST", body: { reason }, idempotencyKey }),
+  cancelRefund: (id: string) => apiRequest<OrderDetail>(`/orders/${seg(id)}/refund/cancel`, { method: "POST" }),
 };
 
 export const favoritesApi = {

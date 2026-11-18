@@ -7,6 +7,8 @@ import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/input";
 import { ListGroup, ListItem } from "@/components/ui/list-item";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
@@ -14,12 +16,15 @@ import { CopyButton } from "@/components/shared/copy-button";
 import { ErrorState } from "@/components/shared/error-state";
 import { Money } from "@/components/shared/money";
 import { Section } from "@/components/shared/section";
+import { createIdempotencyKey } from "@/lib/api/idempotency";
 import { useErrorMessage } from "@/lib/api/use-error-message";
 import { formatDateTime } from "@/lib/formatting/dates";
+import { formatMoney } from "@/lib/formatting/money";
 import { ProductImage } from "@/features/products/product-image";
+import { ServiceFacts } from "@/features/products/service-facts";
 import { cn } from "@/lib/cn";
 import { OrderStatusBadge } from "./order-status-badge";
-import { useCancelOrder, useOrder } from "./queries";
+import { useCancelOrder, useCancelRefund, useOrder, useRequestRefund } from "./queries";
 
 function OrderSkeleton() {
   return (
@@ -42,7 +47,12 @@ export function OrderScreen({ id }: { id: string }) {
   const errorMessage = useErrorMessage();
   const { data: order, isPending, error, refetch } = useOrder(id);
   const cancelOrder = useCancelOrder();
+  const requestRefund = useRequestRefund();
+  const cancelRefund = useCancelRefund();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [reason, setReason] = useState("");
+  const [idempotencyKey, setIdempotencyKey] = useState(createIdempotencyKey);
 
   if (error) {
     return (
@@ -104,6 +114,16 @@ export function OrderScreen({ id }: { id: string }) {
         </dl>
       </section>
 
+      {order.service && (
+        <ServiceFacts
+          isSubscription={order.service.is_subscription}
+          subscriptionPeriod={order.service.subscription_period}
+          warrantyPeriod={order.service.warranty_period}
+          activation={order.service.activation_method}
+          terms={order.service.terms}
+        />
+      )}
+
       {order.delivery && (
         <Section title={t("delivery")}>
           <div className="flex items-start gap-2 rounded-lg border border-success/30 bg-success-soft p-4">
@@ -134,8 +154,8 @@ export function OrderScreen({ id }: { id: string }) {
           {order.timeline.map((step, index) => {
             const last = index === order.timeline.length - 1;
             const stepFailed = step.status === "cancelled" || step.status === "rejected";
-            // Earlier steps are done; the last one is where the order stands now.
-            const inProgress = last && !stepFailed && step.status !== "completed";
+            const settled = step.status === "completed" || step.status === "refunded";
+            const inProgress = last && !stepFailed && !settled;
             return (
               <li key={`${step.status}-${step.at}`} aria-current={last ? "step" : undefined} className="relative flex gap-3 pb-4 last:pb-0">
                 {!last && <span aria-hidden className="absolute start-[9px] top-6 bottom-0 w-0.5 rounded-full bg-accent/30" />}
@@ -164,6 +184,25 @@ export function OrderScreen({ id }: { id: string }) {
           {t("cancel")}
         </Button>
       )}
+      {order.refund_request?.status === "pending" && (
+        <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+          <p className="text-body">{t("refundPending")}</p>
+          <Button variant="secondary" size="lg" fullWidth loading={cancelRefund.isPending} onClick={() => cancelRefund.mutate(order.id, {
+            onSuccess: () => toast.success(t("refundCancelled")),
+            onError: (refundError) => toast.error(errorMessage(refundError)),
+          })}>
+            {t("cancelRefund")}
+          </Button>
+        </div>
+      )}
+      {order.refund_request?.status === "rejected" && order.refund_request.decision_note && (
+        <p className="rounded-lg border border-border bg-surface p-4 text-body">{t("refundRejected", { reason: order.refund_request.decision_note })}</p>
+      )}
+      {order.can_request_refund && (
+        <Button variant="secondary" size="lg" fullWidth onClick={() => setRefundOpen(true)}>
+          {t("requestRefund")}
+        </Button>
+      )}
 
       <BottomSheet open={confirmOpen} onOpenChange={setConfirmOpen} title={t("cancel")} description={t("cancelConfirm")}>
         <div className="flex flex-col gap-2 pb-2">
@@ -189,6 +228,33 @@ export function OrderScreen({ id }: { id: string }) {
             {tCommon("cancel")}
           </Button>
         </div>
+      </BottomSheet>
+
+      <BottomSheet open={refundOpen} onOpenChange={setRefundOpen} title={t("requestRefund")} description={t("refundConfirm", { amount: formatMoney(order.total_minor, order.currency) })}>
+        <form
+          className="flex flex-col gap-4 pb-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const trimmed = reason.trim();
+            if (trimmed.length < 3) return;
+            requestRefund.mutate({ id: order.id, reason: trimmed, idempotencyKey }, {
+              onSuccess: () => {
+                setRefundOpen(false);
+                setReason("");
+                setIdempotencyKey(createIdempotencyKey());
+                toast.success(t("refundSent"));
+              },
+              onError: (refundError) => toast.error(errorMessage(refundError)),
+            });
+          }}
+        >
+          <Field label={t("refundReason")} required>
+            {(a11y) => <Textarea {...a11y} rows={4} value={reason} onChange={(event) => setReason(event.target.value)} />}
+          </Field>
+          <Button type="submit" size="lg" fullWidth loading={requestRefund.isPending} disabled={reason.trim().length < 3}>
+            {t("requestRefund")}
+          </Button>
+        </form>
       </BottomSheet>
     </PageContainer>
   );

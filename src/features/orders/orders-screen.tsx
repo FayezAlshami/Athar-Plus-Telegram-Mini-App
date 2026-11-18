@@ -39,6 +39,7 @@ const STATUS_BAR: Record<Order["status"], string> = {
   completed: "bg-success",
   cancelled: "bg-danger",
   rejected: "bg-danger",
+  refunded: "bg-success",
 };
 
 function OrderCard({ order }: { order: Order }) {

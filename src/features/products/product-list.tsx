@@ -32,6 +32,8 @@ export function ProductRow({ product, showFavorite = false }: { product: Product
               <Badge tone="warning">{t("unavailable")}</Badge>
             ) : product.accepts_preorder ? (
               <Badge tone="info">{t("preorder")}</Badge>
+            ) : product.is_subscription ? (
+              <Badge tone="accent">{t("subscription")}</Badge>
             ) : memberPrice ? (
               <Badge tone="gold" icon={<Crown weight="fill" />}>{t("membershipPrice")}</Badge>
             ) : null}

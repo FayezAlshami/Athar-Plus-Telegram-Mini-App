@@ -17,6 +17,7 @@ describe("navigation", () => {
       ["/orders/42", "/orders"],
       ["/wallet", "/wallet"],
       ["/wallet/deposit", "/wallet"],
+      ["/wallet/withdraw", "/wallet"],
       ["/profile", "/profile"],
     ] as const;
 

@@ -42,6 +42,8 @@ export function ProductCard({ product }: { product: Product }) {
             <Badge tone="gold" icon={<Crown weight="fill" />} className="mt-1 self-start">
               {t("product.membershipPrice")}
             </Badge>
+          ) : product.is_subscription ? (
+            <Badge tone="accent" className="mt-1 self-start">{t("product.subscription")}</Badge>
           ) : null}
           <div className="mt-auto flex flex-row items-center justify-between gap-2 pt-2">
             <span className="flex min-w-0 items-baseline gap-1">

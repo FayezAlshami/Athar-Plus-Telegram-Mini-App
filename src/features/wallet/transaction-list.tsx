@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { ArrowDownLeft, Gift, ArrowCounterClockwise, SlidersHorizontal, ShoppingBagOpen } from "@phosphor-icons/react";
+import { ArrowDownLeft, ArrowUUpLeft, ArrowUpRight, Gift, ArrowCounterClockwise, SlidersHorizontal, ShoppingBagOpen } from "@phosphor-icons/react";
 import type { WalletTransaction, WalletTransactionType } from "@/entities/wallet/types";
 import { ListGroup, ListItem } from "@/components/ui/list-item";
 import { Money } from "@/components/shared/money";
@@ -16,6 +16,8 @@ const TYPE_ICONS: Record<WalletTransactionType, typeof ShoppingBagOpen> = {
   refund: ArrowCounterClockwise,
   gift_code: Gift,
   adjustment: SlidersHorizontal,
+  withdrawal: ArrowUpRight,
+  withdrawal_return: ArrowUUpLeft,
 };
 
 export function TransactionList({ transactions }: { transactions: WalletTransaction[] }) {

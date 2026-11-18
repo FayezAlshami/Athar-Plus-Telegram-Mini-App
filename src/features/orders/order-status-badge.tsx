@@ -13,6 +13,7 @@ const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
   completed: "success",
   cancelled: "danger",
   rejected: "danger",
+  refunded: "success",
 };
 
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {

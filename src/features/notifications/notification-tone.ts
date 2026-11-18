@@ -1,7 +1,7 @@
 import type { AppNotification, NotificationTone } from "@/entities/notification/types";
 
 const FAILURE = new Set(["rejected", "cancelled", "failed"]);
-const SUCCESS = new Set(["completed", "approved"]);
+const SUCCESS = new Set(["completed", "approved", "refunded"]);
 const PENDING = new Set(["pending", "confirmed", "processing"]);
 
 /** Same rules as the API tone: stored status first, then notification type. Title and body are ignored. */

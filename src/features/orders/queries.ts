@@ -41,3 +41,31 @@ export function useCancelOrder() {
     },
   });
 }
+
+export function useRequestRefund() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason, idempotencyKey }: { id: string; reason: string; idempotencyKey: string }) => {
+      assertOnline();
+      return ordersApi.requestRefund(id, reason, idempotencyKey);
+    },
+    onSuccess: (order) => {
+      queryClient.setQueryData(queryKeys.order(order.id), order);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.ordersRoot });
+    },
+  });
+}
+
+export function useCancelRefund() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => {
+      assertOnline();
+      return ordersApi.cancelRefund(id);
+    },
+    onSuccess: (order) => {
+      queryClient.setQueryData(queryKeys.order(order.id), order);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.ordersRoot });
+    },
+  });
+}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ProductVariant } from "@/entities/product/types";
 import { Money } from "@/components/shared/money";
+import { formatPeriod } from "@/lib/formatting/period";
 import { ProductImage } from "./product-image";
 import { cn } from "@/lib/cn";
 
@@ -16,6 +17,7 @@ export function VariantPicker({
   onChange: (id: number) => void;
 }) {
   const t = useTranslations("product");
+  const locale = useLocale();
   if (variants.length === 0) return null;
 
   return (
@@ -40,6 +42,9 @@ export function VariantPicker({
               )}
               <span className="min-w-0 flex-1">
                 <span dir="auto" className="block truncate text-card-title">{variant.name}</span>
+                {variant.subscription_period && (
+                  <span className="block truncate text-caption text-muted-foreground">{formatPeriod(variant.subscription_period.count, variant.subscription_period.unit, locale)}</span>
+                )}
                 <Money amountMinor={variant.price.final_minor} currency={variant.price.currency} className="text-caption" />
               </span>
             </button>

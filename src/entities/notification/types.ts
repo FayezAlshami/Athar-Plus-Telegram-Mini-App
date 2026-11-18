@@ -2,7 +2,7 @@ export type NotificationTone = "danger" | "success" | "warning" | "info";
 
 export interface AppNotification {
   id: number;
-  type: "order_status" | "deposit_status" | "gift_code_redeemed" | "membership_changed" | "promotion" | "admin_message";
+  type: "order_status" | "deposit_status" | "withdrawal_status" | "refund_status" | "gift_code_redeemed" | "membership_changed" | "promotion" | "admin_message";
   tone?: NotificationTone;
   title: string;
   body: string | null;

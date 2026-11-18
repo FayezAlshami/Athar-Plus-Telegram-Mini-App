@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { BellSimple, Crown, Gift, Megaphone, Receipt, Trash, Wallet, type Icon } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowUpRight, BellSimple, Crown, Gift, Megaphone, Receipt, Trash, Wallet, type Icon } from "@phosphor-icons/react";
 import type { AppNotification } from "@/entities/notification/types";
 import type { Locale } from "@/lib/i18n/config";
 import { directionOf } from "@/lib/i18n/config";
@@ -14,6 +14,8 @@ import { shouldDismissNotification } from "./notification-swipe";
 const TYPE_ICON: Record<AppNotification["type"], Icon> = {
   order_status: Receipt,
   deposit_status: Wallet,
+  withdrawal_status: ArrowUpRight,
+  refund_status: ArrowCounterClockwise,
   gift_code_redeemed: Gift,
   membership_changed: Crown,
   promotion: Megaphone,

@@ -65,6 +65,11 @@ export function WalletCard({ wallet, compact = false }: { wallet: Wallet | undef
           {t("giftCode")}
         </Link>
       </div>
+      {!compact && (
+        <Link href="/wallet/withdraw" className="mt-3 flex h-11 items-center justify-center rounded-md border border-white/30 text-button text-white">
+          {t("withdraw")}
+        </Link>
+      )}
     </motion.section>
   );
 }

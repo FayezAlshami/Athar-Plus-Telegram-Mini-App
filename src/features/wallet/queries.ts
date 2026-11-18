@@ -19,6 +19,46 @@ export function useWalletTransactions() {
   });
 }
 
+export function useWithdrawals() {
+  return useInfiniteQuery({
+    queryKey: queryKeys.withdrawals,
+    queryFn: ({ pageParam, signal }) => walletApi.withdrawals(pageParam, { signal }),
+    initialPageParam: 1,
+    getNextPageParam: (last) => (last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined),
+    ...privateQueryOptions,
+  });
+}
+
+export function useCreateWithdrawal() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ idempotencyKey, ...input }: { amount_minor: number; reason: string; destination: string; idempotencyKey: string }) => {
+      assertOnline();
+      return walletApi.createWithdrawal(input, idempotencyKey);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.wallet });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.walletTransactions });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.withdrawals });
+    },
+  });
+}
+
+export function useCancelWithdrawal() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => {
+      assertOnline();
+      return walletApi.cancelWithdrawal(id);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.wallet });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.walletTransactions });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.withdrawals });
+    },
+  });
+}
+
 export function useRedeemGiftCode() {
   const queryClient = useQueryClient();
   return useMutation({

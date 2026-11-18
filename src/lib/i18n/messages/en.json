@@ -79,6 +79,7 @@
     "balance": "Available balance",
     "deposit": "Deposit",
     "giftCode": "Gift code",
+    "withdraw": "Withdraw",
     "history": "Activity",
     "pendingDeposits": "{count, plural, one {# deposit under review} other {# deposits under review}}",
     "emptyTitle": "No activity yet",
@@ -99,7 +100,32 @@
       "purchase": "Purchase",
       "refund": "Refund",
       "gift_code": "Gift code",
-      "adjustment": "Adjustment"
+      "adjustment": "Adjustment",
+    "withdrawal": "Withdrawal",
+    "withdrawal_return": "Withdrawal returned"
+    }
+  },
+  "withdrawal": {
+    "title": "Withdraw balance",
+    "body": "The amount is reserved from your wallet as soon as you send the request. If it is rejected or you cancel it, the same amount comes back. Approval does not charge it again.",
+    "available": "Available now",
+    "empty": "There is no balance to withdraw.",
+    "amount": "Amount",
+    "reason": "Reason for the withdrawal",
+    "destination": "Where should we send it?",
+    "destinationHelp": "The account number or address that should receive the money.",
+    "submit": "Send withdrawal request",
+    "confirm": "Reserve {amount} from your wallet until the request is approved or rejected?",
+    "invalidAmount": "Enter an amount with at most two decimal places. Extra digits are not rounded.",
+    "insufficient": "That amount is larger than your available balance.",
+    "history": "Your requests",
+    "historyEmpty": "No withdrawal requests yet.",
+    "cancel": "Cancel and return the amount",
+    "status": {
+      "pending": "Waiting for payout",
+      "approved": "Paid",
+      "rejected": "Rejected and returned",
+      "cancelled": "Cancelled and returned"
     }
   },
   "deposit": {
@@ -173,6 +199,15 @@
     "confirmBody": "{price} will be deducted from your wallet.",
     "preorder": "Pre-order",
     "preorderBody": "The price is charged now and delivered when the service is available. If it cannot be fulfilled, the full amount returns to your wallet.",
+    "refundable": "Refundable",
+    "refundableBody": "After the order is confirmed or completed you can ask for the amount back. It returns to your wallet only if the request is accepted.",
+    "subscription": "Subscription",
+    "serviceTitle": "Before you buy",
+    "subscriptionDuration": "Subscription length",
+    "activation": "How to activate",
+    "terms": "Terms and limits",
+    "warranty": "Warranty",
+    "faqs": "Common questions",
     "preorderConfirm": "{price} is charged now for a pre-order. Delivery comes later, and cancelling returns the full amount.",
     "note": "Note for our team",
     "placeOrder": "Confirm purchase",
@@ -269,7 +304,8 @@
       "processing": "In progress",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "refunded": "Refunded"
     },
     "number": "Order number",
     "copyNumber": "Copy order number",
@@ -282,6 +318,14 @@
     "cancel": "Cancel order",
     "cancelConfirm": "The order will be cancelled and the amount returned to your wallet.",
     "preorderNote": "Pre-order. The amount is paid, and delivery follows when the service is available.",
+    "requestRefund": "Request a refund",
+    "refundReason": "Reason for the refund",
+    "refundConfirm": "The request is reviewed before {amount} returns to your wallet. A refusal leaves the charge as it is.",
+    "refundSent": "Refund request sent",
+    "refundPending": "Your refund request is waiting for review. The charge stays until it is accepted.",
+    "cancelRefund": "Cancel refund request",
+    "refundCancelled": "Refund request cancelled",
+    "refundRejected": "Refund refused: {reason}",
     "cancelled": "Order cancelled and refunded"
   },
   "membership": {

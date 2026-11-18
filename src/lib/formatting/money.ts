@@ -13,13 +13,14 @@ function intlLocale(locale: Locale): string {
  */
 export function formatMoney(amountMinor: number, currency: string): string {
   const factor = MINOR_UNITS[currency] ?? 100;
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    currencyDisplay: "narrowSymbol",
-    minimumFractionDigits: amountMinor % factor === 0 ? 0 : 2,
-    maximumFractionDigits: 2,
-  }).format(amountMinor / factor);
+  const negative = amountMinor < 0;
+  const absolute = Math.abs(Math.trunc(amountMinor));
+  const whole = Math.trunc(absolute / factor);
+  const fraction = absolute % factor;
+  const grouped = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0, useGrouping: true }).format(whole);
+  const digits = fraction === 0 ? grouped : `${grouped}.${String(fraction).padStart(2, "0")}`;
+  const body = currency === "USD" ? `$${digits}` : `${digits} ${currency}`;
+  return negative ? `-${body}` : body;
 }
 
 const LOCAL_CURRENCY_LABEL: Record<string, Record<Locale, string>> = {
@@ -27,7 +28,8 @@ const LOCAL_CURRENCY_LABEL: Record<string, Record<Locale, string>> = {
 };
 
 export function formatLocalAmount(amount: number, currency: string, locale: Locale): string {
-  const number = new Intl.NumberFormat(intlLocale(locale), { maximumFractionDigits: 0 }).format(amount);
+  const whole = Math.trunc(amount);
+  const number = new Intl.NumberFormat(intlLocale(locale), { maximumFractionDigits: 0 }).format(whole);
   return `${number} ${LOCAL_CURRENCY_LABEL[currency]?.[locale] ?? currency}`;
 }
 
@@ -38,4 +40,12 @@ export function parseMajorToMinor(value: string, currency = "USD"): number | nul
   const [whole, fraction = ""] = normalized.split(".");
   const factor = MINOR_UNITS[currency] ?? 100;
   return Number(whole) * factor + Number(fraction.padEnd(2, "0"));
+}
+
+export function minorToMajorInput(amountMinor: number): string {
+  const absolute = Math.abs(Math.trunc(amountMinor));
+  const factor = 100;
+  const whole = Math.trunc(absolute / factor);
+  const fraction = absolute % factor;
+  return fraction === 0 ? String(whole) : `${whole}.${String(fraction).padStart(2, "0")}`;
 }

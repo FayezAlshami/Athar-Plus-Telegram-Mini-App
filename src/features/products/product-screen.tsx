@@ -28,6 +28,8 @@ import { ProductImage } from "./product-image";
 import { PurchaseSheet } from "./purchase-sheet";
 import { VariantPicker } from "./variant-picker";
 import { useProduct } from "./queries";
+import { FaqList } from "@/features/faqs/faq-list";
+import { ServiceFacts } from "./service-facts";
 
 function ProductSkeleton() {
   return (
@@ -150,6 +152,8 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
             <h1 dir="auto" className="text-display text-balance">{product.name}</h1>
             {!product.is_purchasable && <Badge tone="warning" className="self-start">{t("product.unavailable")}</Badge>}
             {product.is_purchasable && product.accepts_preorder && <Badge tone="info" className="self-start">{t("product.preorder")}</Badge>}
+            {product.refundable && <Badge tone="neutral" className="self-start">{t("product.refundable")}</Badge>}
+            {product.is_subscription && <Badge tone="accent" className="self-start">{t("product.subscription")}</Badge>}
             {product.summary && <p dir="auto" className="text-body text-muted-foreground">{product.summary}</p>}
             {variants.length > 0 && (
               <VariantPicker variants={variants} value={selectedVariant?.id ?? null} onChange={setVariantId} />
@@ -171,6 +175,21 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
             </motion.section>
           )}
 
+          <ServiceFacts
+            isSubscription={product.is_subscription}
+            subscriptionPeriod={selectedVariant?.subscription_period ?? product.subscription_period}
+            warrantyPeriod={product.warranty_period}
+            activation={product.activation_method}
+            terms={product.terms}
+          />
+
+          {product.faqs.length > 0 && (
+            <motion.section variants={fadeUp} className="flex flex-col gap-3">
+              <h2 className="text-section-title">{t("product.faqs")}</h2>
+              <FaqList faqs={product.faqs} />
+            </motion.section>
+          )}
+
           <motion.section variants={fadeUp} className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
             <h2 className="text-section-title">{t("product.delivery")}</h2>
             <div className="flex items-center gap-3">
@@ -180,6 +199,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
               <span className="text-card-title">{product.accepts_preorder ? t("product.preorder") : t(`product.fulfillment.${product.fulfillment_type}`)}</span>
             </div>
             {product.accepts_preorder && <p className="text-small text-muted-foreground">{t("product.preorderBody")}</p>}
+            {product.refundable && <p className="text-small text-muted-foreground">{t("product.refundableBody")}</p>}
             {product.delivery_note.length > 0 && <StructuredText blocks={product.delivery_note} />}
           </motion.section>
         </motion.div>
