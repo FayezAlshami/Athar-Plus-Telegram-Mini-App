@@ -198,24 +198,31 @@ export function useTelegramBottomButtons(options: {
     };
   }, [state, usingNative]);
 
+  // The share button is configured on its own. Refreshing it in the same turn as
+  // a price change makes Telegram paint the previous order price.
   useEffect(() => {
     if (state.status !== "ready" || !usingNative) return;
     const adapter = state.adapter;
-    // Text changes must update the visible button in place. Hiding it here lets
-    // Telegram restore the previous label, so the order button can show another tier's price.
-    const releaseMain = adapter.setMainButton(
-      options.active && options.main ? { text: options.main.text, enabled: options.main.enabled !== false } : null,
-      () => mainClick.current?.(),
-    );
     const releaseSecondary = adapter.setSecondaryButton(
       options.active && options.secondary ? { text: options.secondary.text, enabled: options.secondary.enabled !== false } : null,
       () => secondaryClick.current?.(),
     );
     return () => {
-      releaseMain();
       releaseSecondary();
     };
-  }, [state, usingNative, options.active, options.main?.text, options.main?.enabled, options.secondary?.text, options.secondary?.enabled]);
+  }, [state, usingNative, options.active, options.secondary?.text, options.secondary?.enabled]);
+
+  useEffect(() => {
+    if (state.status !== "ready" || !usingNative) return;
+    const adapter = state.adapter;
+    const releaseMain = adapter.setMainButton(
+      options.active && options.main ? { text: options.main.text, enabled: options.main.enabled !== false } : null,
+      () => mainClick.current?.(),
+    );
+    return () => {
+      releaseMain();
+    };
+  }, [state, usingNative, options.active, options.main?.text, options.main?.enabled]);
 
   return { usingNative };
 }

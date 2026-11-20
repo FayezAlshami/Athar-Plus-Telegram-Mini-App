@@ -78,6 +78,14 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
   const variants = product?.variants ?? [];
   const selectedVariant = variants.find((item) => item.id === variantId) ?? variants[0] ?? null;
   const activePrice = selectedVariant?.price ?? product?.price;
+  const orderLabel =
+    product == null
+      ? null
+      : product.is_purchasable && activePrice
+        ? t(product.accepts_preorder ? "product.reserveFor" : "product.buyFor", {
+            price: formatMoney(activePrice.final_minor, activePrice.currency),
+          })
+        : t("product.unavailable");
 
   const shareFallback = () => {
     if (!product) return;
@@ -101,12 +109,10 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
 
   const { usingNative } = useTelegramBottomButtons({
     active: Boolean(product) && !purchaseOpen,
-    main: product
+    main: orderLabel
       ? {
-          text: product.is_purchasable && activePrice
-            ? t(product.accepts_preorder ? "product.reserveFor" : "product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
-            : t("product.unavailable"),
-          enabled: product.is_purchasable,
+          text: orderLabel,
+          enabled: product?.is_purchasable,
           onClick: () => setPurchaseOpen(true),
         }
       : null,
@@ -209,9 +215,7 @@ export function ProductScreen({ idOrSlug }: { idOrSlug: string }) {
         <BuyBar>
           <div className="flex items-center gap-2">
             <Button size="lg" fullWidth disabled={!product.is_purchasable} onClick={() => setPurchaseOpen(true)} haptic="medium">
-              {product.is_purchasable && activePrice
-                ? t(product.accepts_preorder ? "product.reserveFor" : "product.buyFor", { price: formatMoney(activePrice.final_minor, activePrice.currency) })
-                : t("product.unavailable")}
+              {orderLabel}
             </Button>
             <Button size="lg" variant="secondary" aria-label={t("product.share")} onClick={shareProduct} haptic="light" className="shrink-0 px-4">
               <ShareNetwork className="size-5" />

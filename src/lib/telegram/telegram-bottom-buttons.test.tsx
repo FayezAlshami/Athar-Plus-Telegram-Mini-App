@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { TelegramAdapter } from "./adapter";
 import { RealTelegramAdapter } from "./real-adapter";
@@ -13,14 +13,18 @@ vi.mock("./telegram-provider", () => ({
   useTelegramState: () => harness.state,
 }));
 
-function fakeButton(): TelegramBottomButton & { label: string; hides: number } {
+function fakeButton(): TelegramBottomButton & { label: string; hides: number; writes: number } {
   const button = {
     label: "",
     hides: 0,
+    writes: 0,
+    isVisible: false,
     show() {
+      button.isVisible = true;
       return button;
     },
     hide() {
+      button.isVisible = false;
       button.hides += 1;
       return button;
     },
@@ -32,6 +36,7 @@ function fakeButton(): TelegramBottomButton & { label: string; hides: number } {
     },
     setText(text: string) {
       button.label = text;
+      button.writes += 1;
       return button;
     },
     onClick() {
@@ -41,8 +46,9 @@ function fakeButton(): TelegramBottomButton & { label: string; hides: number } {
       return button;
     },
     setParams(params: { text?: string; is_visible?: boolean }) {
-      if (params.text !== undefined) button.label = params.text;
-      if (params.is_visible === false) button.hides += 1;
+      if (params.text !== undefined) button.setText(params.text);
+      if (params.is_visible === false) button.hide();
+      if (params.is_visible === true) button.show();
       return button;
     },
   };
@@ -60,10 +66,11 @@ function Probe({ text }: { text: string }) {
 
 describe("Telegram order button", () => {
   let main: ReturnType<typeof fakeButton>;
+  let secondary: ReturnType<typeof fakeButton>;
 
   beforeEach(() => {
     main = fakeButton();
-    const secondary = fakeButton();
+    secondary = fakeButton();
     harness.state = {
       status: "ready",
       adapter: new RealTelegramAdapter({
@@ -73,15 +80,25 @@ describe("Telegram order button", () => {
     };
   });
 
-  it("replaces the visible price when the selected tier changes", () => {
+  it("keeps the selected tier price and leaves the share button alone", async () => {
     const view = render(<Probe text="اطلب بـ $15" />);
 
     expect(main.label).toBe("اطلب بـ $15");
     expect(main.hides).toBe(0);
+    const shareWrites = secondary.writes;
 
     view.rerender(<Probe text="اطلب بـ $25" />);
 
     expect(main.label).toBe("اطلب بـ $25");
+    expect(secondary.writes).toBe(shareWrites);
+    expect(main.hides).toBe(0);
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 40));
+    });
+
+    expect(main.label).toBe("اطلب بـ $25");
+    expect(secondary.writes).toBe(shareWrites);
     expect(main.hides).toBe(0);
 
     view.unmount();

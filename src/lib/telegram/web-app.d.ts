@@ -19,6 +19,7 @@ export interface TelegramPopupButton {
 }
 
 export interface TelegramBottomButton {
+  isVisible?: boolean;
   show(): TelegramBottomButton;
   hide(): TelegramBottomButton;
   enable(): TelegramBottomButton;

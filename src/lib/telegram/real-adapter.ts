@@ -141,11 +141,11 @@ export class RealTelegramAdapter implements TelegramAdapter {
   }
 
   setMainButton(button: { text: string; enabled: boolean } | null, onClick: () => void) {
-    return this.bindBottomButton(this.webApp.MainButton, button, onClick);
+    return this.bindBottomButton(this.webApp.MainButton, button, onClick, true);
   }
 
   setSecondaryButton(button: { text: string; enabled: boolean } | null, onClick: () => void) {
-    return this.bindBottomButton(this.webApp.SecondaryButton, button, onClick);
+    return this.bindBottomButton(this.webApp.SecondaryButton, button, onClick, false);
   }
 
   allowsWriteToPm() {
@@ -260,22 +260,33 @@ export class RealTelegramAdapter implements TelegramAdapter {
     button: TelegramBottomButton | undefined,
     spec: { text: string; enabled: boolean } | null,
     onClick: () => void,
+    flushText: boolean,
   ): () => void {
     if (!button || typeof button.show !== "function") return () => undefined;
     if (!spec) {
       button.hide();
       return () => undefined;
     }
-    if (typeof button.setParams === "function") {
-      button.setParams({ text: spec.text, is_active: spec.enabled, is_visible: true });
-    } else {
-      button.setText(spec.text);
+    // setText while the button is already visible. Showing it again makes
+    // Telegram restore the previous label, so the order button swaps prices.
+    const paint = (text: string) => {
+      button.setText(text);
       if (spec.enabled) button.enable();
       else button.disable();
-      button.show();
-    }
+      if (button.isVisible !== true) button.show();
+    };
+    paint(spec.text);
+    const flush = flushText
+      ? window.setTimeout(() => {
+          // Some Telegram clients keep the previous bottom-bar event on screen
+          // until another event arrives. The extra event carries the same price.
+          button.setText(`${spec.text}\u200b`);
+          paint(spec.text);
+        }, 32)
+      : null;
     button.onClick(onClick);
     return () => {
+      if (flush !== null) window.clearTimeout(flush);
       button.offClick(onClick);
     };
   }
